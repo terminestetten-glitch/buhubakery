@@ -186,6 +186,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .section { padding-block: 3rem; }
 .section + .section { border-top: 1px solid var(--line); }
 .section-intro { max-width: 42rem; color: var(--ink-soft); }
+.steps-intro { list-style: none; margin: 0 0 1.25rem; padding: 0; max-width: 42rem; display: grid; gap: 0.4rem; color: var(--ink-soft); }
+.steps-intro li strong { color: var(--accent); margin-right: 0.35rem; }
 
 .mood-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0; }
 .mood-chip {
@@ -474,7 +476,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     <div class="wrap">
       <span class="eyebrow">Willkomme im Café</span>
       <h2>Build your own box</h2>
-      <p class="section-intro">So gaht's: <strong>1.</strong> Wähl im Regal rächts dini Boxgrössi. <strong>2.</strong> Tipp uf d'Cookies i de Vitrine – sie hüpfed diräkt i dini Box uf em Tisch. Wettsch eis wieder use? Eifach s'Cookie i de Box atippe. <strong>3.</strong> A de Abhol-Täg chasch au no en Kafi drzue näh.</p>
+      <p class="section-intro">So gaht's:</p>
+      <ol class="steps-intro">
+        <li><strong>1.</strong> Wähl im Regal rächts dini Boxgrössi.</li>
+        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – sie lande diräkt i dini Box uf em Tisch. Wettsch eis wieder use? Eifach s'Cookie i de Box atippe.</li>
+        <li><strong>3.</strong> A de Abhol-Täg chasch au no en Kafi drzue näh.</li>
+        <li><strong>4.</strong> Wähl dis Wunsch-Abholdatum im Kalender.</li>
+      </ol>
 
       <p><strong>Cookie Mood – wie bisch hüt drufe?</strong></p>
       <div class="mood-row" role="group" aria-label="Cookie Mood wählen">
@@ -926,11 +934,11 @@ function toppingSVG(type, r) {
       return `<rect x="${(cx - sz).toFixed(1)}" y="${(cy - sz * 0.62).toFixed(1)}" width="${(sz * 2).toFixed(1)}" height="${(sz * 1.24).toFixed(1)}" rx="${(sz * 0.3).toFixed(1)}" fill="#8A4F1D" stroke="rgba(46,32,21,0.55)" stroke-width="0.8" transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
     }).join("");
   }
-  // Ovomaltine-Crunch: orangi Malzkügeli mit Glanzpunkt
+  // Ovomaltine-Crunch: malzig-braungoldigi Kügeli mit Glanzpunkt
   return CHIP_SPOTS.slice(0, 6).map(([dx, dy], i) => {
     const cx = parseFloat((dx * r / 20).toFixed(1)), cy = parseFloat((dy * r / 20).toFixed(1));
     const sz = r / (4.3 + (i % 2) * 0.8);
-    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${sz.toFixed(1)}" fill="#F26522" stroke="rgba(46,32,21,0.5)" stroke-width="0.8"/>` +
+    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${sz.toFixed(1)}" fill="#B5772E" stroke="rgba(46,32,21,0.5)" stroke-width="0.8"/>` +
       `<circle cx="${(cx - sz * 0.25).toFixed(1)}" cy="${(cy - sz * 0.25).toFixed(1)}" r="${(sz * 0.35).toFixed(1)}" fill="#FBCB8A" opacity="0.75"/>`;
   }).join("");
 }
