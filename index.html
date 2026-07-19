@@ -934,12 +934,14 @@ function toppingSVG(type, r) {
       return `<rect x="${(cx - sz).toFixed(1)}" y="${(cy - sz * 0.62).toFixed(1)}" width="${(sz * 2).toFixed(1)}" height="${(sz * 1.24).toFixed(1)}" rx="${(sz * 0.3).toFixed(1)}" fill="#8A4F1D" stroke="rgba(46,32,21,0.55)" stroke-width="0.8" transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
     }).join("");
   }
-  // Ovomaltine-Crunch: malzig-braungoldigi Kügeli mit Glanzpunkt
+  // Ovomaltine-Crunch: eckigi malzig-braungoldigi Splitter (kei Chügeli!)
   return CHIP_SPOTS.slice(0, 6).map(([dx, dy], i) => {
-    const cx = parseFloat((dx * r / 20).toFixed(1)), cy = parseFloat((dy * r / 20).toFixed(1));
-    const sz = r / (4.3 + (i % 2) * 0.8);
-    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${sz.toFixed(1)}" fill="#B5772E" stroke="rgba(46,32,21,0.5)" stroke-width="0.8"/>` +
-      `<circle cx="${(cx - sz * 0.25).toFixed(1)}" cy="${(cy - sz * 0.25).toFixed(1)}" r="${(sz * 0.35).toFixed(1)}" fill="#FBCB8A" opacity="0.75"/>`;
+    const cx = dx * r / 20, cy = dy * r / 20;
+    const sz = r / (4.0 + (i % 2) * 0.6);
+    const rot = (i * 53) % 360;
+    const pts = [[0, -1], [0.8, -0.15], [0.25, 1], [-0.8, 0.25]]
+      .map(([px, py]) => `${(px * sz).toFixed(1)},${(py * sz).toFixed(1)}`).join(" ");
+    return `<polygon points="${pts}" fill="#B5772E" stroke="rgba(46,32,21,0.55)" stroke-width="0.8" transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)}) rotate(${rot})"/>`;
   }).join("");
 }
 function cookieSVG(c, r, melt) {
