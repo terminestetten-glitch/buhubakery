@@ -51,7 +51,11 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 ## Offene Punkte (beim User nachfragen, wenn passend)
 1. Echte Preise (Boxen, Sonderbstellig, Kaffee, evtl. Soft-Melt-Aufpreis); Mood-Zuordnung der Sorten bestätigen.
 2. Echte Abhol-Tage/-Ort + Kaffeetage konfigurieren.
-3. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!) – zusätzlich WhatsApp/Instagram gewünscht? Eigene Domain buhubakery.ch scheint zu existieren → für die Website nutzen?
+3. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!) – zusätzlich WhatsApp/Instagram gewünscht?
+   **Domain**: User hat eine Domain bei **GoDaddy** gekauft (vermutlich buhubakery.ch). Plan: GitHub Pages + Custom Domain.
+   Nötige Schritte: (a) Branch nach main mergen → Workflow deployt; (b) Repo-Settings → Pages → Custom Domain eintragen + "Enforce HTTPS";
+   (c) Bei GoDaddy DNS: A-Records für @ auf 185.199.108.153 / 185.199.109.153 / 185.199.110.153 / 185.199.111.153, CNAME für www auf terminestetten-glitch.github.io.
+   Achtung: Bei Workflow-Deploys zählt NUR die Pages-Einstellung, eine CNAME-Datei im Repo reicht nicht.
 4. Fotos für Über-mich (Text ist schon drin, wörtlich vom User).
 5. Impressum & Datenschutz vor echtem Launch (in der Schweiz: zumindest Kontaktangaben empfohlen).
 6. GitHub Pages muss ggf. einmalig in den Repo-Settings aktiviert werden (Source: GitHub Actions) – der Workflow versucht es automatisch (`enablement: true`). Custom Domain (buhubakery.ch) wäre dort auch einstellbar.
