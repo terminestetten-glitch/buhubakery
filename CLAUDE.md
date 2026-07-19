@@ -58,4 +58,9 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
    Achtung: Bei Workflow-Deploys zählt NUR die Pages-Einstellung, eine CNAME-Datei im Repo reicht nicht.
 4. Fotos für Über-mich (Text ist schon drin, wörtlich vom User).
 5. Impressum & Datenschutz vor echtem Launch (in der Schweiz: zumindest Kontaktangaben empfohlen).
-6. GitHub Pages muss ggf. einmalig in den Repo-Settings aktiviert werden (Source: GitHub Actions) – der Workflow versucht es automatisch (`enablement: true`). Custom Domain (buhubakery.ch) wäre dort auch einstellbar.
+6. **Go-Live-Status (19.07.2026)**: `main` ist gepusht, Deploy-Workflow lief an, aber `configure-pages` scheiterte
+   ("Resource not accessible by integration") → Pages kann nicht per Workflow-Token aktiviert werden. Zusätzlich ist das
+   Repo **privat** (Pages auf privaten Repos = nur mit bezahltem Plan). User muss einmalig selbst klicken:
+   (a) Repo öffentlich machen (Settings → General → Danger Zone → Change visibility),
+   (b) Settings → Pages → Source: "GitHub Actions", Custom Domain buhubakery.ch eintragen + Enforce HTTPS.
+   Danach Workflow neu starten (workflow_dispatch via `actions_run_trigger` oder neuer Push). DNS-Schritte bei GoDaddy siehe Punkt 3.
