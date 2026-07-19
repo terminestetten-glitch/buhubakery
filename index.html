@@ -717,9 +717,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <use href="#heart" transform="translate(1124 138) scale(1.25)" fill="#2E2015"/>
           </g>
 
+          <!-- Saison- & Feiertags-Deko (vom Admin gsteuert) -->
+          <g id="g-season-decor"></g>
+          <g id="g-holiday-decor"></g>
+
         </svg>
       </div>
-      <p class="scene-caption">Uf em Handy chasch d'Szene mit em Finger sitlich verschiebe. Alles gaht übrigens au über d'Liste unte.</p>
 
       <!-- Barrierefreier Spiegel der Szene + Zusammenfassung -->
       <div class="builder">
@@ -760,7 +763,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <ul id="summary-list"></ul>
           <button class="btn" id="add-box-btn" type="button" aria-disabled="true">+ No e Box drzue</button>
           <a class="btn btn-primary" id="order-btn" href="#" aria-disabled="true">Aafrag per E-Mail schicke</a>
-          <p class="price-note">⚠️ Alles no <strong>Bispiilpriise</strong> – sag mir dini echte Priise!</p>
         </div>
       </div>
     </div>
@@ -786,7 +788,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <span class="eyebrow">Abholig</span>
       <h2>Abhole &amp; gnüsse</h2>
       <p class="section-intro">Du schickst dini Aafrag per E-Mail ab, ich bestätige dir Priis und Abholtermin – und denn: frisch us em Ofe i dini Händ. An bestimmte Täg gits zusätzlich <strong>Pick up &amp; Coffee to go</strong> – denn erschiint im Café obe au d'Kaffimaschine.</p>
-      <p class="hint">D'Aafrag gaht per E-Mail a bestellung@buhubakery.ch. Wenn du zuesätzlich WhatsApp oder Instagram wettsch, säg Bscheid. Au d'Abholtäg und -ort müemer no iitrage.</p>
+      <p class="hint">D'Aafrag gaht per E-Mail a <a href="mailto:bestellung@buhubakery.ch">bestellung@buhubakery.ch</a>.</p>
     </div>
   </section>
 
@@ -825,6 +827,15 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <h3>Nächsti 4 Wuche – Weli Täg het Kafi?</h3>
       <p style="color:var(--ink-soft);font-size:0.9rem;">Klick uf e Tag zum Kaffee iiträge/uusnäh. D'Änderig speichert automatisch.</p>
       <div class="admin-calendar" id="admin-calendar"></div>
+
+      <h3 style="margin-top:2.5rem;">Saison</h3>
+      <p style="color:var(--ink-soft);font-size:0.9rem;">Steuert d'Deko im Café (Blüete, Sunne, Blätter, Schnee).</p>
+      <div class="mood-row" id="admin-season-chips" role="group" aria-label="Saison wähle"></div>
+
+      <h3 style="margin-top:1.8rem;">Feiertag</h3>
+      <p style="color:var(--ink-soft);font-size:0.9rem;">Zuesätzlichi Deko für spezielli Anläss.</p>
+      <div class="mood-row" id="admin-holiday-chips" role="group" aria-label="Feiertag wähle"></div>
+
       <button id="admin-logout-btn" style="margin-top:2rem;background:var(--line);color:var(--ink);padding:0.6rem 1.2rem;border:none;border-radius:0.5rem;cursor:pointer;">Ablogge</button>
     </div>
   </div>
@@ -873,6 +884,20 @@ const COFFEES = [
 const CUPS = [
   { id: "eigene", label: "Bring min eigene Becher mit ♻️" },
   { id: "einweg", label: "Einweg-Becher" },
+];
+
+const SEASONS = [
+  { id: "fruehling", label: "Frühlig 🌸" },
+  { id: "sommer",    label: "Summer ☀️" },
+  { id: "herbst",    label: "Herbscht 🍂" },
+  { id: "winter",    label: "Winter ❄️" },
+];
+const HOLIDAYS = [
+  { id: "keine",         label: "Kei Feiertag" },
+  { id: "ostern",        label: "Ostere 🐣" },
+  { id: "halloween",     label: "Halloween 🎃" },
+  { id: "bundesfeier",   label: "1. Auguscht 🇨🇭" },
+  { id: "weihnachten",   label: "Weihnachte 🎄" },
 ];
 
 /* --- Zustand --------------------------------------------------------------- */
@@ -958,6 +983,91 @@ function cookieSVG(c, r, melt) {
   const shadow = `<circle r="${r}" fill="none" stroke="rgba(46,32,21,0.15)" stroke-width="1.5"/>`;
   return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="2.2"/>` +
     shadow + topping + gloss + core;
+}
+
+/* --- Saison- & Feiertags-Deko ----------------------------------------------- */
+/* Freie Zone für Streu-Deko: obere Himmel-Strecke rechts vom Wimpel-Banner */
+const SKY_SPOTS = [[630, 20], [700, 55], [770, 15], [960, 30], [1030, 60], [1100, 18], [1160, 50], [660, 70], [940, 72]];
+function seasonDecorSVG(season) {
+  if (season === "fruehling") {
+    return SKY_SPOTS.map(([x, y], i) => {
+      const s = 7 + (i % 3);
+      const petals = [0, 72, 144, 216, 288].map((a) =>
+        `<ellipse cx="0" cy="${-s * 0.65}" rx="${s * 0.34}" ry="${s * 0.62}" fill="#F9C7D9" transform="rotate(${a})"/>`).join("");
+      return `<g transform="translate(${x} ${y})">${petals}<circle r="${s * 0.28}" fill="#F5A11C"/></g>`;
+    }).join("");
+  }
+  if (season === "sommer") {
+    const rays = Array.from({ length: 8 }, (_, i) => {
+      const a = (i * 45) * Math.PI / 180;
+      return `<line x1="${(Math.cos(a) * 26).toFixed(1)}" y1="${(Math.sin(a) * 26).toFixed(1)}" x2="${(Math.cos(a) * 40).toFixed(1)}" y2="${(Math.sin(a) * 40).toFixed(1)}" stroke="#F5A11C" stroke-width="4" stroke-linecap="round"/>`;
+    }).join("");
+    return `<g transform="translate(1120 55)">${rays}<circle r="24" fill="#FBC94C" stroke="#F5A11C" stroke-width="2"/></g>`;
+  }
+  if (season === "herbst") {
+    return SKY_SPOTS.map(([x, y], i) => {
+      const s = 8 + (i % 3) * 1.5;
+      const rot = (i * 41) % 360;
+      const col = ["#C97B3D", "#B5772E", "#8A4F1D"][i % 3];
+      return `<path d="M0 ${-s} C ${s * 0.7} ${-s * 0.5} ${s * 0.7} ${s * 0.5} 0 ${s} C ${-s * 0.7} ${s * 0.5} ${-s * 0.7} ${-s * 0.5} 0 ${-s} Z" fill="${col}" stroke="#2E2015" stroke-width="0.6" transform="translate(${x} ${y}) rotate(${rot})"/>`;
+    }).join("");
+  }
+  if (season === "winter") {
+    return SKY_SPOTS.map(([x, y], i) => {
+      const s = 5 + (i % 3) * 1.2;
+      const arms = [0, 60, 120].map((a) =>
+        `<line x1="${-s}" y1="0" x2="${s}" y2="0" stroke="#FBF3E4" stroke-width="1.6" stroke-linecap="round" transform="rotate(${a})"/>`).join("");
+      return `<g transform="translate(${x} ${y})" opacity="0.9">${arms}</g>`;
+    }).join("");
+  }
+  return "";
+}
+function holidayDecorSVG(holiday) {
+  if (holiday === "ostern") {
+    const eggs = [[418, 300, "#F5A11C"], [440, 304, "#FBF3E4"], [462, 299, "#C97B3D"]];
+    return eggs.map(([x, y, col]) =>
+      `<g transform="translate(${x} ${y})"><ellipse rx="9" ry="13" fill="${col}" stroke="#2E2015" stroke-width="1.5"/>` +
+      `<path d="M-6 -3 Q0 -7 6 -3 M-6 3 Q0 7 6 3" stroke="#2E2015" stroke-width="1" fill="none" opacity="0.5"/></g>`
+    ).join("");
+  }
+  if (holiday === "halloween") {
+    const pumpkin = `<g transform="translate(432 302)">` +
+      `<ellipse rx="17" ry="13" fill="#F26522" stroke="#2E2015" stroke-width="1.8"/>` +
+      `<rect x="-2.5" y="-17" width="5" height="7" fill="#5C3A21"/>` +
+      `<path d="M-6 -3 L-2 1 L-6 5 Z M6 -3 L2 1 L6 5 Z M-5 8 L5 8 L2 11 L-2 11 Z" fill="#2E2015"/></g>`;
+    const bats = [[720, 40], [980, 25]].map(([x, y]) =>
+      `<path d="M0 0 C-10 -8 -18 -4 -16 4 C-10 0 -6 2 0 6 C6 2 10 0 16 4 C18 -4 10 -8 0 0 Z" fill="#2E2015" transform="translate(${x} ${y})"/>`
+    ).join("");
+    return pumpkin + bats;
+  }
+  if (holiday === "bundesfeier") {
+    const flags = [];
+    for (let x = 610; x <= 1180; x += 46) {
+      flags.push(`<rect x="${x - 9}" y="10" width="18" height="18" fill="#B0524A" stroke="#2E2015" stroke-width="1"/>` +
+        `<rect x="${x - 2.5}" y="13" width="5" height="12" fill="#FBF3E4"/><rect x="${x - 9}" y="17.5" width="18" height="5" fill="#FBF3E4"/>`);
+    }
+    return `<path d="M604 18 Q900 -6 1186 18" stroke="#8A7B63" stroke-width="2" fill="none"/>` + flags.join("");
+  }
+  if (holiday === "weihnachten") {
+    const bulbColors = ["#F5A11C", "#B0524A", "#6B8F7B", "#FBF3E4"];
+    let lights = "";
+    for (let x = 60; x <= 540; x += 24) {
+      const dip = Math.sin((x / 480) * Math.PI) * 6;
+      lights += `<circle cx="${x}" cy="${312 + dip}" r="4" fill="${bulbColors[(x / 24) % 4]}" stroke="#2E2015" stroke-width="0.6"/>`;
+    }
+    const tree = `<g transform="translate(28 500)">` +
+      `<path d="M0 -70 L18 -30 L8 -30 L24 0 L-24 0 L-8 -30 L-18 -30 Z" fill="#5C7F6B" stroke="#2E2015" stroke-width="1.5"/>` +
+      `<rect x="-5" y="0" width="10" height="8" fill="#6B573D"/>` +
+      `<circle cx="-6" cy="-14" r="2.5" fill="#F5A11C"/><circle cx="8" cy="-32" r="2.5" fill="#B0524A"/><circle cx="0" cy="-50" r="2.5" fill="#FBF3E4"/></g>`;
+    return `<path d="M50 316 Q300 340 550 316" stroke="#6B573D" stroke-width="1.5" fill="none"/>` + lights + tree;
+  }
+  return "";
+}
+function renderThemeDecor() {
+  const season = localStorage.getItem("buhu_season") || "";
+  const holiday = localStorage.getItem("buhu_holiday") || "keine";
+  document.getElementById("g-season-decor").innerHTML = seasonDecorSVG(season);
+  document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
 }
 
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
@@ -1363,7 +1473,7 @@ function render() {
   if (list.children.length === 0) {
     addLine("No nüt in der Bstellig … 👻", "", "empty");
   } else {
-    addLine("Total (Bispiil)", chf(total), "total");
+    addLine("Total", chf(total), "total");
   }
 
   addBoxBtn.setAttribute("aria-disabled", String(!curValid));
@@ -1385,7 +1495,7 @@ function render() {
     }
     const noteVal = document.getElementById("order-note").value.trim();
     const pickupLine = state.pickupDate ? formatPickupDate(state.pickupDate) : "";
-    body += `\nTotal laut Website (Bispiilpriise): ${chf(total)}\n\nWunschtermin für d'Abholig: ${pickupLine}\n${noteVal ? "Bemerkig: " + noteVal + "\n" : ""}Name: \n\nMerci & en Gruess!`;
+    body += `\nTotal: ${chf(total)}\n\nWunschtermin für d'Abholig: ${pickupLine}\n${noteVal ? "Bemerkig: " + noteVal + "\n" : ""}Name: \n\nMerci & en Gruess!`;
     orderBtn.href = `mailto:${CONFIG.orderEmail}?subject=${encodeURIComponent("Cookie-Box Aafrag – BuhuBakery")}&body=${encodeURIComponent(body)}`;
   } else {
     orderBtn.href = "#";
@@ -1412,6 +1522,8 @@ const adminPanel = {
   loginBtn: document.getElementById("admin-login-btn"),
   logoutBtn: document.getElementById("admin-logout-btn"),
   calendarDiv: document.getElementById("admin-calendar"),
+  seasonChipsDiv: document.getElementById("admin-season-chips"),
+  holidayChipsDiv: document.getElementById("admin-holiday-chips"),
   closeBtn: document.querySelector(".admin-modal-close"),
 
   isLoggedIn() { return !!adminStorage.getSession(); },
@@ -1456,9 +1568,11 @@ const adminPanel = {
   },
 
   showContent() {
-    this.loginDiv.style.display = "block";
+    this.loginDiv.style.display = "none";
     this.contentDiv.style.display = "block";
     this.renderCalendar();
+    this.renderSeasonChips();
+    this.renderHolidayChips();
   },
 
   renderCalendar() {
@@ -1491,11 +1605,41 @@ const adminPanel = {
     this.renderCalendar();
     render(); // Aktualisiere auch die Hauptseite
   },
+
+  renderSeasonChips() {
+    const current = localStorage.getItem("buhu_season") || "";
+    this.seasonChipsDiv.innerHTML = SEASONS.map((s) =>
+      `<button type="button" class="mood-chip" data-season="${s.id}" aria-pressed="${current === s.id}">${s.label}</button>`
+    ).join("");
+    this.seasonChipsDiv.querySelectorAll("[data-season]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const now = localStorage.getItem("buhu_season") || "";
+        localStorage.setItem("buhu_season", now === btn.dataset.season ? "" : btn.dataset.season);
+        this.renderSeasonChips();
+        renderThemeDecor();
+      });
+    });
+  },
+
+  renderHolidayChips() {
+    const current = localStorage.getItem("buhu_holiday") || "keine";
+    this.holidayChipsDiv.innerHTML = HOLIDAYS.map((h) =>
+      `<button type="button" class="mood-chip" data-holiday="${h.id}" aria-pressed="${current === h.id}">${h.label}</button>`
+    ).join("");
+    this.holidayChipsDiv.querySelectorAll("[data-holiday]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        localStorage.setItem("buhu_holiday", btn.dataset.holiday);
+        this.renderHolidayChips();
+        renderThemeDecor();
+      });
+    });
+  },
 };
 
 adminPanel.init();
 
 render();
+renderThemeDecor();
 </script>
 
 </body>
