@@ -388,6 +388,22 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   font-size: 0.9rem;
 }
 .site-footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+
+/* --- Admin-Panel ---------------------------------------------------------- */
+#admin-toggle { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; font-size: 1.2rem; width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid var(--accent); background: var(--raised); cursor: pointer; }
+.admin-modal { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; background: var(--ground); overflow: auto; }
+.admin-modal.open { display: flex; }
+.admin-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--line); background: var(--raised); }
+.admin-modal-close { border: none; background: transparent; font-size: 1.5rem; cursor: pointer; }
+.admin-modal-content { flex: 1; padding: 2rem; }
+.admin-login { display: grid; gap: 1rem; max-width: 20rem; }
+.admin-login input { padding: 0.6rem; border: 1px solid var(--line); border-radius: 0.5rem; font: inherit; background: var(--raised); color: var(--ink); }
+.admin-login button { padding: 0.75rem; background: var(--accent); color: var(--raised); border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; }
+.admin-calendar { display: grid; gap: 1rem; }
+.admin-calendar-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+.admin-calendar-day { padding: 1rem; border: 1px solid var(--line); border-radius: 0.5rem; text-align: center; background: var(--raised); cursor: pointer; }
+.admin-calendar-day.has-coffee { background: var(--accent-bright); color: #2E2015; border-color: var(--accent); }
+.admin-calendar-day.disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -744,6 +760,32 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   </div>
 </footer>
 
+<button id="admin-toggle" aria-label="Admin-Panel öffne">⚙️</button>
+
+<div id="admin-modal" class="admin-modal">
+  <div class="admin-modal-header">
+    <h2>Admin-Panel – Kaffeetäg</h2>
+    <button class="admin-modal-close" aria-label="Schliesse Admin-Panel">×</button>
+  </div>
+  <div class="admin-modal-content">
+    <div id="admin-login" class="admin-login" style="display:block;">
+      <label>Benutzername:
+        <input type="text" id="admin-user" placeholder="Benutzername">
+      </label>
+      <label>Passwort:
+        <input type="password" id="admin-pass" placeholder="Passwort">
+      </label>
+      <button id="admin-login-btn">Alogge</button>
+    </div>
+    <div id="admin-content" style="display:none;">
+      <h3>Nächsti 4 Wuche – Weli Täg het Kafi?</h3>
+      <p style="color:var(--ink-soft);font-size:0.9rem;">Klick uf e Tag zum Kaffee iiträge/uusnäh. D'Änderig speichert automatisch.</p>
+      <div class="admin-calendar" id="admin-calendar"></div>
+      <button id="admin-logout-btn" style="margin-top:2rem;background:var(--line);color:var(--ink);padding:0.6rem 1.2rem;border:none;border-radius:0.5rem;cursor:pointer;">Ablogge</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ==========================================================================
    BuhuBakery – Konfiguration
@@ -757,14 +799,14 @@ const CONFIG = {
 };
 
 const SIZES = {
-  XXS: { capacity: 1,  price: 4,   cols: 1 },
-  XS:  { capacity: 2,  price: 7.5, cols: 2 },
-  S:   { capacity: 4,  price: 14,  cols: 2 },
-  M:   { capacity: 6,  price: 20,  cols: 3 },
-  L:   { capacity: 9,  price: 28,  cols: 3 },
-  XL:  { capacity: 12, price: 36,  cols: 4 },
+  XXS: { capacity: 1,  price: 4,    cols: 1 },
+  XS:  { capacity: 2,  price: 7.50, cols: 2 },
+  S:   { capacity: 4,  price: 15.50, cols: 2 },
+  M:   { capacity: 6,  price: 23,   cols: 3 },
+  L:   { capacity: 9,  price: 35.50, cols: 3 },
+  XL:  { capacity: 12, price: 44,   cols: 4 },
 };
-const SONDER = { min: 13, max: 30, pricePerCookie: 3 };
+const SONDER = { min: 13, max: 30, pricePerCookie: 4, meltSurcharge: 0.5 };
 
 const COOKIES = [
   { id: "oreo",       name: "Oreo",               note: "Schoggi-Teig mit Oreo-Stückli.",         dough: "#3A2E23", chips: ["#FBF3E4", "#191410"], moods: ["comfort", "celebrating"] },
@@ -802,11 +844,21 @@ const state = {
   demoCoffee: false,
 };
 const keyOf = (cid, vid) => cid + ":" + vid;
-const isCoffeeDay = () => state.demoCoffee || CONFIG.coffeeDays.includes(new Date().getDay());
+function isCoffeeDay(date = new Date()) {
+  if (state.demoCoffee) return true;
+  const dateStr = date.toISOString().split("T")[0];
+  const adminDays = JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}");
+  return adminDays[dateStr] !== undefined ? adminDays[dateStr] : CONFIG.coffeeDays.includes(date.getDay());
+}
 const totalCookies = () => Object.values(state.items).reduce((a, b) => a + b, 0);
 const totalCoffees = () => Object.values(state.coffees).reduce((a, b) => a + b, 0);
 const capacity = () => !state.size ? 0 : (state.size === "SONDER" ? state.sonderQty : SIZES[state.size].capacity);
-const boxPrice = () => state.size === "SONDER" ? state.sonderQty * SONDER.pricePerCookie : SIZES[state.size].price;
+function boxPrice() {
+  if (!state.size) return 0;
+  const basePrice = state.size === "SONDER" ? state.sonderQty * SONDER.pricePerCookie - 0.50 : SIZES[state.size].price;
+  const meltCount = Object.entries(state.items).reduce((sum, [k, n]) => k.includes("melt") ? sum + n : sum, 0);
+  return basePrice + (meltCount * 0.50);
+}
 const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols;
 const chf = (n) => CONFIG.currency + " " + n.toFixed(2);
 const boxTitle = (size, qty) => size === "SONDER" ? `Sonderbstellig (${qty} Cookies)` : `Box ${size} (${SIZES[size].capacity} Cookies)`;
@@ -821,17 +873,20 @@ function boxContentLines(items) {
 
 /* --- Cookie-Zeichnung ------------------------------------------------------- */
 /* Deterministische Chip-Positionen, damit Cookie-Icons überall gleich aussehen */
-const CHIP_SPOTS = [[-9, -4], [7, -9], [10, 7], [-4, 10], [2, 0], [-11, 4]];
+const CHIP_SPOTS = [[-9, -4], [7, -9], [10, 7], [-4, 10], [2, 0], [-11, 4], [-6, -10], [8, 2]];
 function cookieSVG(c, r, melt) {
-  const chips = CHIP_SPOTS.map(([dx, dy], i) =>
-    `<circle cx="${(dx * r / 20).toFixed(1)}" cy="${(dy * r / 20).toFixed(1)}" r="${(r / 4.6).toFixed(1)}" fill="${c.chips[i % c.chips.length]}" stroke="rgba(46,32,21,0.4)" stroke-width="0.7"/>`).join("");
+  const chips = CHIP_SPOTS.map(([dx, dy], i) => {
+    const sz = r / (4 + (i % 2));
+    return `<circle cx="${(dx * r / 20).toFixed(1)}" cy="${(dy * r / 20).toFixed(1)}" r="${sz.toFixed(1)}" fill="${c.chips[i % c.chips.length]}" stroke="rgba(46,32,21,0.5)" stroke-width="1" opacity="0.95"/>`;
+  }).join("");
+  const gloss = `<ellipse cx="${(-r * 0.35).toFixed(1)}" cy="${(-r * 0.35).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.25).toFixed(1)}" fill="white" opacity="0.22"/>`;
   const core = melt
-    ? `<circle r="${(r * 0.5).toFixed(1)}" fill="#F5A11C" stroke="#C77E10" stroke-width="1.3"/>` +
-      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.16).toFixed(1)}" rx="${(r * 0.17).toFixed(1)}" ry="${(r * 0.1).toFixed(1)}" fill="#FBF3E4" opacity="0.9"/>`
+    ? `<circle r="${(r * 0.5).toFixed(1)}" fill="#F5A11C" stroke="#C77E10" stroke-width="1.5" opacity="0.95"/>` +
+      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.16).toFixed(1)}" rx="${(r * 0.18).toFixed(1)}" ry="${(r * 0.12).toFixed(1)}" fill="#FBF3E4" opacity="0.8"/>`
     : "";
-  return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="2"/>` +
-    `<path d="M ${(-r * 0.6).toFixed(1)} ${(-r * 0.48).toFixed(1)} A ${(r * 0.76).toFixed(1)} ${(r * 0.76).toFixed(1)} 0 0 1 ${(r * 0.48).toFixed(1)} ${(-r * 0.6).toFixed(1)}" stroke="#FFFDF7" stroke-opacity="0.35" stroke-width="${(r * 0.16).toFixed(1)}" fill="none" stroke-linecap="round"/>` +
-    chips + core;
+  const shadow = `<circle r="${r}" fill="none" stroke="rgba(46,32,21,0.15)" stroke-width="1.5"/>`;
+  return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="2.2"/>` +
+    shadow + chips + gloss + core;
 }
 
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
@@ -1226,6 +1281,109 @@ function render() {
     orderBtn.href = "#";
   }
 }
+
+/* --- Admin-Panel Logik ---------------------------------------------------- */
+const ADMIN_CREDS = { user: "admin", pass: "admin" };
+const adminStorage = {
+  getCoffeeDays() { return JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}"); },
+  setCoffeeDays(days) { localStorage.setItem("buhu_coffeeDays", JSON.stringify(days)); },
+  getSession() { return localStorage.getItem("buhu_adminSession"); },
+  setSession(token) { localStorage.setItem("buhu_adminSession", token); },
+  clearSession() { localStorage.removeItem("buhu_adminSession"); },
+};
+
+const adminPanel = {
+  modal: document.getElementById("admin-modal"),
+  toggle: document.getElementById("admin-toggle"),
+  loginDiv: document.getElementById("admin-login"),
+  contentDiv: document.getElementById("admin-content"),
+  userInput: document.getElementById("admin-user"),
+  passInput: document.getElementById("admin-pass"),
+  loginBtn: document.getElementById("admin-login-btn"),
+  logoutBtn: document.getElementById("admin-logout-btn"),
+  calendarDiv: document.getElementById("admin-calendar"),
+  closeBtn: document.querySelector(".admin-modal-close"),
+
+  isLoggedIn() { return !!adminStorage.getSession(); },
+
+  init() {
+    this.toggle.addEventListener("click", () => this.openModal());
+    this.closeBtn.addEventListener("click", () => this.closeModal());
+    this.modal.addEventListener("click", (e) => { if (e.target === this.modal) this.closeModal(); });
+    this.loginBtn.addEventListener("click", () => this.login());
+    this.logoutBtn.addEventListener("click", () => this.logout());
+    this.userInput.addEventListener("keydown", (e) => e.key === "Enter" && this.login());
+    this.passInput.addEventListener("keydown", (e) => e.key === "Enter" && this.login());
+
+    if (this.isLoggedIn()) this.showContent();
+    else this.showLogin();
+  },
+
+  openModal() { this.modal.classList.add("open"); },
+  closeModal() { this.modal.classList.remove("open"); },
+
+  login() {
+    const user = this.userInput.value.trim();
+    const pass = this.passInput.value.trim();
+    if (user === ADMIN_CREDS.user && pass === ADMIN_CREDS.pass) {
+      adminStorage.setSession("logged-in-" + Date.now());
+      this.showContent();
+    } else {
+      alert("Fählerhaft Benutzername oder Passwort.");
+    }
+  },
+
+  logout() {
+    adminStorage.clearSession();
+    this.userInput.value = "";
+    this.passInput.value = "";
+    this.showLogin();
+  },
+
+  showLogin() {
+    this.loginDiv.style.display = "block";
+    this.contentDiv.style.display = "none";
+  },
+
+  showContent() {
+    this.loginDiv.style.display = "block";
+    this.contentDiv.style.display = "block";
+    this.renderCalendar();
+  },
+
+  renderCalendar() {
+    const coffeeDays = adminStorage.getCoffeeDays();
+    const today = new Date();
+    let html = "";
+    for (let w = 0; w < 4; w++) {
+      html += "<div class='admin-calendar-week'>";
+      for (let d = 0; d < 7; d++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + w * 7 + d);
+        const dateStr = date.toISOString().split("T")[0];
+        const hasCoffee = coffeeDays[dateStr];
+        const dayName = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][date.getDay()];
+        const dayNum = date.getDate();
+        html += `<div class='admin-calendar-day ${hasCoffee ? "has-coffee" : ""}' data-date='${dateStr}'>${dayName} ${dayNum}</div>`;
+      }
+      html += "</div>";
+    }
+    this.calendarDiv.innerHTML = html;
+    this.calendarDiv.querySelectorAll(".admin-calendar-day").forEach((el) => {
+      el.addEventListener("click", () => this.toggleCoffee(el.dataset.date));
+    });
+  },
+
+  toggleCoffee(dateStr) {
+    const coffeeDays = adminStorage.getCoffeeDays();
+    coffeeDays[dateStr] = !coffeeDays[dateStr];
+    adminStorage.setCoffeeDays(coffeeDays);
+    this.renderCalendar();
+    render(); // Aktualisiere auch die Hauptseite
+  },
+};
+
+adminPanel.init();
 
 render();
 </script>
