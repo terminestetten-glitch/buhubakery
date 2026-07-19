@@ -525,17 +525,9 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <rect x="0" y="565" width="1200" height="95" fill="#A8987F"/>
           <line x1="0" y1="565" x2="1200" y2="565" stroke="#8A7B63" stroke-width="3"/>
 
-          <!-- Deko: Wimpeli, Bildli, Guetzli-Glas, Pflanze -->
+          <!-- Deko: Girlande (JS füllt sie – wechselt mit Saison/Feiertag), Bildli, Guetzli-Glas, Pflanze -->
           <g>
-            <path d="M40 26 Q300 66 560 26" stroke="#8A7B63" stroke-width="2" fill="none"/>
-            <path d="M91 37 L109 37 L100 53 Z" fill="#F5A11C"/>
-            <path d="M151 45 L169 45 L160 61 Z" fill="#FBF3E4"/>
-            <path d="M211 51 L229 51 L220 67 Z" fill="#2E2015"/>
-            <path d="M271 55 L289 55 L280 71 Z" fill="#F5A11C"/>
-            <path d="M331 55 L349 55 L340 71 Z" fill="#FBF3E4"/>
-            <path d="M391 51 L409 51 L400 67 Z" fill="#2E2015"/>
-            <path d="M451 44 L469 44 L460 60 Z" fill="#F5A11C"/>
-            <path d="M511 35 L529 35 L520 51 Z" fill="#FBF3E4"/>
+            <g id="g-garland"></g>
             <rect x="84" y="108" width="58" height="70" rx="4" fill="#6B573D" stroke="#2E2015" stroke-width="2"/>
             <rect x="92" y="116" width="42" height="54" fill="#FBF3E4"/>
             <circle cx="113" cy="143" r="14" fill="#C97B3D"/>
@@ -1015,38 +1007,146 @@ function cookieSVG(c, r, melt) {
 const SKY_SPOTS = [[630, 22], [700, 60], [770, 16], [960, 32], [1030, 65], [1100, 20], [1160, 55], [660, 78], [940, 80], [1170, 90], [720, 95], [1050, 95]];
 /* Fenster-Sockel für Deko am Bogefänschter */
 const WINDOW_SILLS = [{ x: 740, apex: 815 }, { x: 920, apex: 995 }];
+
+/* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
+const GRL = { x0: 40, y0: 24, xc: 300, yc: 64, x1: 560, y1: 24, N: 10 };
+function grlPt(t) {
+  const u = 1 - t;
+  return [u * u * GRL.x0 + 2 * u * t * GRL.xc + t * t * GRL.x1,
+          u * u * GRL.y0 + 2 * u * t * GRL.yc + t * t * GRL.y1];
+}
+const grlString = (col = "#8A7B63") => `<path d="M${GRL.x0} ${GRL.y0} Q${GRL.xc} ${GRL.yc} ${GRL.x1} ${GRL.y1}" stroke="${col}" stroke-width="2.5" fill="none"/>`;
+function grlEach(fn, n = GRL.N) {
+  let out = "";
+  for (let i = 0; i < n; i++) { const t = (i + 0.5) / n; const [x, y] = grlPt(t); out += fn(x, y, i); }
+  return out;
+}
+/* Wiederverwendbari Icons */
+function flowerIcon(r, col, center = "#F5A11C") {
+  return [0, 72, 144, 216, 288].map((a) =>
+    `<ellipse cx="0" cy="${(-r * 0.9).toFixed(1)}" rx="${(r * 0.5).toFixed(1)}" ry="${(r * 0.9).toFixed(1)}" fill="${col}" stroke="rgba(46,32,21,0.3)" stroke-width="0.5" transform="rotate(${a})"/>`).join("") +
+    `<circle r="${(r * 0.42).toFixed(1)}" fill="${center}"/>`;
+}
+function leafIcon(s, col) {
+  return `<path d="M0 ${-s} C ${s * 0.72} ${-s * 0.5} ${s * 0.72} ${s * 0.5} 0 ${s} C ${-s * 0.72} ${s * 0.5} ${-s * 0.72} ${-s * 0.5} 0 ${-s} Z" fill="${col}" stroke="#2E2015" stroke-width="0.7"/>` +
+    `<path d="M0 ${-s} L0 ${s} M0 ${-s * 0.3} L${s * 0.4} ${-s * 0.55} M0 ${s * 0.1} L${-s * 0.4} ${-s * 0.15}" stroke="#2E2015" stroke-width="0.6" fill="none" opacity="0.5"/>`;
+}
+function snowflakeIcon(s, col = "#FBF3E4") {
+  return [0, 60, 120].map((a) =>
+    `<g transform="rotate(${a})"><line x1="${-s}" y1="0" x2="${s}" y2="0" stroke="${col}" stroke-width="1.8" stroke-linecap="round"/>` +
+    `<path d="M${s * 0.55} 0 L${s * 0.78} ${-s * 0.28} M${s * 0.55} 0 L${s * 0.78} ${s * 0.28} M${-s * 0.55} 0 L${-s * 0.78} ${-s * 0.28} M${-s * 0.55} 0 L${-s * 0.78} ${s * 0.28}" stroke="${col}" stroke-width="1.4" stroke-linecap="round"/></g>`).join("");
+}
+
+/* --- Girlande je nach Saison/Feiertag (ersetzt d'Standard-Girlande) --------- */
+function garlandSVG(season, holiday) {
+  // Feiertag het Vorrang vor Saison
+  if (holiday === "weihnachten") {
+    // Tanne-Girlande mit Lichter & Chugle
+    const swag = grlEach((x, y, i) => {
+      const bulb = ["#F5A11C", "#B0524A", "#FBF3E4", "#6B8F7B"][i % 4];
+      return `<circle cx="${x.toFixed(1)}" cy="${(y + 9).toFixed(1)}" r="4.5" fill="${bulb}" stroke="#2E2015" stroke-width="0.7"/>` +
+        `<circle cx="${(x - 1.4).toFixed(1)}" cy="${(y + 7.5).toFixed(1)}" r="1.4" fill="#fff" opacity="0.7"/>`;
+    }, 12);
+    const sprigs = grlEach((x, y) =>
+      `<path d="M${x} ${y} l-8 6 M${x} ${y} l8 6 M${x} ${y} l0 9" stroke="#4A6B58" stroke-width="2.4" stroke-linecap="round"/>`, 16);
+    return grlString("#4A6B58") + sprigs + swag;
+  }
+  if (holiday === "bundesfeier") {
+    // Schwiizer Fähnli hänged a de Schnur
+    return grlString() + grlEach((x, y) =>
+      `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-11" y="1" width="22" height="22" rx="2.5" fill="#D8232A" stroke="#2E2015" stroke-width="1.2"/>` +
+      `<rect x="-3" y="6" width="6" height="12" fill="#FBF3E4"/><rect x="-8" y="9" width="16" height="6" fill="#FBF3E4"/>` +
+      `<circle cx="0" cy="0" r="1.8" fill="#8A7B63"/></g>`, 11);
+  }
+  if (holiday === "halloween") {
+    // Chürbis & Fledermüs a de Girlande
+    return grlString("#2E2015") + grlEach((x, y, i) => {
+      if (i % 2 === 0) {
+        return `<g transform="translate(${x.toFixed(1)} ${(y + 11).toFixed(1)})"><ellipse rx="9" ry="7.5" fill="#F26522" stroke="#2E2015" stroke-width="1.3"/>` +
+          `<rect x="-1.5" y="-11" width="3" height="5" fill="#5C7F6B"/>` +
+          `<path d="M-4 -1 L-1.5 1.5 L-4 4 Z M4 -1 L1.5 1.5 L4 4 Z M-3 5 L3 5 L1.5 7 L-1.5 7 Z" fill="#2E2015"/></g>`;
+      }
+      return `<path d="M0 0 C-9 -7 -16 -3 -14 4 C-9 0 -5 2 0 6 C5 2 9 0 14 4 C16 -3 9 -7 0 0 Z" fill="#2E2015" transform="translate(${x.toFixed(1)} ${(y + 9).toFixed(1)})"/>`;
+    }, 11);
+  }
+  if (holiday === "ostern") {
+    // Bunti Oschter-Eier hänged a de Schnur
+    const cols = ["#F5A11C", "#F9C7D9", "#FBF3E4", "#8FBF9F", "#C77E10"];
+    return grlString() + grlEach((x, y, i) =>
+      `<g transform="translate(${x.toFixed(1)} ${(y + 13).toFixed(1)})"><ellipse rx="8" ry="11" fill="${cols[i % cols.length]}" stroke="#2E2015" stroke-width="1.2"/>` +
+      `<path d="M-6 -2 Q0 -6 6 -2 M-6 3 Q0 7 6 3" stroke="#2E2015" stroke-width="1" fill="none" opacity="0.5"/></g>`, 11);
+  }
+  if (season === "fruehling") {
+    // Blueme-Girlande
+    return grlString("#6B8F7B") + grlEach((x, y, i) => {
+      const col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
+      return `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l0 8" stroke="#6B8F7B" stroke-width="1.6"/>` +
+        `<g transform="translate(${x.toFixed(1)} ${(y + 14).toFixed(1)})">${flowerIcon(7, col)}</g>`;
+    }, 11);
+  }
+  if (season === "sommer") {
+    // Warmi Scheibe-Girlande (Zitrone/Sunne-Töne)
+    const cols = ["#FBC94C", "#F5A11C", "#FBF3E4"];
+    return grlString() + grlEach((x, y, i) =>
+      `<path d="M${(x - 15).toFixed(1)} ${y.toFixed(1)} A 15 15 0 0 0 ${(x + 15).toFixed(1)} ${y.toFixed(1)} Z" fill="${cols[i % 3]}" stroke="#2E2015" stroke-width="1.2"/>` +
+      `<circle cx="${x.toFixed(1)}" cy="${(y + 8).toFixed(1)}" r="2" fill="#C77E10" opacity="0.5"/>`, 12);
+  }
+  if (season === "herbst") {
+    // Blätter-Girlande
+    const cols = ["#C97B3D", "#B5772E", "#8A4F1D", "#D89B52"];
+    return grlString("#8A4F1D") + grlEach((x, y, i) =>
+      `<g transform="translate(${x.toFixed(1)} ${(y + 11).toFixed(1)}) rotate(${(i % 2 ? 20 : -20)})">${leafIcon(9, cols[i % cols.length])}</g>`, 12);
+  }
+  if (season === "winter") {
+    // Schneeflocke-Girlande
+    return grlString("#B7C7CE") + grlEach((x, y, i) =>
+      `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l0 ${6 + (i % 2) * 5}" stroke="#B7C7CE" stroke-width="1.4"/>` +
+      `<g transform="translate(${x.toFixed(1)} ${(y + 12 + (i % 2) * 5).toFixed(1)})">${snowflakeIcon(7)}</g>`, 11);
+  }
+  // Standard: hübschi Wimpel-Girlande (Honig/Creme/Braun)
+  const cols = ["#F5A11C", "#FBF3E4", "#C77E10", "#8A4F1D"];
+  return grlString() + grlEach((x, y, i) => {
+    const col = cols[i % cols.length], w = 15, h = 30;
+    return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">` +
+      `<circle r="2.2" fill="#8A7B63"/>` +
+      `<path d="M${-w} 3 Q${-w} ${h * 0.4} 0 ${h} Q${w} ${h * 0.4} ${w} 3 Q0 8 ${-w} 3 Z" fill="${col}" stroke="#2E2015" stroke-width="1.3" stroke-linejoin="round"/>` +
+      `<path d="M${-w * 0.55} 5 Q${-w * 0.5} ${h * 0.35} 0 ${h * 0.85}" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.28" stroke-linecap="round"/></g>`;
+  });
+}
+
 function seasonDecorSVG(season) {
   if (season === "fruehling") {
     const blossoms = SKY_SPOTS.map(([x, y], i) => {
-      const s = 10 + (i % 3) * 2.4;
-      const petals = [0, 72, 144, 216, 288].map((a) =>
-        `<ellipse cx="0" cy="${-s * 0.65}" rx="${s * 0.36}" ry="${s * 0.64}" fill="#F9C7D9" stroke="rgba(46,32,21,0.25)" stroke-width="0.5" transform="rotate(${a})"/>`).join("");
-      return `<g transform="translate(${x} ${y})">${petals}<circle r="${s * 0.3}" fill="#F5A11C"/></g>`;
+      const s = 9 + (i % 3) * 2.2;
+      return `<g transform="translate(${x} ${y}) rotate(${(i * 47) % 60})">${flowerIcon(s, ["#F9C7D9", "#FBF3E4", "#F5A11C"][i % 3])}</g>`;
     }).join("");
     const boxes = WINDOW_SILLS.map(({ x }) => {
       const flowers = [0, 1, 2, 3, 4].map((i) => {
-        const fx = x + 14 + i * 28, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
-        return `<circle cx="${fx}" cy="432" r="7" fill="${col}" stroke="#2E2015" stroke-width="1"/><circle cx="${fx}" cy="432" r="2.4" fill="#8A4F1D"/>` +
-          `<path d="M${fx} 439 L${fx} 448" stroke="#6B8F7B" stroke-width="2"/>`;
+        const fx = x + 16 + i * 27, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
+        return `<path d="M${fx} 440 L${fx} 428" stroke="#6B8F7B" stroke-width="2"/>` +
+          `<g transform="translate(${fx} 424)">${flowerIcon(6.5, col)}</g>`;
       }).join("");
-      return `<rect x="${x + 5}" y="440" width="140" height="16" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>` + flowers;
+      return `<rect x="${x + 5}" y="440" width="140" height="16" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>` +
+        `<rect x="${x + 5}" y="440" width="140" height="5" rx="2" fill="#8A6E4E"/>` + flowers;
     }).join("");
     return blossoms + boxes;
   }
   if (season === "sommer") {
-    const rays = Array.from({ length: 10 }, (_, i) => {
-      const a = (i * 36) * Math.PI / 180;
-      return `<line x1="${(Math.cos(a) * 30).toFixed(1)}" y1="${(Math.sin(a) * 30).toFixed(1)}" x2="${(Math.cos(a) * 50).toFixed(1)}" y2="${(Math.sin(a) * 50).toFixed(1)}" stroke="#F5A11C" stroke-width="5" stroke-linecap="round"/>`;
+    const rays = Array.from({ length: 12 }, (_, i) => {
+      const a = (i * 30) * Math.PI / 180;
+      return `<line x1="${(Math.cos(a) * 32).toFixed(1)}" y1="${(Math.sin(a) * 32).toFixed(1)}" x2="${(Math.cos(a) * 52).toFixed(1)}" y2="${(Math.sin(a) * 52).toFixed(1)}" stroke="#F5A11C" stroke-width="5" stroke-linecap="round"/>`;
     }).join("");
-    const sun = `<g transform="translate(1115 60)">${rays}<circle r="30" fill="#FBC94C" stroke="#F5A11C" stroke-width="2.5"/>` +
-      `<circle cx="-9" cy="-4" r="2.6" fill="#C77E10"/><circle cx="8" cy="-2" r="2.6" fill="#C77E10"/><path d="M-9 8 Q0 15 9 8" stroke="#C77E10" stroke-width="2" fill="none" stroke-linecap="round"/></g>`;
-    const butterflies = [[700, 45, -10], [960, 70, 15], [820, 30, 5]].map(([x, y, rot]) =>
+    const sun = `<g transform="translate(1112 62)">${rays}<circle r="32" fill="#FBC94C" stroke="#F5A11C" stroke-width="2.5"/>` +
+      `<circle cx="-10" cy="-5" r="2.8" fill="#C77E10"/><circle cx="9" cy="-3" r="2.8" fill="#C77E10"/><path d="M-10 9 Q0 17 10 9" stroke="#C77E10" stroke-width="2.2" fill="none" stroke-linecap="round"/>` +
+      `<circle cx="-16" cy="6" r="3.5" fill="#F6B3B3" opacity="0.6"/><circle cx="15" cy="8" r="3.5" fill="#F6B3B3" opacity="0.6"/></g>`;
+    const butterflies = [[700, 48, -10], [960, 74, 15], [820, 30, 5]].map(([x, y, rot]) =>
       `<g transform="translate(${x} ${y}) rotate(${rot})">` +
-      `<ellipse cx="-6" cy="-3" rx="7" ry="5.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.8"/>` +
-      `<ellipse cx="6" cy="-3" rx="7" ry="5.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.8"/>` +
-      `<ellipse cx="-5" cy="5" rx="5" ry="4" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.7"/>` +
-      `<ellipse cx="5" cy="5" rx="5" ry="4" fill="#F5A11C" stroke="#2E2015" stroke-width="0.7"/>` +
-      `<line x1="0" y1="-6" x2="0" y2="8" stroke="#2E2015" stroke-width="1.4"/></g>`
+      `<ellipse cx="-6" cy="-3" rx="8" ry="6.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.9"/>` +
+      `<ellipse cx="6" cy="-3" rx="8" ry="6.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.9"/>` +
+      `<ellipse cx="-5" cy="6" rx="5.5" ry="4.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.8"/>` +
+      `<ellipse cx="5" cy="6" rx="5.5" ry="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.8"/>` +
+      `<line x1="0" y1="-7" x2="0" y2="9" stroke="#2E2015" stroke-width="1.6"/>` +
+      `<path d="M0 -7 l-3 -4 M0 -7 l3 -4" stroke="#2E2015" stroke-width="1" stroke-linecap="round"/></g>`
     ).join("");
     return sun + butterflies;
   }
@@ -1054,23 +1154,14 @@ function seasonDecorSVG(season) {
     const leaves = SKY_SPOTS.map(([x, y], i) => {
       const s = 10 + (i % 3) * 2.2;
       const rot = (i * 41) % 360;
-      const col = ["#C97B3D", "#B5772E", "#8A4F1D"][i % 3];
-      return `<path d="M0 ${-s} C ${s * 0.7} ${-s * 0.5} ${s * 0.7} ${s * 0.5} 0 ${s} C ${-s * 0.7} ${s * 0.5} ${-s * 0.7} ${-s * 0.5} 0 ${-s} Z M0 ${-s} L0 ${s}" fill="${col}" stroke="#2E2015" stroke-width="0.7" transform="translate(${x} ${y}) rotate(${rot})"/>`;
+      const col = ["#C97B3D", "#B5772E", "#8A4F1D", "#D89B52"][i % 4];
+      return `<g transform="translate(${x} ${y}) rotate(${rot})">${leafIcon(s, col)}</g>`;
     }).join("");
-    const garland = [];
-    for (let x = 600; x <= 1180; x += 44) {
-      const col = ["#C97B3D", "#B5772E", "#8A4F1D"][Math.floor(x / 44) % 3];
-      garland.push(`<path d="M0 -6 C4 -3 4 3 0 6 C-4 3 -4 -3 0 -6 Z" fill="${col}" stroke="#2E2015" stroke-width="0.6" transform="translate(${x} ${20 + Math.sin(x / 90) * 8})"/>`);
-    }
-    return `<path d="M596 24 Q890 4 1184 24" stroke="#8A7B63" stroke-width="1.5" fill="none" opacity="0.6"/>` + garland.join("") + leaves;
+    return leaves;
   }
   if (season === "winter") {
-    const flakes = SKY_SPOTS.map(([x, y], i) => {
-      const s = 6 + (i % 3) * 1.6;
-      const arms = [0, 60, 120].map((a) =>
-        `<line x1="${-s}" y1="0" x2="${s}" y2="0" stroke="#FBF3E4" stroke-width="1.8" stroke-linecap="round" transform="rotate(${a})"/>`).join("");
-      return `<g transform="translate(${x} ${y})" opacity="0.95">${arms}</g>`;
-    }).join("");
+    const flakes = SKY_SPOTS.map(([x, y], i) =>
+      `<g transform="translate(${x} ${y})" opacity="0.95">${snowflakeIcon(6 + (i % 3) * 1.8)}</g>`).join("");
     const windowSnow = WINDOW_SILLS.map(({ apex, x }) =>
       `<ellipse cx="${apex}" cy="114" rx="62" ry="15" fill="#FBF3E4" stroke="#DCE6E0" stroke-width="1" opacity="0.95"/>` +
       [0, 1, 2, 3].map((i) => {
@@ -1110,48 +1201,47 @@ function holidayDecorSVG(holiday) {
     const web = `<g transform="translate(760 130)" stroke="#EFE6D2" stroke-width="1" fill="none" opacity="0.85">` +
       `<path d="M0 0 L38 0 M0 0 L27 27 M0 0 L0 38 M0 0 L-27 27"/>` +
       `<path d="M8 3 Q19 8 34 6 M6 9 Q13 20 22 30 M3 8 Q8 19 6 34"/></g>`;
-    const bats = [[720, 55], [1000, 30], [880, 60]].map(([x, y], i) =>
-      `<path d="M0 0 C-11 -9 -20 -4 -18 5 C-11 0 -6 2 0 7 C6 2 11 0 18 5 C20 -4 11 -9 0 0 Z" fill="#2E2015" transform="translate(${x} ${y}) scale(${0.8 + (i % 2) * 0.3})"/>`
-    ).join("");
-    return pumpkin(432, 300, 20) + pumpkin(468, 306, 13) + web + bats;
+    const ghost = `<g transform="translate(1150 120)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
+      `<circle cx="-5" cy="-3" r="2" fill="#2E2015"/><circle cx="5" cy="-3" r="2" fill="#2E2015"/><ellipse cx="0" cy="4" rx="2.4" ry="3" fill="#2E2015"/></g>`;
+    return pumpkin(432, 300, 20) + pumpkin(468, 306, 13) + web + ghost;
   }
   if (holiday === "bundesfeier") {
+    // Grossi Schwiizer Flagge a de Theke
     const fx = 235, fy = 344, fw = 130, fh = 108;
-    const flag = `<line x1="${fx + 10}" y1="330" x2="${fx + 10}" y2="${fy}" stroke="#8A7B63" stroke-width="2"/>` +
+    return `<line x1="${fx + 10}" y1="330" x2="${fx + 10}" y2="${fy}" stroke="#8A7B63" stroke-width="2"/>` +
       `<line x1="${fx + fw - 10}" y1="330" x2="${fx + fw - 10}" y2="${fy}" stroke="#8A7B63" stroke-width="2"/>` +
-      `<path d="M${fx} ${fy} H${fx + fw} V${fy + fh - 16} Q${fx + fw * 0.75} ${fy + fh} ${fx + fw * 0.5} ${fy + fh - 12} Q${fx + fw * 0.25} ${fy + fh} ${fx} ${fy + fh - 16} Z" fill="#B0524A" stroke="#2E2015" stroke-width="2"/>` +
+      `<path d="M${fx} ${fy} H${fx + fw} V${fy + fh - 16} Q${fx + fw * 0.75} ${fy + fh} ${fx + fw * 0.5} ${fy + fh - 12} Q${fx + fw * 0.25} ${fy + fh} ${fx} ${fy + fh - 16} Z" fill="#D8232A" stroke="#2E2015" stroke-width="2"/>` +
       `<rect x="${fx + fw * 0.15}" y="${fy + fh * 0.42}" width="${fw * 0.7}" height="${fh * 0.16}" fill="#FBF3E4"/>` +
       `<rect x="${fx + fw * 0.42}" y="${fy + fh * 0.14}" width="${fw * 0.16}" height="${fh * 0.6}" fill="#FBF3E4"/>`;
-    const flags = [];
-    for (let x = 610; x <= 1180; x += 50) {
-      flags.push(`<rect x="${x - 10}" y="10" width="20" height="20" fill="#B0524A" stroke="#2E2015" stroke-width="1"/>` +
-        `<rect x="${x - 3}" y="13.5" width="6" height="13" fill="#FBF3E4"/><rect x="${x - 10}" y="17" width="20" height="6" fill="#FBF3E4"/>`);
-    }
-    return `<path d="M604 18 Q900 -8 1186 18" stroke="#8A7B63" stroke-width="2" fill="none"/>` + flags.join("") + flag;
   }
   if (holiday === "weihnachten") {
+    // Grosse Tannebaum rächts (ersetzt d'Pflanze), Lichter a de Theke
     const bulbColors = ["#F5A11C", "#B0524A", "#6B8F7B", "#FBF3E4"];
     let lights = "";
     for (let x = 60; x <= 540; x += 22) {
       const dip = Math.sin((x / 480) * Math.PI) * 7;
-      lights += `<circle cx="${x}" cy="${312 + dip}" r="4.5" fill="${bulbColors[Math.floor(x / 22) % 4]}" stroke="#2E2015" stroke-width="0.7"/>`;
+      lights += `<line x1="${x}" y1="308" x2="${x}" y2="${312 + dip - 3}" stroke="#4A6B58" stroke-width="1.4"/>` +
+        `<circle cx="${x}" cy="${312 + dip}" r="4.5" fill="${bulbColors[Math.floor(x / 22) % 4]}" stroke="#2E2015" stroke-width="0.7"/>`;
     }
-    const tree = `<g transform="translate(1168 484)">` +
-      `<path d="M0 -128 L34 -78 L18 -78 L46 -34 L26 -34 L52 6 L-52 6 L-26 -34 L-46 -34 L-18 -78 L-34 -78 Z" fill="#4A6B58" stroke="#2E2015" stroke-width="2"/>` +
-      `<rect x="-10" y="6" width="20" height="16" rx="2" fill="#6B573D" stroke="#2E2015" stroke-width="1.4"/>` +
-      `<path d="M0 -138 L6 -128 L-6 -128 Z" fill="#F5A11C" stroke="#2E2015" stroke-width="1.2"/>` +
-      `<circle cx="-16" cy="-24" r="4" fill="#B0524A"/><circle cx="14" cy="-40" r="4" fill="#F5A11C"/>` +
-      `<circle cx="-8" cy="-56" r="4" fill="#FBF3E4"/><circle cx="18" cy="-70" r="4" fill="#B0524A"/>` +
-      `<circle cx="-20" cy="-88" r="4" fill="#F5A11C"/><circle cx="6" cy="-98" r="4" fill="#FBF3E4"/>` +
-      `<circle cx="-6" cy="-16" r="3.5" fill="#FBF3E4"/><circle cx="20" cy="-52" r="3.5" fill="#6B8F7B"/></g>`;
+    const tree = `<g transform="translate(1168 486)">` +
+      `<path d="M0 -132 L36 -80 L20 -80 L48 -34 L28 -34 L54 8 L-54 8 L-28 -34 L-48 -34 L-20 -80 L-36 -80 Z" fill="#4A6B58" stroke="#2E2015" stroke-width="2"/>` +
+      `<path d="M0 -132 L36 -80 L20 -80 L48 -34 L28 -34 L54 8" fill="none" stroke="#5C7F6B" stroke-width="0"/>` +
+      `<rect x="-11" y="8" width="22" height="17" rx="2" fill="#6B573D" stroke="#2E2015" stroke-width="1.4"/>` +
+      `<path d="M0 -148 l6 10 l6 -3 l-4 8 l7 4 l-9 3 l1 8 l-7 -5 l-7 5 l1 -8 l-9 -3 l7 -4 l-4 -8 l6 3 Z" fill="#FBC94C" stroke="#2E2015" stroke-width="1.1"/>` +
+      `<circle cx="-18" cy="-26" r="4.5" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/><circle cx="16" cy="-44" r="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/>` +
+      `<circle cx="-10" cy="-60" r="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="0.6"/><circle cx="20" cy="-74" r="4.5" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/>` +
+      `<circle cx="-22" cy="-94" r="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/><circle cx="7" cy="-104" r="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="0.6"/>` +
+      `<circle cx="-7" cy="-18" r="3.8" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/><circle cx="22" cy="-56" r="3.8" fill="#6B8F7B" stroke="#2E2015" stroke-width="0.6"/>` +
+      `<circle cx="0" cy="-40" r="3.8" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/></g>`;
     const snowCap = `<path d="M40 190 Q640 168 1200 190 L1200 198 Q640 178 40 198 Z" fill="#FBF3E4" opacity="0.5"/>`;
-    return `<path d="M50 316 Q300 340 550 316" stroke="#6B573D" stroke-width="1.5" fill="none"/>` + lights + tree + snowCap;
+    return lights + snowCap + tree;
   }
   return "";
 }
 function renderThemeDecor() {
   const season = localStorage.getItem("buhu_season") || "";
   const holiday = localStorage.getItem("buhu_holiday") || "keine";
+  document.getElementById("g-garland").innerHTML = garlandSVG(season, holiday);
   document.getElementById("g-season-decor").innerHTML = seasonDecorSVG(season);
   document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
   const plant = document.getElementById("deco-plant");
