@@ -717,16 +717,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <g id="scene-box"></g>
           </g>
 
-          <!-- Herz-Ballönli -->
-          <g>
-            <line x1="1108" y1="140" x2="1120" y2="470" stroke="#8A7B63" stroke-width="2"/>
-            <line x1="1136" y1="158" x2="1120" y2="470" stroke="#8A7B63" stroke-width="2"/>
-            <line x1="1122" y1="120" x2="1120" y2="470" stroke="#8A7B63" stroke-width="2"/>
-            <use href="#heart" transform="translate(1098 106) scale(1.3)" fill="#F5A11C"/>
-            <use href="#heart" transform="translate(1112 84) scale(1.2)" fill="#FBF3E4"/>
-            <use href="#heart" transform="translate(1124 138) scale(1.25)" fill="#2E2015"/>
-          </g>
-
           <!-- Saison- & Feiertags-Deko (vom Admin gsteuert) -->
           <g id="g-season-decor"></g>
           <g id="g-holiday-decor"></g>
@@ -1120,26 +1110,32 @@ function seasonDecorSVG(season) {
       const s = 9 + (i % 3) * 2.2;
       return `<g transform="translate(${x} ${y}) rotate(${(i * 47) % 60})">${flowerIcon(s, ["#F9C7D9", "#FBF3E4", "#F5A11C"][i % 3])}</g>`;
     }).join("");
-    const boxes = WINDOW_SILLS.map(({ x }) => {
-      const flowers = [0, 1, 2, 3, 4].map((i) => {
-        const fx = x + 16 + i * 27, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
-        return `<path d="M${fx} 440 L${fx} 428" stroke="#6B8F7B" stroke-width="2"/>` +
-          `<g transform="translate(${fx} 424)">${flowerIcon(6.5, col)}</g>`;
+    // Blueme-Chischtli uf de Fänschter-Simse (obe im Fänschter, nöd vor de Box)
+    const WINDOWS = [{ x0: 745, x1: 885 }, { x0: 925, x1: 1065 }];
+    const boxes = WINDOWS.map(({ x0, x1 }) => {
+      const cx = (x0 + x1) / 2, bw = 108, sill = 300;
+      const flowers = [0, 1, 2, 3].map((i) => {
+        const fx = cx - 36 + i * 24, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
+        return `<path d="M${fx} ${sill} L${fx} ${sill - 16}" stroke="#6B8F7B" stroke-width="2"/>` +
+          `<g transform="translate(${fx} ${sill - 20})">${flowerIcon(7, col)}</g>`;
       }).join("");
-      return `<rect x="${x + 5}" y="440" width="140" height="16" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>` +
-        `<rect x="${x + 5}" y="440" width="140" height="5" rx="2" fill="#8A6E4E"/>` + flowers;
+      return flowers +
+        `<rect x="${cx - bw / 2}" y="${sill}" width="${bw}" height="15" rx="3" fill="#8A5A2B" stroke="#2E2015" stroke-width="1.3"/>` +
+        `<rect x="${cx - bw / 2}" y="${sill}" width="${bw}" height="5" rx="2" fill="#A6774A"/>`;
     }).join("");
     return blossoms + boxes;
   }
   if (season === "sommer") {
+    // Sunne obe rächts (Strahle in zwei Länge, sauberi Form)
     const rays = Array.from({ length: 12 }, (_, i) => {
       const a = (i * 30) * Math.PI / 180;
-      return `<line x1="${(Math.cos(a) * 32).toFixed(1)}" y1="${(Math.sin(a) * 32).toFixed(1)}" x2="${(Math.cos(a) * 52).toFixed(1)}" y2="${(Math.sin(a) * 52).toFixed(1)}" stroke="#F5A11C" stroke-width="5" stroke-linecap="round"/>`;
+      const r1 = 34, r2 = i % 2 ? 50 : 44;
+      return `<line x1="${(Math.cos(a) * r1).toFixed(1)}" y1="${(Math.sin(a) * r1).toFixed(1)}" x2="${(Math.cos(a) * r2).toFixed(1)}" y2="${(Math.sin(a) * r2).toFixed(1)}" stroke="#F5A11C" stroke-width="4.5" stroke-linecap="round"/>`;
     }).join("");
-    const sun = `<g transform="translate(1112 62)">${rays}<circle r="32" fill="#FBC94C" stroke="#F5A11C" stroke-width="2.5"/>` +
-      `<circle cx="-10" cy="-5" r="2.8" fill="#C77E10"/><circle cx="9" cy="-3" r="2.8" fill="#C77E10"/><path d="M-10 9 Q0 17 10 9" stroke="#C77E10" stroke-width="2.2" fill="none" stroke-linecap="round"/>` +
-      `<circle cx="-16" cy="6" r="3.5" fill="#F6B3B3" opacity="0.6"/><circle cx="15" cy="8" r="3.5" fill="#F6B3B3" opacity="0.6"/></g>`;
-    const butterflies = [[700, 48, -10], [960, 74, 15], [820, 30, 5]].map(([x, y, rot]) =>
+    const sun = `<g transform="translate(1120 66)">${rays}` +
+      `<circle r="33" fill="#FBC94C" stroke="#F5A11C" stroke-width="3"/>` +
+      `<circle r="33" fill="none" stroke="#fff" stroke-width="6" opacity="0.15"/></g>`;
+    const butterflies = [[690, 54, -12], [980, 60, 14]].map(([x, y, rot]) =>
       `<g transform="translate(${x} ${y}) rotate(${rot})">` +
       `<ellipse cx="-6" cy="-3" rx="8" ry="6.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.9"/>` +
       `<ellipse cx="6" cy="-3" rx="8" ry="6.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.9"/>` +
@@ -1162,11 +1158,12 @@ function seasonDecorSVG(season) {
   if (season === "winter") {
     const flakes = SKY_SPOTS.map(([x, y], i) =>
       `<g transform="translate(${x} ${y})" opacity="0.95">${snowflakeIcon(6 + (i % 3) * 1.8)}</g>`).join("");
-    const windowSnow = WINDOW_SILLS.map(({ apex, x }) =>
+    // Schnee-Chappe obe uf de Fänschter + Isszapfe unter em Boge (obe, nöd vor de Box)
+    const windowSnow = WINDOW_SILLS.map(({ apex }) =>
       `<ellipse cx="${apex}" cy="114" rx="62" ry="15" fill="#FBF3E4" stroke="#DCE6E0" stroke-width="1" opacity="0.95"/>` +
-      [0, 1, 2, 3].map((i) => {
-        const ix = x + 22 + i * 34, len = 14 + (i % 2) * 8;
-        return `<path d="M${ix} 428 L${ix - 4} ${428 + len} L${ix} ${428 + len + 4} L${ix + 4} ${428 + len} Z" fill="#EAF2EF" stroke="#DCE6E0" stroke-width="0.6"/>`;
+      [0, 1, 2, 3, 4].map((i) => {
+        const ix = apex - 40 + i * 20, len = 12 + (i % 2) * 8;
+        return `<path d="M${ix} 126 L${ix - 4} ${126 + len} L${ix} ${126 + len + 5} L${ix + 4} ${126 + len} Z" fill="#EAF2EF" stroke="#DCE6E0" stroke-width="0.6"/>`;
       }).join("")
     ).join("");
     const shelfSnow = `<path d="M572 188 Q640 178 708 188 L708 196 Q640 188 572 196 Z" fill="#FBF3E4" opacity="0.95"/>`;
@@ -1176,46 +1173,72 @@ function seasonDecorSVG(season) {
 }
 function holidayDecorSVG(holiday) {
   if (holiday === "ostern") {
-    const basket = `<path d="M400 316 L466 316 L460 300 L406 300 Z" fill="#B5772E" stroke="#2E2015" stroke-width="1.5"/>` +
-      `<path d="M406 300 Q433 288 460 300" stroke="#8A4F1D" stroke-width="2" fill="none"/>` +
-      `<path d="M406 300 L410 308 L456 308 L460 300 M410 308 L414 316 M456 308 L452 316 M420 300 L423 316 M446 300 L443 316 M433 300 L433 316" stroke="#2E2015" stroke-width="0.8" fill="none" opacity="0.45"/>`;
-    const eggs = [[416, 293, "#F5A11C", -12], [433, 288, "#FBF3E4", 4], [450, 293, "#C97B3D", 14]];
-    const eggsSvg = eggs.map(([x, y, col, rot]) =>
-      `<g transform="translate(${x} ${y}) rotate(${rot})"><ellipse rx="12" ry="16" fill="${col}" stroke="#2E2015" stroke-width="1.6"/>` +
-      `<path d="M-8 -4 Q0 -9 8 -4 M-8 3 Q0 8 8 3" stroke="#2E2015" stroke-width="1.2" fill="none" opacity="0.55"/></g>`
-    ).join("");
-    const bunny = `<g transform="translate(486 298)">` +
-      `<ellipse cx="-4" cy="-16" rx="4" ry="12" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2" transform="rotate(-12 -4 -16)"/>` +
-      `<ellipse cx="5" cy="-17" rx="4" ry="12" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2" transform="rotate(8 5 -17)"/>` +
-      `<circle r="11" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4"/>` +
-      `<circle cx="-3.5" cy="-1" r="1.4" fill="#2E2015"/><circle cx="3.5" cy="-1" r="1.4" fill="#2E2015"/>` +
-      `<ellipse cx="0" cy="3" rx="2" ry="1.4" fill="#F5A11C"/></g>`;
-    return basket + eggsSvg + bunny;
+    // Oschter-Chorb uf em Bode rächts (ersetzt d'Pflanze)
+    const eggsInBasket = [[-14, -24, "#F5A11C"], [0, -28, "#F9C7D9"], [14, -24, "#8FBF9F"], [-4, -22, "#FBF3E4"]]
+      .map(([x, y, c]) => `<ellipse cx="${x}" cy="${y}" rx="8" ry="10.5" fill="${c}" stroke="#2E2015" stroke-width="1.3"/>` +
+        `<path d="M${x - 6} ${y - 1} q6 -4 12 0" stroke="#2E2015" stroke-width="0.9" fill="none" opacity="0.5"/>`).join("");
+    const basket = `<g transform="translate(1150 548)">` +
+      `<path d="M-30 -14 L30 -14 L24 18 L-24 18 Z" fill="#B5772E" stroke="#2E2015" stroke-width="1.6"/>` +
+      `<path d="M-28 -6 L28 -6 M-26 2 L26 2 M-25 10 L25 10 M-15 -14 L-13 18 M0 -14 L0 18 M15 -14 L13 18" stroke="#8A4F1D" stroke-width="1" opacity="0.5" fill="none"/>` +
+      eggsInBasket +
+      `<rect x="-33" y="-18" width="66" height="8" rx="3" fill="#8A5A2B" stroke="#2E2015" stroke-width="1.3"/>` +
+      `<path d="M-24 -16 Q0 -56 24 -16" stroke="#8A5A2B" stroke-width="5" fill="none"/>` +
+      `<path d="M-24 -16 Q0 -56 24 -16" stroke="#2E2015" stroke-width="1" fill="none" opacity="0.35"/></g>`;
+    // Ganze Hase, sitzt uf em linke Höckerli
+    const bunny = `<g transform="translate(736 500)">` +
+      `<ellipse cx="-11" cy="-2" rx="8" ry="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2"/>` +
+      `<ellipse cx="11" cy="-2" rx="8" ry="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2"/>` +
+      `<ellipse cx="0" cy="-22" rx="16" ry="20" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
+      `<ellipse cx="0" cy="-18" rx="8" ry="12" fill="#fff" opacity="0.45"/>` +
+      `<ellipse cx="-14" cy="-20" rx="4" ry="9" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.1" transform="rotate(14 -14 -20)"/>` +
+      `<ellipse cx="14" cy="-20" rx="4" ry="9" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.1" transform="rotate(-14 14 -20)"/>` +
+      `<circle cx="0" cy="-46" r="13" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
+      `<ellipse cx="-6" cy="-64" rx="4.5" ry="14" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.3" transform="rotate(-12 -6 -64)"/>` +
+      `<ellipse cx="6" cy="-64" rx="4.5" ry="14" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.3" transform="rotate(12 6 -64)"/>` +
+      `<ellipse cx="-6" cy="-64" rx="2" ry="9" fill="#F9C7D9" transform="rotate(-12 -6 -64)"/>` +
+      `<ellipse cx="6" cy="-64" rx="2" ry="9" fill="#F9C7D9" transform="rotate(12 6 -64)"/>` +
+      `<circle cx="-4.5" cy="-48" r="1.8" fill="#2E2015"/><circle cx="4.5" cy="-48" r="1.8" fill="#2E2015"/>` +
+      `<ellipse cx="0" cy="-43" rx="2.2" ry="1.5" fill="#F9C7D9"/>` +
+      `<path d="M0 -41.5 l0 2.5 M0 -39 q-3 2 -5 0 M0 -39 q3 2 5 0" stroke="#2E2015" stroke-width="1" fill="none" stroke-linecap="round"/>` +
+      `<circle cx="-8" cy="-43" r="2.5" fill="#F9C7D9" opacity="0.6"/><circle cx="8" cy="-43" r="2.5" fill="#F9C7D9" opacity="0.6"/></g>`;
+    return basket + bunny;
   }
   if (holiday === "halloween") {
-    const pumpkin = (x, y, s) => `<g transform="translate(${x} ${y})">` +
-      `<ellipse rx="${s}" ry="${s * 0.78}" fill="#F26522" stroke="#2E2015" stroke-width="1.8"/>` +
-      `<path d="M${-s * 0.6} 0 Q0 ${-s * 0.15} ${s * 0.6} 0 M${-s * 0.35} ${-s * 0.5} Q0 ${-s * 0.35} ${s * 0.35} ${-s * 0.5}" stroke="#C7541A" stroke-width="1.2" fill="none" opacity="0.6"/>` +
-      `<rect x="${-s * 0.14}" y="${-s - 6}" width="${s * 0.28}" height="8" fill="#5C7F6B"/>` +
-      `<path d="M${-s * 0.4} ${-s * 0.15} L${-s * 0.12} ${s * 0.1} L${-s * 0.4} ${s * 0.35} Z M${s * 0.4} ${-s * 0.15} L${s * 0.12} ${s * 0.1} L${s * 0.4} ${s * 0.35} Z M${-s * 0.32} ${s * 0.5} L${s * 0.32} ${s * 0.5} L${s * 0.16} ${s * 0.68} L${-s * 0.16} ${s * 0.68} Z" fill="#2E2015"/></g>`;
-    const web = `<g transform="translate(760 130)" stroke="#EFE6D2" stroke-width="1" fill="none" opacity="0.85">` +
-      `<path d="M0 0 L38 0 M0 0 L27 27 M0 0 L0 38 M0 0 L-27 27"/>` +
-      `<path d="M8 3 Q19 8 34 6 M6 9 Q13 20 22 30 M3 8 Q8 19 6 34"/></g>`;
-    const ghost = `<g transform="translate(1150 120)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
+    // Chürbis-Chürbstli (Grüsel-Gsicht)
+    const pumpkin = (x, y, s, col = "#F26522") => `<g transform="translate(${x} ${y})">` +
+      `<ellipse rx="${s}" ry="${s * 0.8}" fill="${col}" stroke="#2E2015" stroke-width="2"/>` +
+      `<path d="M${-s * 0.6} 0 Q0 ${-s * 0.12} ${s * 0.6} 0 M${-s * 0.32} ${-s * 0.5} Q0 ${-s * 0.38} ${s * 0.32} ${-s * 0.5} M${-s * 0.32} ${s * 0.5} Q0 ${s * 0.38} ${s * 0.32} ${s * 0.5}" stroke="#C7541A" stroke-width="1.3" fill="none" opacity="0.6"/>` +
+      `<rect x="${-s * 0.13}" y="${-s * 0.9}" width="${s * 0.26}" height="9" fill="#5C7F6B"/>` +
+      `<path d="M${-s * 0.42} ${-s * 0.18} L${-s * 0.12} ${s * 0.08} L${-s * 0.42} ${s * 0.32} Z M${s * 0.42} ${-s * 0.18} L${s * 0.12} ${s * 0.08} L${s * 0.42} ${s * 0.32} Z M${-s * 0.34} ${s * 0.48} L${-s * 0.14} ${s * 0.44} L${-s * 0.06} ${s * 0.62} L${s * 0.06} ${s * 0.44} L${s * 0.16} ${s * 0.62} L${s * 0.34} ${s * 0.5} L${s * 0.18} ${s * 0.72} L${-s * 0.18} ${s * 0.72} Z" fill="#2E2015"/></g>`;
+    // Grossi Chürbis uf em Bode rächts (ersetzt d'Pflanze)
+    const floorPumpkins = pumpkin(1140, 538, 30) + pumpkin(1180, 548, 20, "#D9741F") + pumpkin(1112, 552, 16, "#E8641C");
+    // Chli Chürbis uf de Kasse
+    const deskPumpkins = pumpkin(432, 300, 18) + pumpkin(466, 306, 12, "#D9741F");
+    const web = `<g transform="translate(748 128)" stroke="#EFE6D2" stroke-width="1" fill="none" opacity="0.85">` +
+      `<path d="M0 0 L40 0 M0 0 L28 28 M0 0 L0 40 M0 0 L-28 28"/>` +
+      `<path d="M9 3 Q20 9 36 6 M6 9 Q14 21 24 32 M3 9 Q9 20 6 36"/></g>`;
+    // Hängendi Spinne obe rächts (dört wo früener d'Herzli gsi sind)
+    const spider = `<g transform="translate(1088 0)"><line x1="0" y1="0" x2="0" y2="86" stroke="#5A4832" stroke-width="1"/>` +
+      `<g transform="translate(0 98)"><path d="M-8 -3 q-11 -4 -15 5 M-8 2 q-12 1 -15 10 M8 -3 q11 -4 15 5 M8 2 q12 1 15 10" stroke="#2E2015" stroke-width="1.6" fill="none"/>` +
+      `<ellipse rx="9" ry="11" fill="#2E2015"/><circle cy="-10" r="5.5" fill="#2E2015"/>` +
+      `<circle cx="-2" cy="-11" r="1.5" fill="#F5A11C"/><circle cx="2" cy="-11" r="1.5" fill="#F5A11C"/></g></g>`;
+    const ghost = `<g transform="translate(1000 96)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
       `<circle cx="-5" cy="-3" r="2" fill="#2E2015"/><circle cx="5" cy="-3" r="2" fill="#2E2015"/><ellipse cx="0" cy="4" rx="2.4" ry="3" fill="#2E2015"/></g>`;
-    return pumpkin(432, 300, 20) + pumpkin(468, 306, 13) + web + ghost;
+    return floorPumpkins + deskPumpkins + web + spider + ghost;
   }
   if (holiday === "bundesfeier") {
-    // Grossi Schwiizer Flagge a de Theke
-    const fx = 235, fy = 344, fw = 130, fh = 108;
-    return `<line x1="${fx + 10}" y1="330" x2="${fx + 10}" y2="${fy}" stroke="#8A7B63" stroke-width="2"/>` +
-      `<line x1="${fx + fw - 10}" y1="330" x2="${fx + fw - 10}" y2="${fy}" stroke="#8A7B63" stroke-width="2"/>` +
-      `<path d="M${fx} ${fy} H${fx + fw} V${fy + fh - 16} Q${fx + fw * 0.75} ${fy + fh} ${fx + fw * 0.5} ${fy + fh - 12} Q${fx + fw * 0.25} ${fy + fh} ${fx} ${fy + fh - 16} Z" fill="#D8232A" stroke="#2E2015" stroke-width="2"/>` +
-      `<rect x="${fx + fw * 0.15}" y="${fy + fh * 0.42}" width="${fw * 0.7}" height="${fh * 0.16}" fill="#FBF3E4"/>` +
-      `<rect x="${fx + fw * 0.42}" y="${fy + fh * 0.14}" width="${fw * 0.16}" height="${fh * 0.6}" fill="#FBF3E4"/>`;
+    // Schwiizer Flagge im Fänschter (wie usserhalb, dur d'Schiibe gseh) – obe, nöd vor de Box
+    const flagInWindow = (cx, cy) => {
+      const fw = 96, fh = 96, x = cx - fw / 2, y = cy - fh / 2;
+      return `<g opacity="0.96"><rect x="${x}" y="${y}" width="${fw}" height="${fh}" rx="4" fill="#D8232A" stroke="#2E2015" stroke-width="2"/>` +
+        `<rect x="${x + fw * 0.16}" y="${y + fh * 0.42}" width="${fw * 0.68}" height="${fh * 0.16}" fill="#FBF3E4"/>` +
+        `<rect x="${x + fw * 0.42}" y="${y + fh * 0.16}" width="${fw * 0.16}" height="${fh * 0.68}" fill="#FBF3E4"/>` +
+        `<path d="M${x + 4} ${y + 6} q${fw * 0.2} ${fh * 0.14} ${fw * 0.42} 0" stroke="#fff" stroke-width="2" fill="none" opacity="0.18"/></g>`;
+    };
+    return flagInWindow(815, 268) + flagInWindow(995, 268);
   }
   if (holiday === "weihnachten") {
-    // Grosse Tannebaum rächts (ersetzt d'Pflanze), Lichter a de Theke
+    // Lichterkette a de Theke
     const bulbColors = ["#F5A11C", "#B0524A", "#6B8F7B", "#FBF3E4"];
     let lights = "";
     for (let x = 60; x <= 540; x += 22) {
@@ -1223,16 +1246,21 @@ function holidayDecorSVG(holiday) {
       lights += `<line x1="${x}" y1="308" x2="${x}" y2="${312 + dip - 3}" stroke="#4A6B58" stroke-width="1.4"/>` +
         `<circle cx="${x}" cy="${312 + dip}" r="4.5" fill="${bulbColors[Math.floor(x / 22) % 4]}" stroke="#2E2015" stroke-width="0.7"/>`;
     }
-    const tree = `<g transform="translate(1168 486)">` +
-      `<path d="M0 -132 L36 -80 L20 -80 L48 -34 L28 -34 L54 8 L-54 8 L-28 -34 L-48 -34 L-20 -80 L-36 -80 Z" fill="#4A6B58" stroke="#2E2015" stroke-width="2"/>` +
-      `<path d="M0 -132 L36 -80 L20 -80 L48 -34 L28 -34 L54 8" fill="none" stroke="#5C7F6B" stroke-width="0"/>` +
-      `<rect x="-11" y="8" width="22" height="17" rx="2" fill="#6B573D" stroke="#2E2015" stroke-width="1.4"/>` +
-      `<path d="M0 -148 l6 10 l6 -3 l-4 8 l7 4 l-9 3 l1 8 l-7 -5 l-7 5 l1 -8 l-9 -3 l7 -4 l-4 -8 l6 3 Z" fill="#FBC94C" stroke="#2E2015" stroke-width="1.1"/>` +
-      `<circle cx="-18" cy="-26" r="4.5" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/><circle cx="16" cy="-44" r="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/>` +
-      `<circle cx="-10" cy="-60" r="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="0.6"/><circle cx="20" cy="-74" r="4.5" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/>` +
-      `<circle cx="-22" cy="-94" r="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/><circle cx="7" cy="-104" r="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="0.6"/>` +
-      `<circle cx="-7" cy="-18" r="3.8" fill="#F5A11C" stroke="#2E2015" stroke-width="0.6"/><circle cx="22" cy="-56" r="3.8" fill="#6B8F7B" stroke="#2E2015" stroke-width="0.6"/>` +
-      `<circle cx="0" cy="-40" r="3.8" fill="#B0524A" stroke="#2E2015" stroke-width="0.6"/></g>`;
+    // Grosse Tannebaum rächts, bis am Bode (ersetzt Pflanze + Herzli)
+    const tier = (yb, hw, yt, i) =>
+      `<path d="M${-hw} ${yb} Q0 ${yb + 10} ${hw} ${yb} L0 ${yt} Z" fill="#3F6350" stroke="#243D30" stroke-width="2"/>` +
+      `<path d="M${-hw + 6} ${yb - 4} Q0 ${yb + 4} ${hw - 6} ${yb - 4}" stroke="#FBF3E4" stroke-width="3.5" fill="none" opacity="0.85" stroke-linecap="round"/>` +
+      `<path d="M${-hw * 0.5} ${(yb + yt) / 2} L0 ${yt + 8}" stroke="#5C7F6B" stroke-width="1.5" opacity="0.5"/>`;
+    const baubles = [[-30, -40, "#B0524A"], [24, -66, "#F5A11C"], [-16, -96, "#FBF3E4"], [30, -120, "#B0524A"],
+      [-34, -150, "#F5A11C"], [12, -170, "#6B8F7B"], [-14, -196, "#B0524A"], [20, -212, "#FBF3E4"], [0, -60, "#6B8F7B"]]
+      .map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="5" fill="${c}" stroke="#2E2015" stroke-width="0.8"/>` +
+        `<circle cx="${x - 1.5}" cy="${y - 1.5}" r="1.6" fill="#fff" opacity="0.7"/>`).join("");
+    const star = `<path d="M0 -270 l6.5 11 l12.5 2 l-9 9 l2 12.5 l-12 -6 l-12 6 l2 -12.5 l-9 -9 l12.5 -2 Z" fill="#FBC94C" stroke="#C77E10" stroke-width="1.4"/>`;
+    const tree = `<g transform="translate(1132 560)">` +
+      `<rect x="-14" y="-18" width="28" height="22" rx="2" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>` +
+      `<ellipse cx="0" cy="4" rx="34" ry="7" fill="#FBF3E4" opacity="0.7"/>` +
+      tier(-16, 66, -80) + tier(-70, 54, -140) + tier(-124, 42, -196) + tier(-176, 30, -250) +
+      baubles + star + `</g>`;
     const snowCap = `<path d="M40 190 Q640 168 1200 190 L1200 198 Q640 178 40 198 Z" fill="#FBF3E4" opacity="0.5"/>`;
     return lights + snowCap + tree;
   }
@@ -1245,7 +1273,7 @@ function renderThemeDecor() {
   document.getElementById("g-season-decor").innerHTML = seasonDecorSVG(season);
   document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
   const plant = document.getElementById("deco-plant");
-  if (plant) plant.classList.toggle("hidden", holiday === "weihnachten");
+  if (plant) plant.classList.toggle("hidden", ["weihnachten", "halloween", "ostern"].includes(holiday));
 }
 
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
