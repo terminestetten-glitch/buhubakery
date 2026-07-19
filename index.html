@@ -877,8 +877,9 @@ const state = {
   pickupDate: null, // "YYYY-MM-DD"
 };
 const keyOf = (cid, vid) => cid + ":" + vid;
-function isCoffeeDay(date = new Date()) {
+function isCoffeeDay(date) {
   if (state.demoCoffee) return true;
+  if (!date) date = state.pickupDate ? new Date(state.pickupDate + "T00:00:00") : new Date();
   const dateStr = date.toISOString().split("T")[0];
   const adminDays = JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}");
   return adminDays[dateStr] !== undefined ? adminDays[dateStr] : CONFIG.coffeeDays.includes(date.getDay());
@@ -1117,12 +1118,13 @@ function renderPickupCalendar() {
 const coffeeContent = document.getElementById("coffee-content");
 function renderCoffeePanel() {
   const label = document.getElementById("coffee-day-label");
+  const dayRef = state.pickupDate ? `Dini Wahl (${formatPickupDate(state.pickupDate)})` : "Hüt";
   if (!isCoffeeDay()) {
     label.textContent = "";
-    coffeeContent.innerHTML = `<p class="coffee-note">Hüt isch kei Abhol-Tag mit Kafi. 😴 A de Kafi-Täg erschiint da s'Kafi-Menü – und im Café obe d'Maschine.</p>`;
+    coffeeContent.innerHTML = `<p class="coffee-note">${dayRef} isch kei Abhol-Tag mit Kafi. 😴 Wähl bi Schritt 4 en Kafi-Tag (☕), de erschiint da s'Kafi-Menü – und im Café obe d'Maschine.</p>`;
     return;
   }
-  label.textContent = "– hüt isch Kafi-Tag! ☕";
+  label.textContent = `– ${dayRef} isch Kafi-Tag! ☕`;
   coffeeContent.innerHTML = "";
   const ul = document.createElement("ul");
   ul.className = "item-list";
