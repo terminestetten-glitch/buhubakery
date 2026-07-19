@@ -12,9 +12,11 @@
 Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des Users
 (`docs/idee-skizze.pdf`): **Die Website ist ein illustriertes Café.**
 - Theke mit Cookie-Vitrine, "Buhu Bakery"-Schild, Lampen, Bogenfenster, Tisch + Hocker, Herzballons.
-- **Build your own box**: Im Packaging-Regal rechts Boxgrösse wählen (S=4, M=6, L=9, XL=12 Cookies), dann Cookies aus der Vitrine in die Box packen (Box füllt sich sichtbar auf dem Tisch).
+- **Build your own box**: Im Packaging-Regal rechts Boxgrösse wählen (XXS=1, XS=2, S=4, M=6, L=9, XL=12; ab 13 = "Sonderbstellig" mit Zahlenfeld 13–30), dann Cookies aus der Vitrine in die Box packen (Box füllt sich sichtbar auf dem Tisch; Cookie in der Box antippen = wieder entfernen).
+- **Jede Sorte in 2 Varianten**: "eifach so" oder "mit Soft Melt Chärn" (flüssiger Kern, im Bild als oranger Punkt). Umschalter-Chips über der Szene bestimmen, welche Variante beim Antippen in der Vitrine gilt; in der Liste hat jede Sorte zwei Zähler.
 - **Cookie Mood**: Need comfort / Celebrating / Hangry / Study session / Date night → hebt passende Cookies hervor.
 - **Kaffee nur an Abhol-Tagen**: Kaffeemaschine + COFFEEMENU (Americano, Cappuccino, Schale, Espresso, Kaffee Crème) erscheinen nur an konfigurierten Tagen (`CONFIG.coffeeDays` in index.html, 0=So…6=Sa; aktuell Fr+Sa als Platzhalter). Es gibt einen "Kafi-Tag simulieren"-Vorschau-Button.
+- **Becher-Wahl bei Kaffee**: Wenn Kaffee im Warenkorb ist, muss gewählt werden: eigener Becher mitbringen ♻️ oder Einweg. Ohne Wahl bleibt der Bestell-Knopf gesperrt.
 - Bestellung = mailto-Link mit fertig ausgefüllter Bestellübersicht (kein Backend!).
 
 ## Branding
@@ -24,7 +26,8 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - Slogan (Visitenkarte, Schweizerdeutsch, wörtlich übernehmen):
   «De Schreck isch nur wenns kei meh het, drum bstell en jetzt bevor de Kolleg de letscht wett»
 - Farbwelt aus dem Logo: Creme #FBF3E4, Greige #CDC1AC, Honig-Orange #F5A11C, Dunkelbraun #2E2015.
-- Sprache: Deutsch mit Schweizer Schreibweise (**kein ß**), UI-Texte teils Schweizerdeutsch, Moods auf Englisch (so in der Skizze).
+- Sprache: **Züridütsch** für alle UI-Texte (Wunsch des Users), Moods auf Englisch (so in der Skizze). Kein ß.
+- Über-mich-Text: vom User geliefert (Züridütsch, mit 🍪 und 🐝🤎), steht wörtlich in index.html – nicht umformulieren.
 - Währung: **CHF**.
 
 ## Technik-Entscheidungen (mit Begründung)
@@ -38,13 +41,13 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
   Vorschau während der Arbeit: Claude-Artifact.
 - Branch-Konvention: Feature-Branches `claude/...`, Merge nach `main` deployt.
 
-## Beispieldaten (alle noch Platzhalter!)
-- Boxpreise: S 14 / M 20 / L 28 / XL 36 CHF. Cookiesorten: Choco Chip, Double Choc, Red Velvet, Peanut Butter, Espresso, Birthday Confetti (mit Mood-Zuordnung in `COOKIES` in index.html).
-- Kaffeepreise: 3.50–4.80 CHF.
+## Sortiment & Preise
+- **Echte Sorten (vom User)**: Oreo, Lotus (Biscoff), Ovomaltine Classic, Ovomaltine Noir – je "eifach so" oder "Soft Melt Chärn". Mood-Zuordnung in `COOKIES` in index.html ist von Claude geraten → bei Gelegenheit bestätigen lassen.
+- **Preise noch Platzhalter**: XXS 4 / XS 7.50 / S 14 / M 20 / L 28 / XL 36 CHF; Sonderbstellig 3 CHF/Cookie; Kaffee 3.50–4.80 CHF. Soft Melt kostet aktuell gleich viel wie normal → fragen, ob Aufpreis.
 
 ## Offene Punkte (beim User nachfragen, wenn passend)
-1. Original-Logodatei (PNG/SVG) einbauen.
-2. Echte Cookiesorten, Preise, Boxgrössen/-preise.
+1. **Logo**: User hat es selbst gezeichnet, besitzt KEINE Vektordatei; das Bild kam bisher nur inline im Chat an (nicht speicherbar). User wurde gebeten, die Bilddatei als Anhang hochzuladen → dann als `assets/logo.png` einbauen und den nachgezeichneten SVG-Platzhalter `#buhu-bee` ersetzen/ergänzen.
+2. Echte Preise (Boxen, Sonderbstellig, Kaffee, evtl. Soft-Melt-Aufpreis); Mood-Zuordnung der Sorten bestätigen.
 3. Echte Abhol-Tage/-Ort + Kaffeetage konfigurieren.
 4. Kontaktkanal: aktuell mailto an ai@honegger.dev – WhatsApp/Instagram gewünscht?
 5. Über-mich-Text + Fotos.
