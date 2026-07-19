@@ -130,7 +130,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   font-size: 1.3rem;
   font-weight: 700;
 }
-.brand svg { width: 2.6rem; height: 2.6rem; }
+.brand img { width: 2.6rem; height: 2.6rem; border-radius: 50%; }
 .site-nav { display: flex; gap: 1.2rem; }
 .site-nav a {
   text-decoration: none;
@@ -156,7 +156,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .hero .slogan { color: var(--ink); }
 .hero p.lead { font-size: 1.1rem; color: var(--ink-soft); max-width: 36rem; }
 .hero-mascot { text-align: center; }
-.hero-mascot svg { width: min(13rem, 55vw); height: auto; }
+.hero-mascot img { width: min(13rem, 55vw); height: auto; border-radius: 50%; box-shadow: var(--shadow); }
+.rotate-overlay { display: none; }
+@media (max-width: 700px) and (orientation: portrait) {
+  .rotate-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2rem; background: var(--ground); text-align: center; padding: 2rem;
+  }
+  .rotate-overlay img { width: 9rem; border-radius: 50%; }
+  .rotate-overlay p { font-size: 1.1rem; font-weight: 600; max-width: 18rem; margin: 0; }
+}
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.25rem; }
 .btn {
   display: inline-block;
@@ -344,6 +354,20 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .summary .empty { color: var(--ink-soft); border-bottom: none; }
 .fill-state { font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 0.8rem; }
 .fill-state strong { color: var(--ink); }
+.summary .btn { display: block; width: 100%; text-align: center; margin-bottom: 0.6rem; }
+.box-x {
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1;
+  font-weight: 700;
+  padding: 0;
+  margin-left: 0.4rem;
+}
+.summary li.sub { border-bottom: none; padding-block: 0.1rem; font-size: 0.85rem; color: var(--ink-soft); }
 .price-note {
   display: inline-block;
   background: var(--ground);
@@ -370,28 +394,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <!-- Buhu, d'Geischter-Biene (nachgezeichnet vom Logo – Original-Datei folgt) -->
-    <g id="buhu-bee">
-      <ellipse cx="84" cy="46" rx="17" ry="10" transform="rotate(-28 84 46)" fill="#FBF3E4" stroke="#2E2015" stroke-width="2" opacity="0.95"/>
-      <ellipse cx="92" cy="58" rx="14" ry="8" transform="rotate(-12 92 58)" fill="#FBF3E4" stroke="#2E2015" stroke-width="2" opacity="0.95"/>
-      <g transform="rotate(-18 72 84)">
-        <clipPath id="bee-butt"><ellipse cx="72" cy="84" rx="25" ry="20"/></clipPath>
-        <ellipse cx="72" cy="84" rx="25" ry="20" fill="#2E2015"/>
-        <rect x="46" y="77" width="52" height="13" fill="#F5A11C" clip-path="url(#bee-butt)"/>
-      </g>
-      <path d="M34 64 Q30 32 57 28 Q82 28 84 62 L84 68 Q78 76 71 69 Q65 78 57 70 Q51 78 43 70 Q38 75 34 70 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5" stroke-linejoin="round"/>
-      <ellipse cx="51" cy="49" rx="2.6" ry="4" fill="#2E2015"/>
-      <ellipse cx="65" cy="49" rx="2.6" ry="4" fill="#2E2015"/>
-      <circle cx="46" cy="57" r="3" fill="#E8A5A0"/>
-      <circle cx="70" cy="57" r="3" fill="#E8A5A0"/>
-      <path d="M55 56 q3.5 3.5 7 0" stroke="#2E2015" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M43 31 Q34 15 47 13 Q47 3 60 5 Q73 3 73 13 Q86 15 77 31 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5" stroke-linejoin="round"/>
-      <rect x="45" y="29" width="30" height="5.5" rx="2.5" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.5"/>
-      <line x1="40" y1="42" x2="30" y2="66" stroke="#6B4A2A" stroke-width="3.5" stroke-linecap="round"/>
-      <ellipse cx="39" cy="40" rx="6.5" ry="2.6" fill="#6B4A2A"/>
-      <ellipse cx="41" cy="35" rx="5.5" ry="2.4" fill="#6B4A2A"/>
-      <ellipse cx="43" cy="30.5" rx="4.5" ry="2.2" fill="#6B4A2A"/>
-    </g>
     <!-- Herz-Ballon -->
     <path id="heart" d="M0 5 C0 -2 9 -2 9 5 C9 -2 18 -2 18 5 C18 12 9 19 9 19 C9 19 0 12 0 5 Z"/>
   </defs>
@@ -400,7 +402,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="#top" aria-label="BuhuBakery – zum Seitenanfang">
-      <svg viewBox="0 0 120 120" role="img" aria-label="Buhu, die Geister-Biene"><use href="#buhu-bee"/></svg>
+      <img src="assets/logo.png" alt="BuhuBakery-Logo: Biene im Geisterkostüm">
       BuhuBakery
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
@@ -424,10 +426,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
         </div>
       </div>
       <div class="hero-mascot">
-        <svg viewBox="0 0 120 120" role="img" aria-label="Buhu, die Biene im Geisterkostüm mit Kochmütze und Honiglöffel">
-          <circle cx="60" cy="60" r="57" fill="none" stroke="#2E2015" stroke-width="2" opacity="0.5"/>
-          <use href="#buhu-bee"/>
-        </svg>
+        <img src="assets/logo.png" alt="Buhu, die Biene im Geisterkostüm mit Kochmütze und Honiglöffel">
       </div>
     </div>
   </section>
@@ -506,14 +505,30 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <g id="g-menu-board" class="hidden">
             <line x1="345" y1="0" x2="345" y2="92" stroke="#8A7B63" stroke-width="2"/>
             <line x1="465" y1="0" x2="465" y2="92" stroke="#8A7B63" stroke-width="2"/>
-            <rect x="315" y="92" width="180" height="128" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
-            <text x="405" y="118" text-anchor="middle" font-size="17" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">COFFEEMENU</text>
+            <rect x="315" y="92" width="180" height="132" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
+            <text x="405" y="115" text-anchor="middle" font-size="17" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">COFFEEMENU</text>
+            <text x="405" y="128" text-anchor="middle" font-size="9" fill="#7A6A52">— zum Bstelle eifach atippe —</text>
             <g font-size="12.5" fill="#5A4832" font-family="Georgia, serif">
-              <text x="331" y="140">Americano</text><text x="479" y="140" text-anchor="end">4.20</text>
-              <text x="331" y="158">Cappuccino</text><text x="479" y="158" text-anchor="end">4.80</text>
-              <text x="331" y="176">Schale</text><text x="479" y="176" text-anchor="end">4.50</text>
-              <text x="331" y="194">Espresso</text><text x="479" y="194" text-anchor="end">3.50</text>
-              <text x="331" y="212">Kaffee Crème</text><text x="479" y="212" text-anchor="end">4.00</text>
+              <g class="scene-hot" data-coffee="americano" tabindex="0" role="button" aria-label="En Americano bstelle">
+                <rect class="hot-halo" x="323" y="133" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="331" y="146">Americano</text><text x="479" y="146" text-anchor="end">4.20</text>
+              </g>
+              <g class="scene-hot" data-coffee="cappuccino" tabindex="0" role="button" aria-label="En Cappuccino bstelle">
+                <rect class="hot-halo" x="323" y="150" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="331" y="163">Cappuccino</text><text x="479" y="163" text-anchor="end">4.80</text>
+              </g>
+              <g class="scene-hot" data-coffee="schale" tabindex="0" role="button" aria-label="E Schale bstelle">
+                <rect class="hot-halo" x="323" y="167" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="331" y="180">Schale</text><text x="479" y="180" text-anchor="end">4.50</text>
+              </g>
+              <g class="scene-hot" data-coffee="espresso" tabindex="0" role="button" aria-label="En Espresso bstelle">
+                <rect class="hot-halo" x="323" y="184" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="331" y="197">Espresso</text><text x="479" y="197" text-anchor="end">3.50</text>
+              </g>
+              <g class="scene-hot" data-coffee="creme" tabindex="0" role="button" aria-label="En Kaffee Crème bstelle">
+                <rect class="hot-halo" x="323" y="201" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="331" y="214">Kaffee Crème</text><text x="479" y="214" text-anchor="end">4.00</text>
+              </g>
             </g>
           </g>
 
@@ -539,7 +554,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <rect x="80" y="188" width="230" height="130" rx="8" fill="#EFE6D2" stroke="#2E2015" stroke-width="2.5" opacity="0.95"/>
             <line x1="88" y1="252" x2="302" y2="252" stroke="#8A7B63" stroke-width="3"/>
             <line x1="88" y1="312" x2="302" y2="312" stroke="#8A7B63" stroke-width="3"/>
-            <text x="195" y="180" text-anchor="middle" font-size="13" letter-spacing="2" fill="#2E2015" font-weight="bold">COOKIES – TIPP MI A!</text>
+            <rect x="100" y="189" width="190" height="25" rx="6" fill="#F5A11C" stroke="#2E2015" stroke-width="2"/>
+            <text x="195" y="206" text-anchor="middle" font-size="13.5" letter-spacing="1" fill="#2E2015" font-weight="bold">COOKIES – TIPP MI A!</text>
             <g id="vitrine-cookies"></g>
           </g>
 
@@ -564,7 +580,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <path d="M514 270 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
             <rect x="440" y="296" width="104" height="10" rx="3" fill="#2E2015"/>
             <rect x="430" y="306" width="124" height="12" rx="3" fill="#5A4832"/>
-            <text x="492" y="334" text-anchor="middle" font-size="13" font-weight="bold" fill="#FBF3E4">☕ Pick up &amp; Coffee to go!</text>
+            <rect x="412" y="320" width="160" height="19" rx="5" fill="#F5A11C" stroke="#2E2015" stroke-width="1.5"/>
+            <text x="492" y="334" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2E2015">☕ Pick up &amp; Coffee to go!</text>
           </g>
 
           <!-- Packaging-Regal -->
@@ -650,8 +667,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <use href="#heart" transform="translate(1124 138) scale(1.25)" fill="#2E2015"/>
           </g>
 
-          <!-- Buhu flügt dur s'Café -->
-          <use href="#buhu-bee" transform="translate(620 30) scale(0.55)"/>
         </svg>
       </div>
       <p class="scene-caption">Uf em Handy chasch d'Szene mit em Finger sitlich verschiebe. Alles gaht übrigens au über d'Liste unte.</p>
@@ -680,9 +695,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           </div>
         </div>
         <div class="panel summary" aria-live="polite">
-          <h3>Dini Box</h3>
+          <h3>Dini Bstellig</h3>
           <p class="fill-state" id="fill-state">Wähl zerscht e Boxgrössi im Regal.</p>
           <ul id="summary-list"></ul>
+          <button class="btn" id="add-box-btn" type="button" aria-disabled="true">+ No e Box drzue</button>
           <a class="btn btn-primary" id="order-btn" href="#" aria-disabled="true">Aafrag per E-Mail schicke</a>
           <p class="price-note">⚠️ Alles no <strong>Bispiilpriise</strong> – sag mir dini echte Priise!</p>
         </div>
@@ -710,11 +726,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <span class="eyebrow">Abholig</span>
       <h2>Abhole &amp; gnüsse</h2>
       <p class="section-intro">Du schickst dini Aafrag per E-Mail ab, ich bestätige dir Priis und Abholtermin – und denn: frisch us em Ofe i dini Händ. An bestimmte Täg gits zusätzlich <strong>Pick up &amp; Coffee to go</strong> – denn erschiint im Café obe au d'Kaffimaschine.</p>
-      <p class="hint">Aktuell gaht d'Aafrag a dini E-Mail-Adresse. Wenn du lieber WhatsApp oder Instagram hettsch, säg Bscheid. Au d'Abholtäg und -ort müemer no iitrage.</p>
+      <p class="hint">D'Aafrag gaht per E-Mail a bestellung@buhubakery.ch. Wenn du zuesätzlich WhatsApp oder Instagram wettsch, säg Bscheid. Au d'Abholtäg und -ort müemer no iitrage.</p>
     </div>
   </section>
 
 </main>
+
+<div class="rotate-overlay" role="status">
+  <img src="assets/logo.png" alt="">
+  <p>Dreh dis Handy is Querformat 🔄<br>denn gseht s'Café am beschte us!</p>
+</div>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -731,7 +752,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 const CONFIG = {
   // Wochentage mit "Pick up & Coffee to go": 0=So, 1=Mo, 2=Di, 3=Mi, 4=Do, 5=Fr, 6=Sa
   coffeeDays: [5, 6],
-  orderEmail: "ai@honegger.dev",
+  orderEmail: "bestellung@buhubakery.ch",
   currency: "CHF",
 };
 
@@ -746,10 +767,10 @@ const SIZES = {
 const SONDER = { min: 13, max: 30, pricePerCookie: 3 };
 
 const COOKIES = [
-  { id: "oreo",       name: "Oreo",               note: "Schoggi-Teig mit Oreo-Stückli.",         dough: "#33291F", chips: ["#FBF3E4", "#1E1712"], moods: ["comfort", "celebrating"] },
-  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Karamellig mit Biscoff-Crunch.",         dough: "#C97B3D", chips: ["#8A4F1D", "#FBF3E4"], moods: ["study", "date"] },
-  { id: "ovoclassic", name: "Ovomaltine Classic", note: "De Schwiizer Klassiker mit Ovo-Crunch.", dough: "#B57A3E", chips: ["#F26522", "#6B4A2A"], moods: ["hangry", "comfort"] },
-  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi trifft Ovo-Crunch.",      dough: "#4A3320", chips: ["#F26522", "#2E2015"], moods: ["date", "hangry"] },
+  { id: "oreo",       name: "Oreo",               note: "Schoggi-Teig mit Oreo-Stückli.",         dough: "#3A2E23", chips: ["#FBF3E4", "#191410"], moods: ["comfort", "celebrating"] },
+  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Karamellig mit Biscoff-Crunch.",         dough: "#D89B52", chips: ["#8A4F1D", "#FBF3E4"], moods: ["study", "date"] },
+  { id: "ovoclassic", name: "Ovomaltine Classic", note: "De Schwiizer Klassiker mit Ovo-Crunch.", dough: "#C08A4A", chips: ["#F26522", "#5C3A21"], moods: ["hangry", "comfort"] },
+  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi trifft Ovo-Crunch.",      dough: "#54402C", chips: ["#F26522", "#241A12"], moods: ["date", "hangry"] },
 ];
 const VARIANTS = [
   { id: "plain", label: "eifach so" },
@@ -770,10 +791,11 @@ const CUPS = [
 
 /* --- Zustand --------------------------------------------------------------- */
 const state = {
-  size: null,
+  size: null,        // aktuelli Box
   sonderQty: 13,
-  items: {},   // "cookieId:variant" -> Aazahl
-  coffees: {}, // coffeeId -> Aazahl
+  items: {},         // "cookieId:variant" -> Aazahl (aktuelli Box)
+  savedBoxes: [],    // fertigi Boxe: { size, sonderQty, items, price }
+  coffees: {},       // coffeeId -> Aazahl
   cup: null,
   mood: null,
   variant: "plain",
@@ -787,18 +809,33 @@ const capacity = () => !state.size ? 0 : (state.size === "SONDER" ? state.sonder
 const boxPrice = () => state.size === "SONDER" ? state.sonderQty * SONDER.pricePerCookie : SIZES[state.size].price;
 const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols;
 const chf = (n) => CONFIG.currency + " " + n.toFixed(2);
+const boxTitle = (size, qty) => size === "SONDER" ? `Sonderbstellig (${qty} Cookies)` : `Box ${size} (${SIZES[size].capacity} Cookies)`;
+function boxContentLines(items) {
+  const out = [];
+  COOKIES.forEach((c) => VARIANTS.forEach((v) => {
+    const n = items[keyOf(c.id, v.id)] || 0;
+    if (n > 0) out.push(`${n}× ${c.name} (${v.label})`);
+  }));
+  return out;
+}
 
+/* --- Cookie-Zeichnung ------------------------------------------------------- */
 /* Deterministische Chip-Positionen, damit Cookie-Icons überall gleich aussehen */
-const CHIP_SPOTS = [[-8, -5], [6, -8], [9, 6], [-4, 8], [1, -1], [-10, 3]];
+const CHIP_SPOTS = [[-9, -4], [7, -9], [10, 7], [-4, 10], [2, 0], [-11, 4]];
 function cookieSVG(c, r, melt) {
-  const core = melt ? `<circle r="${r * 0.42}" fill="#F5A11C" stroke="#C77E10" stroke-width="1"/>` : "";
   const chips = CHIP_SPOTS.map(([dx, dy], i) =>
-    `<circle cx="${dx * r / 20}" cy="${dy * r / 20}" r="${r / 6}" fill="${c.chips[i % c.chips.length]}"/>`).join("");
-  return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="1.5"/>${core}${chips}`;
+    `<circle cx="${(dx * r / 20).toFixed(1)}" cy="${(dy * r / 20).toFixed(1)}" r="${(r / 4.6).toFixed(1)}" fill="${c.chips[i % c.chips.length]}" stroke="rgba(46,32,21,0.4)" stroke-width="0.7"/>`).join("");
+  const core = melt
+    ? `<circle r="${(r * 0.5).toFixed(1)}" fill="#F5A11C" stroke="#C77E10" stroke-width="1.3"/>` +
+      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.16).toFixed(1)}" rx="${(r * 0.17).toFixed(1)}" ry="${(r * 0.1).toFixed(1)}" fill="#FBF3E4" opacity="0.9"/>`
+    : "";
+  return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="2"/>` +
+    `<path d="M ${(-r * 0.6).toFixed(1)} ${(-r * 0.48).toFixed(1)} A ${(r * 0.76).toFixed(1)} ${(r * 0.76).toFixed(1)} 0 0 1 ${(r * 0.48).toFixed(1)} ${(-r * 0.6).toFixed(1)}" stroke="#FFFDF7" stroke-opacity="0.35" stroke-width="${(r * 0.16).toFixed(1)}" fill="none" stroke-linecap="round"/>` +
+    chips + core;
 }
 
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
-const VITRINE_POS = [[140, 232], [250, 232], [140, 294], [250, 294]];
+const VITRINE_POS = [[140, 240], [250, 240], [140, 296], [250, 296]];
 const vitrine = document.getElementById("vitrine-cookies");
 COOKIES.forEach((c, i) => {
   const [x, y] = VITRINE_POS[i];
@@ -810,8 +847,8 @@ COOKIES.forEach((c, i) => {
   g.setAttribute("aria-label", c.name + " i d'Box lege");
   g.dataset.cookie = c.id;
   g.innerHTML =
-    `<circle class="mood-halo" r="27" fill="none" stroke="#F5A11C" stroke-width="3" stroke-dasharray="5 4"/>` +
-    `<circle class="hot-halo" r="25" fill="none" stroke="#FBF3E4" stroke-width="3"/>` +
+    `<circle class="mood-halo" r="26" fill="none" stroke="#F5A11C" stroke-width="3" stroke-dasharray="5 4"/>` +
+    `<circle class="hot-halo" r="24" fill="none" stroke="#FBF3E4" stroke-width="3"/>` +
     `<g class="c-body">${cookieSVG(c, 20, false)}</g>`;
   vitrine.appendChild(g);
 });
@@ -819,10 +856,23 @@ COOKIES.forEach((c, i) => {
 /* --- Szene: Box auf dem Tisch (Cookies drin sind antippbar zum Usenäh) ----- */
 function renderSceneBox() {
   const boxG = document.getElementById("scene-box");
+  let inner = "";
+  // Scho parat gmachti Boxe: Stapel näbe de offene Box
+  const n = state.savedBoxes.length;
+  if (n > 0) {
+    const shown = Math.min(n, 3);
+    for (let i = 0; i < shown; i++) {
+      const bw = 56, bh = 20, bx = 776, by = 470 - bh * (i + 1);
+      inner += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="3" fill="#E8DCC6" stroke="#2E2015" stroke-width="2"/>` +
+        `<line x1="${bx}" y1="${by + bh / 2}" x2="${bx + bw}" y2="${by + bh / 2}" stroke="#C77E10" stroke-width="2"/>`;
+    }
+    inner += `<text x="804" y="${470 - 20 * shown - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">${n}× parat 📦</text>`;
+  }
   if (!state.size) {
-    boxG.innerHTML =
-      `<rect x="845" y="414" width="90" height="56" rx="5" fill="none" stroke="#2E2015" stroke-width="2.5" stroke-dasharray="7 6"/>` +
+    inner += `<rect x="845" y="414" width="90" height="56" rx="5" fill="none" stroke="#2E2015" stroke-width="2.5" stroke-dasharray="7 6"/>` +
+      `<rect x="798" y="389" width="184" height="22" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
       `<text x="890" y="404" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">← Wähl e Grössi im Regal</text>`;
+    boxG.innerHTML = inner;
     return;
   }
   const cap = capacity(), cols = boxCols();
@@ -832,13 +882,15 @@ function renderSceneBox() {
   const w = cols * cell + pad * 2, h = rows * cell + pad * 2;
   const x = 890 - w / 2, y = 470 - h;
   const title = state.size === "SONDER" ? "Dini Sonderbstellig" : `Dini ${state.size}-Box`;
-  let inner = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
+  const tw = title.length * 7.6 + 18;
+  inner += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
     `<path d="M${x} ${y} l-14 -12 l14 -2 z M${x + w} ${y} l14 -12 l-14 -2 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="2"/>` +
+    `<rect x="${890 - tw / 2}" y="${y - 33}" width="${tw}" height="21" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
     `<text x="890" y="${y - 18}" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">${title}</text>`;
   const flat = [];
   COOKIES.forEach((c) => VARIANTS.forEach((v) => {
     const k = keyOf(c.id, v.id);
-    for (let n = 0; n < (state.items[k] || 0); n++) flat.push({ c, v, k });
+    for (let m = 0; m < (state.items[k] || 0); m++) flat.push({ c, v, k });
   }));
   for (let s = 0; s < cap; s++) {
     const cx = x + pad + (s % cols) * cell + cell / 2;
@@ -863,22 +915,6 @@ sceneBoxG.addEventListener("keydown", (e) => {
   const g = e.target.closest("[data-remove]");
   if (g) { e.preventDefault(); removeCookie(g.dataset.remove); }
 });
-
-/* Cookie flügt vo de Vitrine i d'Box */
-function flyCookie(fromEl, cookie, melt) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const svg = document.getElementById("scene");
-  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  g.setAttribute("transform", fromEl.getAttribute("transform"));
-  g.setAttribute("class", "fly-cookie");
-  g.innerHTML = cookieSVG(cookie, 16, melt);
-  svg.appendChild(g);
-  requestAnimationFrame(() => {
-    g.style.transform = "translate(870px, 440px)";
-    g.style.transition = "transform 0.6s cubic-bezier(0.3, 0, 0.6, 1)";
-  });
-  setTimeout(() => g.remove(), 650);
-}
 
 /* --- Bedienelemente (HTML-Spiegel) ----------------------------------------- */
 const sizeButtons = document.getElementById("size-buttons");
@@ -928,7 +964,7 @@ COOKIES.forEach((c) => {
     const k = keyOf(c.id, v.id);
     const plus = li.querySelector(`button[data-op="+"][data-v="${v.id}"]`);
     const minus = li.querySelector(`button[data-op="-"][data-v="${v.id}"]`);
-    plus.addEventListener("click", () => addCookie(c.id, v.id, null));
+    plus.addEventListener("click", () => addCookie(c.id, v.id));
     minus.addEventListener("click", () => removeCookie(k));
     rowRefs[k] = { out: li.querySelector(`output[data-v="${v.id}"]`), plus, minus };
   });
@@ -998,16 +1034,32 @@ function selectSize(key) {
   trimOverflow();
   render();
 }
-function addCookie(cid, vid, sceneEl) {
+function addCookie(cid, vid) {
   if (!state.size) selectSize("M"); // ohni Uuswahl: fründliche Standard statt Fähler
   if (totalCookies() >= capacity()) return;
   const k = keyOf(cid, vid);
   state.items[k] = (state.items[k] || 0) + 1;
-  if (sceneEl) flyCookie(sceneEl, COOKIES.find((x) => x.id === cid), vid === "melt");
   render();
 }
 function removeCookie(k) {
   if (state.items[k] > 0) state.items[k]--;
+  render();
+}
+function addBoxToOrder() {
+  if (!state.size || totalCookies() === 0) return;
+  state.savedBoxes.push({
+    size: state.size,
+    sonderQty: state.sonderQty,
+    items: { ...state.items },
+    price: boxPrice(),
+  });
+  state.size = null;
+  state.items = {};
+  document.getElementById("sonder-row").classList.add("hidden");
+  render();
+}
+function removeSavedBox(i) {
+  state.savedBoxes.splice(i, 1);
   render();
 }
 
@@ -1018,7 +1070,16 @@ document.querySelectorAll("#g-shelf .scene-hot").forEach((el) => {
   el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
 vitrine.querySelectorAll(".scene-hot").forEach((el) => {
-  const go = () => addCookie(el.dataset.cookie, state.variant, el);
+  const go = () => addCookie(el.dataset.cookie, state.variant);
+  el.addEventListener("click", go);
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+});
+document.querySelectorAll("#g-menu-board .scene-hot").forEach((el) => {
+  const go = () => {
+    if (!isCoffeeDay()) return;
+    state.coffees[el.dataset.coffee] = (state.coffees[el.dataset.coffee] || 0) + 1;
+    render();
+  };
   el.addEventListener("click", go);
   el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
@@ -1039,6 +1100,19 @@ document.getElementById("coffee-demo").addEventListener("click", (e) => {
   state.demoCoffee = !state.demoCoffee;
   e.currentTarget.setAttribute("aria-pressed", String(state.demoCoffee));
   render();
+});
+
+/* Box-Knopf & Bstellig */
+document.getElementById("add-box-btn").addEventListener("click", (e) => {
+  if (e.currentTarget.getAttribute("aria-disabled") === "true") return;
+  addBoxToOrder();
+});
+document.getElementById("summary-list").addEventListener("click", (e) => {
+  const b = e.target.closest(".box-x");
+  if (b) removeSavedBox(parseInt(b.dataset.i, 10));
+});
+document.getElementById("order-btn").addEventListener("click", (e) => {
+  if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault();
 });
 
 /* --- Alles zeichnen & Bestell-Mail ----------------------------------------- */
@@ -1074,66 +1148,84 @@ function render() {
   renderCoffeePanel();
   renderSceneBox();
 
+  // Zämezug
   const fill = document.getElementById("fill-state");
   const list = document.getElementById("summary-list");
+  const addBoxBtn = document.getElementById("add-box-btn");
   const orderBtn = document.getElementById("order-btn");
   list.innerHTML = "";
   let total = 0;
-  const lines = [];
+  const addLine = (l, r, cls) => {
+    const li = document.createElement("li");
+    if (cls) li.className = cls;
+    li.innerHTML = `<span>${l}</span><span>${r || ""}</span>`;
+    list.appendChild(li);
+    return li;
+  };
+
+  state.savedBoxes.forEach((b, i) => {
+    total += b.price;
+    const li = addLine(`📦 ${boxTitle(b.size, b.sonderQty)}`, chf(b.price));
+    const btn = document.createElement("button");
+    btn.className = "box-x";
+    btn.dataset.i = i;
+    btn.setAttribute("aria-label", `Box ${i + 1} us de Bstellig entferne`);
+    btn.textContent = "×";
+    li.lastElementChild.appendChild(btn);
+    boxContentLines(b.items).forEach((t) => addLine("· " + t, "", "sub"));
+  });
+
+  const curValid = state.size && totalCookies() > 0;
   if (!state.size) {
-    fill.innerHTML = "Wähl zerscht e <strong>Boxgrössi</strong> im Regal (oder unte bi Schritt 1).";
+    fill.innerHTML = state.savedBoxes.length > 0
+      ? "Wettsch <strong>no e Box</strong>? Wähl eifach wieder e Grössi im Regal – susch schick d'Aafrag ab!"
+      : "Wähl zerscht e <strong>Boxgrössi</strong> im Regal (oder unte bi Schritt 1).";
   } else {
-    let f = `<strong>${totalCookies()} vo ${capacity()}</strong> Plätzli belegt ${full ? "– d'Box isch voll! 🎉" : ""}`;
+    let f = `Aktuelli Box: <strong>${totalCookies()} vo ${capacity()}</strong> Plätzli belegt ${full ? "– voll! 🎉" : ""}`;
     if (totalCoffees() > 0 && !state.cup) f += "<br>→ Wähl bi Schritt 3 no, öb du en eigene Becher mitbringsch.";
     fill.innerHTML = f;
-    total += boxPrice();
-    lines.push([state.size === "SONDER" ? `Sonderbstellig (${state.sonderQty} Cookies)` : `Box ${state.size} (${capacity()} Cookies)`, chf(boxPrice())]);
-    COOKIES.forEach((c) => VARIANTS.forEach((v) => {
-      const n = state.items[keyOf(c.id, v.id)] || 0;
-      if (n > 0) lines.push([`  ${n}× ${c.name} (${v.label})`, ""]);
-    }));
+    if (curValid) {
+      total += boxPrice();
+      addLine(boxTitle(state.size, state.sonderQty), chf(boxPrice()));
+      boxContentLines(state.items).forEach((t) => addLine("· " + t, "", "sub"));
+    }
   }
   COFFEES.forEach((k) => {
     const n = state.coffees[k.id] || 0;
-    if (n > 0) { total += n * k.price; lines.push([`${n}× ${k.name}`, chf(n * k.price)]); }
+    if (n > 0) { total += n * k.price; addLine(`${n}× ${k.name}`, chf(n * k.price)); }
   });
   if (totalCoffees() > 0 && state.cup) {
-    lines.push([state.cup === "eigene" ? "Eigene Becher ♻️" : "Einweg-Becher", ""]);
+    addLine(state.cup === "eigene" ? "Eigene Becher ♻️" : "Einweg-Becher", "");
   }
-  if (lines.length === 0) {
-    list.innerHTML = `<li class="empty">No nüt in der Box … 👻</li>`;
+  if (list.children.length === 0) {
+    addLine("No nüt in der Bstellig … 👻", "", "empty");
   } else {
-    lines.forEach(([l, r]) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span>${l}</span><span>${r}</span>`;
-      list.appendChild(li);
-    });
-    const t = document.createElement("li");
-    t.className = "total";
-    t.innerHTML = `<span>Total (Bispiil)</span><span>${chf(total)}</span>`;
-    list.appendChild(t);
+    addLine("Total (Bispiil)", chf(total), "total");
   }
 
-  const ready = state.size && totalCookies() > 0 && (totalCoffees() === 0 || state.cup);
+  addBoxBtn.setAttribute("aria-disabled", String(!curValid));
+  const ready = (state.savedBoxes.length > 0 || curValid) && (totalCoffees() === 0 || state.cup);
   orderBtn.setAttribute("aria-disabled", String(!ready));
   if (ready) {
     let body = "Hoi BuhuBakery!\n\nIch hätt gärn:\n";
-    body += `- ${state.size === "SONDER" ? `Sonderbstellig (${state.sonderQty} Cookies)` : `Box ${state.size} (${capacity()} Cookies)`}, ${chf(boxPrice())}\n`;
-    COOKIES.forEach((c) => VARIANTS.forEach((v) => {
-      const n = state.items[keyOf(c.id, v.id)] || 0;
-      if (n) body += `   • ${n}× ${c.name} (${v.label})\n`;
-    }));
-    COFFEES.forEach((k) => { const n = state.coffees[k.id] || 0; if (n) body += `- ${n}× ${k.name}\n`; });
-    if (totalCoffees() > 0) body += `- Becher: ${state.cup === "eigene" ? "ich bring min eigene mit ♻️" : "Einweg bitte"}\n`;
+    const allBoxes = [...state.savedBoxes];
+    if (curValid) allBoxes.push({ size: state.size, sonderQty: state.sonderQty, items: state.items, price: boxPrice() });
+    allBoxes.forEach((b, i) => {
+      body += `\nBox ${i + 1}: ${boxTitle(b.size, b.sonderQty)} – ${chf(b.price)}\n`;
+      boxContentLines(b.items).forEach((t) => { body += `   • ${t}\n`; });
+    });
+    const coffeeLines = COFFEES.filter((k) => (state.coffees[k.id] || 0) > 0);
+    if (coffeeLines.length > 0) {
+      body += "\n";
+      coffeeLines.forEach((k) => { body += `- ${state.coffees[k.id]}× ${k.name}\n`; });
+      body += `- Becher: ${state.cup === "eigene" ? "ich bring min eigene mit ♻️" : "Einweg bitte"}\n`;
+    }
     body += `\nTotal laut Website (Bispiilpriise): ${chf(total)}\n\nWunschtermin für d'Abholig: \nName: \n\nMerci & en Gruess!`;
     orderBtn.href = `mailto:${CONFIG.orderEmail}?subject=${encodeURIComponent("Cookie-Box Aafrag – BuhuBakery")}&body=${encodeURIComponent(body)}`;
   } else {
     orderBtn.href = "#";
   }
 }
-document.getElementById("order-btn").addEventListener("click", (e) => {
-  if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault();
-});
 
 render();
 </script>
