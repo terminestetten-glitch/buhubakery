@@ -182,6 +182,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .btn:hover { filter: brightness(1.07); }
 .btn[disabled] { opacity: 0.45; cursor: not-allowed; filter: none; }
 
+/* --- Bald-neu-Band -------------------------------------------------------- */
+.coming-soon-band { background: linear-gradient(90deg, var(--accent-bright), #F7C048); border-block: 1px solid var(--accent); }
+.coming-soon-band .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1.1rem; padding-block: 0.9rem; }
+.cs-badge { font-weight: 800; color: #2E2015; letter-spacing: 0.02em; white-space: nowrap; }
+.cs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.cs-list li { background: rgba(255,255,255,0.55); color: #2E2015; border: 1.5px solid rgba(46,32,21,0.25); border-radius: 2rem; padding: 0.3rem 0.9rem; font-weight: 700; font-size: 0.95rem; }
+
 /* --- Café-Szene ----------------------------------------------------------- */
 .section { padding-block: 3rem; }
 .section + .section { border-top: 1px solid var(--line); }
@@ -504,6 +511,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <div class="hero-mascot">
         <img src="assets/logo.png" onerror="this.onerror=null;this.src=BUHU_LOGO_FALLBACK" alt="Buhu, die Biene im Geisterkostüm mit Kochmütze und Honiglöffel">
       </div>
+    </div>
+  </section>
+
+  <section class="coming-soon-band hidden" id="coming-soon">
+    <div class="wrap">
+      <span class="cs-badge">🔜 Bald neu</span>
+      <ul class="cs-list" id="coming-soon-list"></ul>
     </div>
   </section>
 
@@ -831,19 +845,20 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   </div>
   <div class="admin-modal-content">
     <div id="admin-login" class="admin-login-wrap" style="display:block;">
-      <form class="admin-login" id="admin-login-form">
+      <form class="admin-login" id="admin-login-form" autocomplete="off">
         <p class="admin-login-icon" aria-hidden="true">🔒</p>
         <h3 style="margin:0 0 0.2rem;text-align:center;">Admin-Alogge</h3>
         <p style="margin:0 0 0.5rem;color:var(--ink-soft);font-size:0.88rem;text-align:center;">Nur für d'Bakery-Verwaltig.</p>
         <label class="admin-field">
           <span>Benutzername</span>
-          <input type="text" id="admin-user" placeholder="Benutzername" autocomplete="username">
+          <input type="text" id="admin-user" placeholder="Benutzername" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
         </label>
         <label class="admin-field">
           <span>Passwort</span>
-          <input type="password" id="admin-pass" placeholder="Passwort" autocomplete="current-password">
+          <input type="password" id="admin-pass" placeholder="Passwort" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false">
         </label>
         <button id="admin-login-btn" type="submit">Alogge</button>
+        <p style="margin:0.4rem 0 0;color:var(--ink-soft);font-size:0.8rem;text-align:center;">Benutzername <strong>admin</strong> · Passwort <strong>admin</strong></p>
       </form>
     </div>
     <div id="admin-content" style="display:none;">
@@ -858,6 +873,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <h3 style="margin-top:1.8rem;">Feiertag</h3>
       <p style="color:var(--ink-soft);font-size:0.9rem;">Zuesätzlichi Deko für spezielli Anläss.</p>
       <div class="mood-row" id="admin-holiday-chips" role="group" aria-label="Feiertag wähle"></div>
+
+      <h3 style="margin-top:1.8rem;">Bald neu 🔜</h3>
+      <p style="color:var(--ink-soft);font-size:0.9rem;">Ei Cookie pro Zile. Erschiint als Band zobercht uf de Startsite. Leer lah = kei Band.</p>
+      <textarea id="admin-comingsoon" rows="4" placeholder="z.B. Cinnamon Cookie Dreams&#10;Toblerone Brownie" style="width:100%;max-width:26rem;padding:0.7rem;border:1.5px solid var(--line);border-radius:0.6rem;background:var(--ground);color:var(--ink);font:inherit;resize:vertical;"></textarea>
+      <div><button id="admin-comingsoon-save" style="margin-top:0.6rem;background:var(--accent);color:var(--raised);padding:0.55rem 1.1rem;border:none;border-radius:0.5rem;font-weight:700;cursor:pointer;">Speichere</button> <span id="admin-comingsoon-msg" style="color:var(--ink-soft);font-size:0.85rem;"></span></div>
 
       <button id="admin-logout-btn" style="margin-top:2rem;background:var(--line);color:var(--ink);padding:0.6rem 1.2rem;border:none;border-radius:0.5rem;cursor:pointer;">Ablogge</button>
     </div>
@@ -874,6 +894,8 @@ const CONFIG = {
   coffeeDays: [5, 6],
   orderEmail: "bestellung@buhubakery.ch",
   currency: "CHF",
+  // "Bald neu"-Cookies (zeigt's uf de Startsite; über s'Admin-Panel apassbar)
+  comingSoon: ["Cinnamon Cookie Dreams", "Toblerone Brownie"],
 };
 
 const SIZES = {
@@ -1341,6 +1363,20 @@ function renderThemeDecor() {
   if (plant) plant.classList.toggle("hidden", ["weihnachten", "halloween", "ostern"].includes(holiday));
 }
 
+/* --- Bald-neu-Band --------------------------------------------------------- */
+function getComingSoon() {
+  const stored = localStorage.getItem("buhu_comingSoon");
+  if (stored !== null) { try { return JSON.parse(stored); } catch (e) { /* egal */ } }
+  return CONFIG.comingSoon || [];
+}
+function renderComingSoon() {
+  const items = getComingSoon().map((s) => String(s).trim()).filter(Boolean);
+  const band = document.getElementById("coming-soon");
+  const list = document.getElementById("coming-soon-list");
+  list.innerHTML = items.map((t) => `<li>${t.replace(/</g, "&lt;")}</li>`).join("");
+  band.classList.toggle("hidden", items.length === 0);
+}
+
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
 const VITRINE_POS = [[140, 240], [250, 240], [140, 296], [250, 296]];
 const vitrine = document.getElementById("vitrine-cookies");
@@ -1795,6 +1831,9 @@ const adminPanel = {
   calendarDiv: document.getElementById("admin-calendar"),
   seasonChipsDiv: document.getElementById("admin-season-chips"),
   holidayChipsDiv: document.getElementById("admin-holiday-chips"),
+  csTextarea: document.getElementById("admin-comingsoon"),
+  csSaveBtn: document.getElementById("admin-comingsoon-save"),
+  csMsg: document.getElementById("admin-comingsoon-msg"),
   closeBtn: document.querySelector(".admin-modal-close"),
 
   isLoggedIn() { return !!adminStorage.getSession(); },
@@ -1805,22 +1844,31 @@ const adminPanel = {
     this.modal.addEventListener("click", (e) => { if (e.target === this.modal) this.closeModal(); });
     this.loginForm.addEventListener("submit", (e) => { e.preventDefault(); this.login(); });
     this.logoutBtn.addEventListener("click", () => this.logout());
+    this.csSaveBtn.addEventListener("click", () => this.saveComingSoon());
 
     if (this.isLoggedIn()) this.showContent();
     else this.showLogin();
+  },
+
+  saveComingSoon() {
+    const items = this.csTextarea.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    localStorage.setItem("buhu_comingSoon", JSON.stringify(items));
+    renderComingSoon();
+    this.csMsg.textContent = "✓ Gspeicheret";
+    setTimeout(() => { this.csMsg.textContent = ""; }, 2500);
   },
 
   openModal() { this.modal.classList.add("open"); },
   closeModal() { this.modal.classList.remove("open"); },
 
   login() {
-    const user = this.userInput.value.trim();
+    const user = this.userInput.value.trim().toLowerCase();
     const pass = this.passInput.value.trim();
     if (user === ADMIN_CREDS.user && pass === ADMIN_CREDS.pass) {
       adminStorage.setSession("logged-in-" + Date.now());
       this.showContent();
     } else {
-      alert("Fählerhaft Benutzername oder Passwort.");
+      alert("Fählerhaft Benutzername oder Passwort.\n\nBenutzername: admin\nPasswort: admin");
     }
   },
 
@@ -1842,6 +1890,7 @@ const adminPanel = {
     this.renderCalendar();
     this.renderSeasonChips();
     this.renderHolidayChips();
+    this.csTextarea.value = getComingSoon().join("\n");
   },
 
   renderCalendar() {
@@ -1909,6 +1958,7 @@ adminPanel.init();
 
 render();
 renderThemeDecor();
+renderComingSoon();
 </script>
 
 </body>
