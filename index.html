@@ -456,6 +456,22 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   <defs>
     <!-- Herz-Ballon -->
     <path id="heart" d="M0 5 C0 -2 9 -2 9 5 C9 -2 18 -2 18 5 C18 12 9 19 9 19 C9 19 0 12 0 5 Z"/>
+    <!-- Cookie-Backverläufe: heller gebackeni Mitte → dunkler Rand -->
+    <radialGradient id="dough-oreo" cx="42%" cy="36%" r="72%">
+      <stop offset="0%" stop-color="#382C21"/><stop offset="58%" stop-color="#1F1712"/><stop offset="100%" stop-color="#0D0906"/>
+    </radialGradient>
+    <radialGradient id="dough-lotus" cx="42%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#EFD196"/><stop offset="55%" stop-color="#D8A85F"/><stop offset="100%" stop-color="#A96C2E"/>
+    </radialGradient>
+    <radialGradient id="dough-ovoclassic" cx="42%" cy="36%" r="72%">
+      <stop offset="0%" stop-color="#A17A56"/><stop offset="58%" stop-color="#7C5636"/><stop offset="100%" stop-color="#54351E"/>
+    </radialGradient>
+    <radialGradient id="dough-ovonoir" cx="42%" cy="36%" r="72%">
+      <stop offset="0%" stop-color="#583E2A"/><stop offset="58%" stop-color="#3B2718"/><stop offset="100%" stop-color="#22150C"/>
+    </radialGradient>
+    <radialGradient id="melt-core" cx="42%" cy="38%" r="66%">
+      <stop offset="0%" stop-color="#FFD27A"/><stop offset="55%" stop-color="#F5A11C"/><stop offset="100%" stop-color="#D9791A"/>
+    </radialGradient>
   </defs>
 </svg>
 
@@ -871,10 +887,10 @@ const SIZES = {
 const SONDER = { min: 13, max: 30, pricePerCookie: 4, meltSurcharge: 0.5 };
 
 const COOKIES = [
-  { id: "oreo",       name: "Oreo",               note: "Schoggi-Teig mit Oreo-Stückli.",         dough: "#3A2E23", topping: "oreo",  moods: ["comfort", "celebrating"] },
-  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Karamellig mit Biscoff-Crunch.",         dough: "#D89B52", topping: "lotus", moods: ["study", "date"] },
-  { id: "ovoclassic", name: "Ovomaltine Classic", note: "De Schwiizer Klassiker mit Ovo-Crunch.", dough: "#C08A4A", topping: "ovo",   moods: ["hangry", "comfort"] },
-  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi trifft Ovo-Crunch.",      dough: "#54402C", topping: "ovo",   moods: ["date", "hangry"] },
+  { id: "oreo",       name: "Oreo",               note: "Dunkle Schoggi-Cookie mit wiisser Schoggi-Drizzle & halbem Oreo.", drizzle: "#F1EBDB", garnish: "oreo",    moods: ["comfort", "celebrating"] },
+  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
+  { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
+  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
 ];
 const VARIANTS = [
   { id: "plain", label: "eifach so" },
@@ -949,47 +965,96 @@ function boxContentLines(items) {
   return out;
 }
 
-/* --- Cookie-Zeichnung ------------------------------------------------------- */
-/* Deterministische Positione, damit Cookie-Icons überall gleich aussehen */
-const CHIP_SPOTS = [[-9, -4], [7, -9], [10, 7], [-4, 10], [2, 0], [-11, 4], [-6, -10], [8, 2]];
-function toppingSVG(type, r) {
-  if (type === "oreo") {
-    // Oreo-Stückli: dunkli Wafer-Runde mit heller Crème-Rand
-    return CHIP_SPOTS.slice(0, 5).map(([dx, dy], i) => {
-      const cx = (dx * r / 20).toFixed(1), cy = (dy * r / 20).toFixed(1);
-      const sz = (r / (i % 2 === 0 ? 4.0 : 5.4)).toFixed(1);
-      return `<circle cx="${cx}" cy="${cy}" r="${sz}" fill="#191410" stroke="#FBF3E4" stroke-width="${(r * 0.055).toFixed(1)}"/>`;
-    }).join("");
-  }
-  if (type === "lotus") {
-    // Biscoff-Crunch: braun-goldigi Guetzli-Bröckli, quadratisch mit Rillen
-    return CHIP_SPOTS.slice(0, 4).map(([dx, dy], i) => {
-      const cx = dx * r / 20, cy = dy * r / 20;
-      const sz = r / 4.4;
-      const rot = (i * 37) % 360;
-      return `<rect x="${(cx - sz).toFixed(1)}" y="${(cy - sz * 0.62).toFixed(1)}" width="${(sz * 2).toFixed(1)}" height="${(sz * 1.24).toFixed(1)}" rx="${(sz * 0.3).toFixed(1)}" fill="#8A4F1D" stroke="rgba(46,32,21,0.55)" stroke-width="0.8" transform="rotate(${rot} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`;
-    }).join("");
-  }
-  // Ovomaltine-Crunch: eckigi malzig-braungoldigi Splitter (kei Chügeli!)
-  return CHIP_SPOTS.slice(0, 6).map(([dx, dy], i) => {
-    const cx = dx * r / 20, cy = dy * r / 20;
-    const sz = r / (4.0 + (i % 2) * 0.6);
-    const rot = (i * 53) % 360;
-    const pts = [[0, -1], [0.8, -0.15], [0.25, 1], [-0.8, 0.25]]
-      .map(([px, py]) => `${(px * sz).toFixed(1)},${(py * sz).toFixed(1)}`).join(" ");
-    return `<polygon points="${pts}" fill="#B5772E" stroke="rgba(46,32,21,0.55)" stroke-width="0.8" transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)}) rotate(${rot})"/>`;
-  }).join("");
+/* --- Cookie-Zeichnung (fotorealistisch) ------------------------------------ */
+/* Organischi, gebackeni Cookie-Form – deterministisch, überall gliich */
+function blobPath(r, wob) {
+  const n = wob.length, P = [];
+  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; const rr = r * wob[i]; P.push([Math.cos(a) * rr, Math.sin(a) * rr]); }
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  let m0 = mid(P[n - 1], P[0]);
+  let d = `M ${m0[0].toFixed(1)} ${m0[1].toFixed(1)} `;
+  for (let i = 0; i < n; i++) { const cur = P[i], nx = P[(i + 1) % n], m = mid(cur, nx); d += `Q ${cur[0].toFixed(1)} ${cur[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)} `; }
+  return d + "Z";
 }
+/* Wobble-Profile pro Sorte (dass jede Sorte e chli anderi Form het) */
+const WOB = {
+  oreo:       [1.00, 0.93, 1.04, 0.96, 1.02, 0.94, 1.05, 0.97, 1.01, 0.95, 1.03, 0.96],
+  lotus:      [1.02, 0.96, 1.00, 1.04, 0.95, 1.03, 0.97, 1.01, 0.94, 1.04, 0.98, 1.00],
+  ovoclassic: [0.98, 1.03, 0.95, 1.02, 0.97, 1.04, 0.96, 1.01, 1.03, 0.95, 1.02, 0.97],
+  ovonoir:    [1.03, 0.97, 1.01, 0.94, 1.04, 0.96, 1.02, 0.98, 1.00, 1.03, 0.95, 1.01],
+};
+/* Drizzle: dünni wälleti Linie, criss-cross übere Cookie (wie uf de Foti) */
+function drizzleSVG(r, col, seed) {
+  const sw = Math.max(0.6, r * 0.045);
+  let out = `<g transform="rotate(-16)">`;
+  const N = 7;
+  for (let i = 0; i < N; i++) {
+    const off = (i / (N - 1) * 2 - 1) * r * 0.82;
+    const half = Math.sqrt(Math.max(0, r * r - off * off)) * 0.96;
+    const wob = ((i + seed) % 2 ? 1 : -1) * r * 0.13;
+    out += `<path d="M${off.toFixed(1)} ${(-half).toFixed(1)} Q${(off + wob).toFixed(1)} 0 ${off.toFixed(1)} ${half.toFixed(1)}" stroke="${col}" stroke-width="${sw.toFixed(2)}" fill="none" stroke-linecap="round" opacity="0.92"/>`;
+  }
+  out += `</g>`;
+  return out;
+}
+/* Zentrali Garnitur pro Sorte (wie uf de Foti: 1 Stück i de Mitti) */
+function garnishSVG(c, r) {
+  const sw = Math.max(0.6, r * 0.05);
+  const cx = 0, cy = -r * 0.05;
+  if (c.garnish === "oreo") {
+    // Halbe Oreo: dunkle Wafer obe/unte, wiissi Crème i de Mitti
+    const s = r * 0.5;
+    return `<g transform="translate(${cx} ${cy}) rotate(-8)">` +
+      `<path d="M${-s} ${-s * 0.1} A ${s} ${s} 0 0 1 ${s} ${-s * 0.1} Z" fill="#1C1712" stroke="#0C0906" stroke-width="${sw.toFixed(2)}"/>` +
+      `<rect x="${-s}" y="${-s * 0.1}" width="${s * 2}" height="${(s * 0.42).toFixed(1)}" fill="#F1EBDB" stroke="#DCCFB2" stroke-width="${(sw * 0.7).toFixed(2)}"/>` +
+      `<path d="M${-s * 0.92} ${(s * 0.32).toFixed(1)} h${(s * 1.84).toFixed(1)} v${(s * 0.34).toFixed(1)} a${s * 0.92} ${s * 0.4} 0 0 1 ${-s * 1.84} 0 Z" fill="#1C1712" stroke="#0C0906" stroke-width="${sw.toFixed(2)}"/>` +
+      `<ellipse cx="${-s * 0.3}" cy="${-s * 0.34}" rx="${s * 0.34}" ry="${s * 0.16}" fill="#fff" opacity="0.14"/></g>`;
+  }
+  if (c.garnish === "biscoff") {
+    // Ganzes Biscoff-Guetzli: karamellbrun, rundlichs Rechteck mit Prägig & "B"
+    const w = r * 0.92, h = r * 0.7;
+    const scallop = [];
+    const per = 6;
+    for (let i = 0; i < per; i++) { const t = -w / 2 + (i + 0.5) / per * w; scallop.push(`<circle cx="${t.toFixed(1)}" cy="${(-h / 2).toFixed(1)}" r="${(w / per / 2.4).toFixed(1)}" fill="#B06E30"/>`); }
+    return `<g transform="translate(${cx} ${cy}) rotate(-12)">` +
+      `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="${(h * 0.16).toFixed(1)}" fill="#C17A3A" stroke="#7C4A1E" stroke-width="${sw.toFixed(2)}"/>` +
+      `<rect x="${-w / 2 + w * 0.08}" y="${-h / 2 + h * 0.12}" width="${w * 0.84}" height="${h * 0.76}" rx="${(h * 0.1).toFixed(1)}" fill="none" stroke="#9A5F28" stroke-width="${(sw * 0.7).toFixed(2)}" opacity="0.7"/>` +
+      `<text x="0" y="${(h * 0.12).toFixed(1)}" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="${(h * 0.5).toFixed(1)}" fill="#8A4F1D" opacity="0.65">B</text>` +
+      `<ellipse cx="${-w * 0.22}" cy="${-h * 0.24}" rx="${w * 0.22}" ry="${h * 0.14}" fill="#fff" opacity="0.16"/></g>`;
+  }
+  // Ovomaltine-Schoggi-Stück (Würfel), evtl. mit Fleur de Sel
+  const s = r * 0.42, col = c.garnishCol || "#8A5A34";
+  let g = `<g transform="translate(${cx} ${cy}) rotate(-14)">` +
+    `<rect x="${-s}" y="${-s}" width="${s * 2}" height="${s * 2}" rx="${(s * 0.16).toFixed(1)}" fill="${col}" stroke="#4A2E16" stroke-width="${sw.toFixed(2)}"/>` +
+    `<path d="M${-s} 0 h${s * 2} M0 ${-s} v${s * 2}" stroke="#4A2E16" stroke-width="${(sw * 0.6).toFixed(2)}" opacity="0.5"/>` +
+    `<rect x="${-s * 0.8}" y="${-s * 0.8}" width="${s * 0.7}" height="${s * 0.5}" rx="2" fill="#fff" opacity="0.18"/></g>`;
+  if (c.salt) {
+    g += [[-s * 0.2, -s * 1.1], [s * 0.5, -s * 0.7], [-s * 0.7, -s * 0.5], [s * 0.1, -s * 1.3]]
+      .map(([x, y]) => `<rect x="${(cx + x).toFixed(1)}" y="${(cy + y).toFixed(1)}" width="${(r * 0.06).toFixed(1)}" height="${(r * 0.06).toFixed(1)}" fill="#FBF3E4"/>`).join("");
+  }
+  return g;
+}
+
 function cookieSVG(c, r, melt) {
-  const topping = toppingSVG(c.topping, r);
-  const gloss = `<ellipse cx="${(-r * 0.35).toFixed(1)}" cy="${(-r * 0.35).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.25).toFixed(1)}" fill="white" opacity="0.22"/>`;
-  const core = melt
-    ? `<circle r="${(r * 0.5).toFixed(1)}" fill="#F5A11C" stroke="#C77E10" stroke-width="1.5" opacity="0.95"/>` +
-      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.16).toFixed(1)}" rx="${(r * 0.18).toFixed(1)}" ry="${(r * 0.12).toFixed(1)}" fill="#FBF3E4" opacity="0.8"/>`
+  const wob = WOB[c.id] || WOB.oreo;
+  const base = `<path d="${blobPath(r, wob)}" fill="url(#dough-${c.id})" stroke="#241A12" stroke-width="${Math.max(1, r * 0.08).toFixed(2)}" stroke-linejoin="round"/>`;
+  const rim = `<path d="${blobPath(r * 0.88, wob)}" fill="none" stroke="rgba(46,32,21,0.16)" stroke-width="${Math.max(0.6, r * 0.045).toFixed(2)}"/>`;
+  // gebackeni Wulscht/Falte
+  const wrinkles = `<path d="M${(-r * 0.5).toFixed(1)} ${(-r * 0.05).toFixed(1)} q${(r * 0.25).toFixed(1)} ${(r * 0.14).toFixed(1)} ${(r * 0.5).toFixed(1)} ${(r * 0.02).toFixed(1)} M${(-r * 0.35).toFixed(1)} ${(r * 0.35).toFixed(1)} q${(r * 0.2).toFixed(1)} ${(-r * 0.12).toFixed(1)} ${(r * 0.42).toFixed(1)} ${(-r * 0.02).toFixed(1)} M${(r * 0.05).toFixed(1)} ${(-r * 0.4).toFixed(1)} q${(r * 0.14).toFixed(1)} ${(r * 0.1).toFixed(1)} ${(r * 0.05).toFixed(1)} ${(r * 0.24).toFixed(1)}" stroke="rgba(20,12,6,0.16)" stroke-width="${Math.max(0.5, r * 0.04).toFixed(2)}" fill="none" stroke-linecap="round"/>`;
+  // wiissi Schoggi-Chunks (nume Lotus)
+  const chunks = c.whiteChunks
+    ? [[-0.45, 0.28], [0.4, 0.34], [-0.15, 0.5], [0.5, -0.28]].map(([x, y], i) =>
+        `<path d="${blobPath(r * 0.13, [1, 0.8, 1.1, 0.85, 1.05, 0.9])}" fill="#F4ECD8" stroke="#DCCFB2" stroke-width="${Math.max(0.4, r * 0.03).toFixed(2)}" transform="translate(${(x * r).toFixed(1)} ${(y * r).toFixed(1)})"/>`).join("")
     : "";
-  const shadow = `<circle r="${r}" fill="none" stroke="rgba(46,32,21,0.15)" stroke-width="1.5"/>`;
-  return `<circle r="${r}" fill="${c.dough}" stroke="#2E2015" stroke-width="2.2"/>` +
-    shadow + topping + gloss + core;
+  const gloss = `<ellipse cx="${(-r * 0.34).toFixed(1)}" cy="${(-r * 0.4).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.22).toFixed(1)}" fill="#fff" opacity="0.12"/>`;
+  if (melt) {
+    const core = `<ellipse cx="${(r * 0.02).toFixed(1)}" cy="${(r * 0.04).toFixed(1)}" rx="${(r * 0.5).toFixed(1)}" ry="${(r * 0.46).toFixed(1)}" fill="url(#melt-core)" stroke="#C77E10" stroke-width="${Math.max(0.8, r * 0.05).toFixed(2)}"/>` +
+      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.14).toFixed(1)}" rx="${(r * 0.18).toFixed(1)}" ry="${(r * 0.11).toFixed(1)}" fill="#FFF3D8" opacity="0.8"/>`;
+    return base + rim + wrinkles + chunks + core + gloss;
+  }
+  const drizzle = drizzleSVG(r, c.drizzle, c.id.length);
+  const garnish = garnishSVG(c, r);
+  return base + rim + wrinkles + chunks + drizzle + garnish + gloss;
 }
 
 /* --- Saison- & Feiertags-Deko ----------------------------------------------- */
