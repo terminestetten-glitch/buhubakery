@@ -168,8 +168,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .rotate-overlay p { font-size: 1.1rem; font-weight: 600; max-width: 18rem; margin: 0; }
 }
 #buhu-figure { pointer-events: none; transition: transform 0.85s cubic-bezier(0.34, 1.15, 0.4, 1); }
-#buhu-body { filter: drop-shadow(0 4px 6px rgba(46,32,21,0.35)); animation: buhuFloat 3.2s ease-in-out infinite; }
-#buhu-img { transform-box: fill-box; transform-origin: center; }
+#buhu-body { scale: 0.72; filter: drop-shadow(0 4px 6px rgba(46,32,21,0.35)); animation: buhuFloat 3.2s ease-in-out infinite; }
+#buhu-scene-bubble .buhu-choice { pointer-events: auto; cursor: pointer; }
 @keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
 @media (prefers-reduced-motion: reduce) { #buhu-figure { transition: none; } #buhu-body { animation: none; } }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.25rem; }
@@ -758,12 +758,40 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
           <!-- Buhu, de Café-Mitarbeiter: füehrt Schritt für Schritt dur d'Bstellig -->
           <g id="buhu-figure">
-            <defs><clipPath id="buhu-clip"><circle cx="0" cy="0" r="45"/></clipPath></defs>
             <g id="buhu-scene-bubble"></g>
             <g id="buhu-body">
-              <circle cx="0" cy="0" r="46" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
-              <image id="buhu-img" x="-46" y="-46" width="92" height="92" href="assets/logo.png" clip-path="url(#buhu-clip)"
-                     onerror="this.onerror=null;this.setAttribute('href',BUHU_LOGO_FALLBACK)"/>
+              <defs><clipPath id="buhu-sil"><path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z"/></clipPath></defs>
+              <!-- Flügel (hinter em Chörper) -->
+              <g fill="#FBF3E4" stroke="#2E2015" stroke-width="2" opacity="0.95">
+                <ellipse cx="46" cy="-16" rx="15" ry="8.5" transform="rotate(-26 46 -16)"/>
+                <ellipse cx="49" cy="1" rx="13" ry="7.5" transform="rotate(-6 49 1)"/>
+              </g>
+              <!-- Geist-Chörper (creme) -->
+              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="#F3EBDA"/>
+              <!-- Bienebauch (schwarz) mit oranger Striife -->
+              <g clip-path="url(#buhu-sil)">
+                <path d="M-46 14 C-30 22 -20 9 -8 17 C4 23 15 9 27 17 C37 21 46 15 46 64 L-46 64 Z" fill="#211A12"/>
+                <rect x="-64" y="24" width="128" height="20" fill="#F5A11C" transform="rotate(-27)"/>
+              </g>
+              <!-- Umriss -->
+              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="none" stroke="#2E2015" stroke-width="2.6" stroke-linejoin="round"/>
+              <!-- Gsicht -->
+              <ellipse cx="-16" cy="3" rx="6" ry="3.8" fill="#F4A6A0" opacity="0.75"/>
+              <ellipse cx="14" cy="3" rx="6" ry="3.8" fill="#F4A6A0" opacity="0.75"/>
+              <ellipse cx="-10" cy="-8" rx="3.4" ry="5" fill="#2E2015"/>
+              <ellipse cx="8" cy="-8" rx="3.4" ry="5" fill="#2E2015"/>
+              <circle cx="-11" cy="-10" r="1.2" fill="#fff"/><circle cx="7" cy="-10" r="1.2" fill="#fff"/>
+              <path d="M-4 0 Q2 5 7 0" fill="none" stroke="#2E2015" stroke-width="2" stroke-linecap="round"/>
+              <!-- Chuchichappe -->
+              <g transform="rotate(-8 0 -58)">
+                <rect x="-20" y="-60" width="40" height="12" rx="4" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4"/>
+                <path d="M-22 -58 C-31 -60 -30 -75 -18 -74 C-21 -85 -5 -87 0 -78 C5 -87 21 -85 18 -74 C30 -75 31 -60 22 -58 Z" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4" stroke-linejoin="round"/>
+              </g>
+              <!-- Honiglöffel -->
+              <line x1="-30" y1="7" x2="-44" y2="-28" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="-45" cy="-32" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
+              <path d="M-51 -34 h12 M-51 -31 h12 M-50 -36 h11" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
+              <circle cx="-30" cy="8" r="6.5" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.2"/>
             </g>
           </g>
 
@@ -1890,43 +1918,60 @@ function render() {
 
 /* --- Buhu, de Café-Mitarbeiter (füehrt dur d'Schritt) --------------------- */
 const BUHU_STEPS = {
-  greet:  { x: 395,  y: 292, flip: false },
-  select: { x: 335,  y: 292, flip: true  },
-  coffee: { x: 500,  y: 286, flip: false },
-  pack:   { x: 1082, y: 442, flip: true  },
-  bye:    { x: 620,  y: 288, flip: false },
+  greet:  { x: 395,  y: 292, bcx: 645, bcy: 58 },
+  select: { x: 335,  y: 292, bcx: 655, bcy: 58 },
+  coffee: { x: 505,  y: 286, bcx: 858, bcy: 150 },
+  pack:   { x: 1082, y: 442, bcx: 928, bcy: 250 },
+  bye:    { x: 620,  y: 288, bcx: 655, bcy: 58 },
 };
 let buhuBye = false;
-function buhuLine(step, ready) {
-  return ({
-    greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Boxgrössi – ich hilf der.",
-    select: "Tipp d'Cookies i de Vitrine aa – ich leg sie dir i d'Box. 🍪",
-    coffee: "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?",
-    pack:   ready ? "Alles bereit! Schick mir d'Aafrag – ich richt's dir. ✅" : "So, ich pack dini Box zäme… 📦",
-    bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
-  })[step];
-}
-function setBuhuBubble(text) {
+let coffeeChoice = null; // null = no gfragt, "yes" oder "no"
+
+function setBuhuBubble(text, cx, cy, tx, ty, withChoice) {
   const wrap = 30, words = text.split(" "), lines = [];
   let cur = "";
   for (const w of words) { if ((cur + " " + w).trim().length > wrap) { lines.push(cur.trim()); cur = w; } else cur += " " + w; }
   if (cur.trim()) lines.push(cur.trim());
-  const fs = 13, pad = 9, lh = 17;
-  const w = Math.max(...lines.map((l) => l.length)) * fs * 0.56 + pad * 2;
-  const h = lines.length * lh + pad * 2;
-  const bx = -w / 2, by = -54 - h;
-  let t = `<rect x="${bx.toFixed(0)}" y="${by.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="11" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>`;
-  t += `<path d="M-11 ${(by + h).toFixed(0)} L1 ${(by + h + 13).toFixed(0)} L11 ${(by + h).toFixed(0)} Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>`;
-  lines.forEach((l, i) => { t += `<text x="0" y="${(by + pad + lh * i + 12).toFixed(0)}" text-anchor="middle" font-size="${fs}" fill="#2E2015" font-family="'Segoe UI',system-ui,sans-serif">${l.replace(/</g, "&lt;")}</text>`; });
-  document.getElementById("buhu-scene-bubble").innerHTML = t;
+  const fs = 13, pad = 10, lh = 17, btnH = withChoice ? 30 : 0;
+  const w = Math.max(150, Math.max(...lines.map((l) => l.length)) * fs * 0.56 + pad * 2);
+  const h = lines.length * lh + pad * 2 + btnH;
+  const bx = cx - w / 2, by = cy - h / 2;
+  const baseY = ty > by + h ? by + h : (ty < by ? by : cy);
+  const baseX = Math.max(bx + 14, Math.min(bx + w - 14, tx));
+  let t = `<rect x="${bx.toFixed(0)}" y="${by.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="12" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>`;
+  t += `<path d="M${(baseX - 9).toFixed(0)} ${baseY.toFixed(0)} L${tx.toFixed(0)} ${ty.toFixed(0)} L${(baseX + 9).toFixed(0)} ${baseY.toFixed(0)} Z" fill="#FBF3E4"/>`;
+  t += `<path d="M${(baseX - 9).toFixed(0)} ${baseY.toFixed(0)} L${tx.toFixed(0)} ${ty.toFixed(0)} L${(baseX + 9).toFixed(0)} ${baseY.toFixed(0)}" fill="none" stroke="#2E2015" stroke-width="2" stroke-linejoin="round"/>`;
+  lines.forEach((l, i) => { t += `<text x="${cx.toFixed(0)}" y="${(by + pad + lh * i + 12).toFixed(0)}" text-anchor="middle" font-size="${fs}" fill="#2E2015" font-family="'Segoe UI',system-ui,sans-serif">${l.replace(/</g, "&lt;")}</text>`; });
+  if (withChoice) {
+    const byB = by + h - btnH + 3, bw = 64;
+    t += `<g class="buhu-choice" data-choice="yes"><rect x="${(cx - bw - 5).toFixed(0)}" y="${byB.toFixed(0)}" width="${bw}" height="22" rx="11" fill="#F5A11C" stroke="#2E2015" stroke-width="1.6"/><text x="${(cx - bw / 2 - 5).toFixed(0)}" y="${(byB + 15).toFixed(0)}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">Ja gern ☕</text></g>`;
+    t += `<g class="buhu-choice" data-choice="no"><rect x="${(cx + 5).toFixed(0)}" y="${byB.toFixed(0)}" width="${bw}" height="22" rx="11" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.6"/><text x="${(cx + bw / 2 + 5).toFixed(0)}" y="${(byB + 15).toFixed(0)}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">Nei, merci</text></g>`;
+  }
+  const el = document.getElementById("buhu-scene-bubble");
+  el.innerHTML = t;
+  el.querySelectorAll(".buhu-choice").forEach((g) => g.addEventListener("click", () => onCoffeeChoice(g.dataset.choice)));
 }
+function onCoffeeChoice(c) { coffeeChoice = c; render(); }
+
 function setBuhu(step, ready) {
   const s = BUHU_STEPS[step];
   if (!s) return;
-  const fig = document.getElementById("buhu-figure");
-  fig.style.transform = `translate(${s.x}px, ${s.y}px)`;
-  document.getElementById("buhu-img").style.transform = s.flip ? "scaleX(-1)" : "none";
-  setBuhuBubble(buhuLine(step, ready));
+  document.getElementById("buhu-figure").style.transform = `translate(${s.x}px, ${s.y}px)`;
+  const withChoice = step === "coffee" && coffeeChoice === null;
+  let line;
+  if (step === "coffee") {
+    line = coffeeChoice === "yes"
+      ? "Super – tipp uf d'COFFEEMENU-Tafel ☕ oder unte i de Liste."
+      : "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?";
+  } else {
+    line = ({
+      greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Boxgrössi – ich hilf der.",
+      select: "Tipp d'Cookies i de Vitrine aa – ich leg sie dir i d'Box. 🍪",
+      pack:   ready ? "Alles bereit! Schick mir d'Aafrag – ich richt's dir. ✅" : "So, ich pack dini Box zäme… 📦",
+      bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
+    })[step];
+  }
+  setBuhuBubble(line, s.bcx - s.x, s.bcy - s.y, 0, -38, withChoice);
 }
 function updateBuhu(ready) {
   if (buhuBye) return;
@@ -1934,7 +1979,7 @@ function updateBuhu(ready) {
   let step;
   if (!state.size && state.savedBoxes.length === 0) step = "greet";
   else if (!state.size || n < cap) step = "select";
-  else if (isCoffeeDay() && totalCoffees() === 0) step = "coffee";
+  else if (isCoffeeDay() && totalCoffees() === 0 && coffeeChoice !== "no") step = "coffee";
   else step = "pack";
   setBuhu(step, ready);
 }
