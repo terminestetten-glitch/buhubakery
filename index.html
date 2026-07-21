@@ -167,6 +167,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .rotate-overlay img { width: 9rem; border-radius: 50%; }
   .rotate-overlay p { font-size: 1.1rem; font-weight: 600; max-width: 18rem; margin: 0; }
 }
+#buhu-figure { pointer-events: none; transition: transform 0.85s cubic-bezier(0.34, 1.15, 0.4, 1); }
+#buhu-body { filter: drop-shadow(0 4px 6px rgba(46,32,21,0.35)); animation: buhuFloat 3.2s ease-in-out infinite; }
+#buhu-img { transform-box: fill-box; transform-origin: center; }
+@keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@media (prefers-reduced-motion: reduce) { #buhu-figure { transition: none; } #buhu-body { animation: none; } }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.25rem; }
 .btn {
   display: inline-block;
@@ -751,6 +756,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <g id="g-season-decor"></g>
           <g id="g-holiday-decor"></g>
 
+          <!-- Buhu, de Café-Mitarbeiter: füehrt Schritt für Schritt dur d'Bstellig -->
+          <g id="buhu-figure">
+            <defs><clipPath id="buhu-clip"><circle cx="0" cy="0" r="45"/></clipPath></defs>
+            <g id="buhu-scene-bubble"></g>
+            <g id="buhu-body">
+              <circle cx="0" cy="0" r="46" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
+              <image id="buhu-img" x="-46" y="-46" width="92" height="92" href="assets/logo.png" clip-path="url(#buhu-clip)"
+                     onerror="this.onerror=null;this.setAttribute('href',BUHU_LOGO_FALLBACK)"/>
+            </g>
+          </g>
+
         </svg>
       </div>
 
@@ -858,7 +874,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <input type="password" id="admin-pass" placeholder="Passwort" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false">
         </label>
         <button id="admin-login-btn" type="submit">Alogge</button>
-        <p style="margin:0.4rem 0 0;color:var(--ink-soft);font-size:0.8rem;text-align:center;">Benutzername <strong>admin</strong> · Passwort <strong>admin</strong></p>
+        <p id="admin-hint" style="margin:0.4rem 0 0;color:var(--ink-soft);font-size:0.8rem;text-align:center;">Benutzername <strong>admin</strong> · Passwort <strong>admin</strong></p>
       </form>
     </div>
     <div id="admin-content" style="display:none;">
@@ -896,7 +912,60 @@ const CONFIG = {
   currency: "CHF",
   // "Bald neu"-Cookies (zeigt's uf de Startsite; über s'Admin-Panel apassbar)
   comingSoon: ["Cinnamon Cookie Dreams", "Toblerone Brownie"],
+  // Globale Selbstbedienig (Supabase). Läär = nur lokal (pro Gerät).
+  // Sobald url + anonKey iträit sind, sind Admin-Änderige für ALLI Chunde sichtbar.
+  supabase: { url: "", anonKey: "" },
 };
+
+/* --- Globale Selbstbedienig via Supabase (optional, nur fetch) ------------- */
+const SB = (CONFIG.supabase && CONFIG.supabase.url) ? CONFIG.supabase : null;
+let adminPw = null; // im Arbeitsspeicher, sobald Admin iiglogged
+const sbHeaders = () => ({ "apikey": SB.anonKey, "Authorization": "Bearer " + SB.anonKey, "Content-Type": "application/json" });
+
+function applyRemoteData(d) {
+  if (!d) return;
+  if (d.coffeeDays !== undefined) localStorage.setItem("buhu_coffeeDays", JSON.stringify(d.coffeeDays));
+  if (d.comingSoon !== undefined) localStorage.setItem("buhu_comingSoon", JSON.stringify(d.comingSoon));
+  if (d.season !== undefined) localStorage.setItem("buhu_season", d.season);
+  if (d.holiday !== undefined) localStorage.setItem("buhu_holiday", d.holiday);
+}
+function collectAdminState() {
+  return {
+    coffeeDays: JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}"),
+    comingSoon: getComingSoon(),
+    season: localStorage.getItem("buhu_season") || "",
+    holiday: localStorage.getItem("buhu_holiday") || "keine",
+  };
+}
+async function loadRemoteState() {
+  if (!SB) return false;
+  try {
+    const res = await fetch(`${SB.url}/rest/v1/site_state?id=eq.1&select=data`, { headers: sbHeaders() });
+    if (!res.ok) return false;
+    const rows = await res.json();
+    if (rows[0] && rows[0].data) { applyRemoteData(rows[0].data); return true; }
+  } catch (e) { /* offline: lokal witerläbe */ }
+  return false;
+}
+async function saveRemoteState() {
+  if (!SB || !adminPw) return;
+  try {
+    await fetch(`${SB.url}/rest/v1/rpc/admin_save`, {
+      method: "POST", headers: sbHeaders(),
+      body: JSON.stringify({ pw: adminPw, new_data: collectAdminState() }),
+    });
+  } catch (e) { /* egal, lokal isch scho gspeicheret */ }
+}
+async function verifyAdminPw(user, pass) {
+  if (user !== "admin") return false;
+  if (!SB) return pass === ADMIN_CREDS.pass; // lokaler Fallback ohni Supabase
+  try {
+    const res = await fetch(`${SB.url}/rest/v1/rpc/admin_check`, {
+      method: "POST", headers: sbHeaders(), body: JSON.stringify({ pw: pass }),
+    });
+    return res.ok && (await res.json()) === true;
+  } catch (e) { return false; }
+}
 
 const SIZES = {
   XXS: { capacity: 1,  price: 4,    cols: 1 },
@@ -1070,9 +1139,18 @@ function cookieSVG(c, r, melt) {
     : "";
   const gloss = `<ellipse cx="${(-r * 0.34).toFixed(1)}" cy="${(-r * 0.4).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.22).toFixed(1)}" fill="#fff" opacity="0.12"/>`;
   if (melt) {
-    const core = `<ellipse cx="${(r * 0.02).toFixed(1)}" cy="${(r * 0.04).toFixed(1)}" rx="${(r * 0.5).toFixed(1)}" ry="${(r * 0.46).toFixed(1)}" fill="url(#melt-core)" stroke="#C77E10" stroke-width="${Math.max(0.8, r * 0.05).toFixed(2)}"/>` +
-      `<ellipse cx="${(-r * 0.16).toFixed(1)}" cy="${(-r * 0.14).toFixed(1)}" rx="${(r * 0.18).toFixed(1)}" ry="${(r * 0.11).toFixed(1)}" fill="#FFF3D8" opacity="0.8"/>`;
-    return base + rim + wrinkles + chunks + core + gloss;
+    // Soft Melt Chärn: molten Kern wo us de Mitti usequellt, mit em Sorte-Stück drin
+    const MW = [1.07, 0.9, 1.08, 0.92, 1.05, 0.88, 1.1, 0.93, 1.04, 0.9, 1.06, 0.91];
+    const pr = r * 0.6;
+    const drz = drizzleSVG(r, c.drizzle, c.id.length);
+    const riv = [[-0.52, 0.42], [0.6, 0.18], [0.12, -0.62], [-0.34, -0.38], [0.46, 0.56]]
+      .map(([x, y]) => `<path d="M0 0 Q${(x * r * 0.4).toFixed(1)} ${(y * r * 0.4).toFixed(1)} ${(x * r * 0.86).toFixed(1)} ${(y * r * 0.86).toFixed(1)}" stroke="url(#melt-core)" stroke-width="${Math.max(1, r * 0.1).toFixed(2)}" fill="none" stroke-linecap="round" opacity="0.9"/>`).join("");
+    const crater = `<path d="${blobPath(pr * 1.14, MW)}" fill="#6E3A12" opacity="0.5"/>`;
+    const pool = `<path d="${blobPath(pr, MW)}" fill="url(#melt-core)" stroke="#C77E10" stroke-width="${Math.max(0.6, r * 0.03).toFixed(2)}"/>`;
+    const sheen = `<ellipse cx="${(-pr * 0.28).toFixed(1)}" cy="${(-pr * 0.34).toFixed(1)}" rx="${(pr * 0.5).toFixed(1)}" ry="${(pr * 0.28).toFixed(1)}" fill="#FFF6E0" opacity="0.75"/>` +
+      `<circle cx="${(pr * 0.3).toFixed(1)}" cy="${(pr * 0.22).toFixed(1)}" r="${(pr * 0.1).toFixed(1)}" fill="#FFF6E0" opacity="0.5"/>`;
+    const gsmall = garnishSVG(c, r * 0.8);
+    return base + rim + wrinkles + chunks + drz + riv + crater + pool + sheen + gsmall + gloss;
   }
   const drizzle = drizzleSVG(r, c.drizzle, c.id.length);
   const garnish = garnishSVG(c, r);
@@ -1807,6 +1885,58 @@ function render() {
   } else {
     orderBtn.href = "#";
   }
+  updateBuhu(ready);
+}
+
+/* --- Buhu, de Café-Mitarbeiter (füehrt dur d'Schritt) --------------------- */
+const BUHU_STEPS = {
+  greet:  { x: 395,  y: 292, flip: false },
+  select: { x: 335,  y: 292, flip: true  },
+  coffee: { x: 500,  y: 286, flip: false },
+  pack:   { x: 1082, y: 442, flip: true  },
+  bye:    { x: 620,  y: 288, flip: false },
+};
+let buhuBye = false;
+function buhuLine(step, ready) {
+  return ({
+    greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Boxgrössi – ich hilf der.",
+    select: "Tipp d'Cookies i de Vitrine aa – ich leg sie dir i d'Box. 🍪",
+    coffee: "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?",
+    pack:   ready ? "Alles bereit! Schick mir d'Aafrag – ich richt's dir. ✅" : "So, ich pack dini Box zäme… 📦",
+    bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
+  })[step];
+}
+function setBuhuBubble(text) {
+  const wrap = 30, words = text.split(" "), lines = [];
+  let cur = "";
+  for (const w of words) { if ((cur + " " + w).trim().length > wrap) { lines.push(cur.trim()); cur = w; } else cur += " " + w; }
+  if (cur.trim()) lines.push(cur.trim());
+  const fs = 13, pad = 9, lh = 17;
+  const w = Math.max(...lines.map((l) => l.length)) * fs * 0.56 + pad * 2;
+  const h = lines.length * lh + pad * 2;
+  const bx = -w / 2, by = -54 - h;
+  let t = `<rect x="${bx.toFixed(0)}" y="${by.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="11" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>`;
+  t += `<path d="M-11 ${(by + h).toFixed(0)} L1 ${(by + h + 13).toFixed(0)} L11 ${(by + h).toFixed(0)} Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>`;
+  lines.forEach((l, i) => { t += `<text x="0" y="${(by + pad + lh * i + 12).toFixed(0)}" text-anchor="middle" font-size="${fs}" fill="#2E2015" font-family="'Segoe UI',system-ui,sans-serif">${l.replace(/</g, "&lt;")}</text>`; });
+  document.getElementById("buhu-scene-bubble").innerHTML = t;
+}
+function setBuhu(step, ready) {
+  const s = BUHU_STEPS[step];
+  if (!s) return;
+  const fig = document.getElementById("buhu-figure");
+  fig.style.transform = `translate(${s.x}px, ${s.y}px)`;
+  document.getElementById("buhu-img").style.transform = s.flip ? "scaleX(-1)" : "none";
+  setBuhuBubble(buhuLine(step, ready));
+}
+function updateBuhu(ready) {
+  if (buhuBye) return;
+  const cap = capacity(), n = totalCookies();
+  let step;
+  if (!state.size && state.savedBoxes.length === 0) step = "greet";
+  else if (!state.size || n < cap) step = "select";
+  else if (isCoffeeDay() && totalCoffees() === 0) step = "coffee";
+  else step = "pack";
+  setBuhu(step, ready);
 }
 
 /* --- Admin-Panel Logik ---------------------------------------------------- */
@@ -1836,7 +1966,7 @@ const adminPanel = {
   csMsg: document.getElementById("admin-comingsoon-msg"),
   closeBtn: document.querySelector(".admin-modal-close"),
 
-  isLoggedIn() { return !!adminStorage.getSession(); },
+  isLoggedIn() { return !SB && !!adminStorage.getSession(); },
 
   init() {
     this.toggle.addEventListener("click", () => this.openModal());
@@ -1846,6 +1976,8 @@ const adminPanel = {
     this.logoutBtn.addEventListener("click", () => this.logout());
     this.csSaveBtn.addEventListener("click", () => this.saveComingSoon());
 
+    if (SB) { const h = document.getElementById("admin-hint"); if (h) h.textContent = "Nume für Buhu 🐝 – Passwort privat."; }
+
     if (this.isLoggedIn()) this.showContent();
     else this.showLogin();
   },
@@ -1854,21 +1986,29 @@ const adminPanel = {
     const items = this.csTextarea.value.split("\n").map((s) => s.trim()).filter(Boolean);
     localStorage.setItem("buhu_comingSoon", JSON.stringify(items));
     renderComingSoon();
-    this.csMsg.textContent = "✓ Gspeicheret";
+    saveRemoteState();
+    this.csMsg.textContent = SB ? "✓ Gspeicheret – für alli sichtbar" : "✓ Gspeicheret";
     setTimeout(() => { this.csMsg.textContent = ""; }, 2500);
   },
 
   openModal() { this.modal.classList.add("open"); },
   closeModal() { this.modal.classList.remove("open"); },
 
-  login() {
+  async login() {
     const user = this.userInput.value.trim().toLowerCase();
     const pass = this.passInput.value.trim();
-    if (user === ADMIN_CREDS.user && pass === ADMIN_CREDS.pass) {
+    const btn = document.getElementById("admin-login-btn");
+    btn.disabled = true; btn.textContent = "Prüefe…";
+    const ok = await verifyAdminPw(user, pass);
+    btn.disabled = false; btn.textContent = "Alogge";
+    if (ok) {
+      adminPw = pass;
       adminStorage.setSession("logged-in-" + Date.now());
       this.showContent();
     } else {
-      alert("Fählerhaft Benutzername oder Passwort.\n\nBenutzername: admin\nPasswort: admin");
+      alert(SB
+        ? "Fählerhaft Benutzername oder Passwort."
+        : "Fählerhaft Benutzername oder Passwort.\n\nBenutzername: admin\nPasswort: admin");
     }
   },
 
@@ -1920,6 +2060,7 @@ const adminPanel = {
     const coffeeDays = adminStorage.getCoffeeDays();
     coffeeDays[dateStr] = !coffeeDays[dateStr];
     adminStorage.setCoffeeDays(coffeeDays);
+    saveRemoteState();
     this.renderCalendar();
     render(); // Aktualisiere auch die Hauptseite
   },
@@ -1933,6 +2074,7 @@ const adminPanel = {
       btn.addEventListener("click", () => {
         const now = localStorage.getItem("buhu_season") || "";
         localStorage.setItem("buhu_season", now === btn.dataset.season ? "" : btn.dataset.season);
+        saveRemoteState();
         this.renderSeasonChips();
         renderThemeDecor();
       });
@@ -1947,6 +2089,7 @@ const adminPanel = {
     this.holidayChipsDiv.querySelectorAll("[data-holiday]").forEach((btn) => {
       btn.addEventListener("click", () => {
         localStorage.setItem("buhu_holiday", btn.dataset.holiday);
+        saveRemoteState();
         this.renderHolidayChips();
         renderThemeDecor();
       });
@@ -1956,9 +2099,22 @@ const adminPanel = {
 
 adminPanel.init();
 
+// Buhu winkt zum Abschied, sobald d'Aafrag abgschickt wird
+document.getElementById("order-btn").addEventListener("click", () => {
+  if (document.getElementById("order-btn").getAttribute("aria-disabled") === "true") return;
+  buhuBye = true;
+  setBuhu("bye");
+  setTimeout(() => { buhuBye = false; render(); }, 6500);
+});
+
 render();
 renderThemeDecor();
 renderComingSoon();
+
+// Globale Daten vom Server hole (falls Supabase iigrichtet) und Site aktualisiere
+loadRemoteState().then((ok) => {
+  if (ok) { render(); renderThemeDecor(); renderComingSoon(); }
+});
 </script>
 
 </body>
