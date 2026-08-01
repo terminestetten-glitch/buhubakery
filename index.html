@@ -947,24 +947,27 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               <path d="M-42 22 C-39 36 -33 30 -26 40 C-18 51 -10 36 -1 45 C8 54 17 38 24 45 C31 51 39 37 42 22 L42 32 C39 46 31 40 24 50 C17 61 8 46 -1 55 C-10 64 -18 48 -26 50 C-33 52 -39 46 -42 32 Z" fill="#2E2015" opacity="0.1"/>
               <path d="M-42 22 C-50 -6 -34 -54 -2 -55 C30 -56 48 -8 42 22 C39 36 31 30 24 40 C17 51 8 36 -1 45 C-10 54 -18 38 -26 45 C-33 51 -39 37 -42 22 Z" fill="none" stroke="#2E2015" stroke-width="2.8" stroke-linejoin="round"/>
 
+              <!-- Zwei süessi Ärmli, wie im Logo: chlini Stumpe wo usem Tuech luege -->
+              <ellipse cx="-45" cy="-6" rx="10.5" ry="8" transform="rotate(-28 -45 -6)" fill="#F7F1E3" stroke="#2E2015" stroke-width="2.6"/>
+              <ellipse cx="45" cy="4" rx="10.5" ry="8" transform="rotate(28 45 4)" fill="#F7F1E3" stroke="#2E2015" stroke-width="2.6"/>
+
               <!-- Gsicht ufem Tuech: grossi Chulleraugen, Bäckli, Schmunzler -->
-              <ellipse cx="-21" cy="-4" rx="6.6" ry="4.2" fill="#F4A6A0" opacity="0.7"/>
-              <ellipse cx="21" cy="-4" rx="6.6" ry="4.2" fill="#F4A6A0" opacity="0.7"/>
-              <ellipse cx="-11" cy="-17" rx="5.2" ry="6.8" fill="#2E2015"/>
-              <ellipse cx="11" cy="-17" rx="5.2" ry="6.8" fill="#2E2015"/>
-              <circle cx="-12.6" cy="-19.6" r="2" fill="#fff"/><circle cx="9.4" cy="-19.6" r="2" fill="#fff"/>
-              <circle cx="-9.2" cy="-14.4" r="1.1" fill="#fff" opacity="0.85"/><circle cx="12.8" cy="-14.4" r="1.1" fill="#fff" opacity="0.85"/>
-              <path d="M-5.5 -5 Q0 1 5.5 -5" fill="none" stroke="#2E2015" stroke-width="2.2" stroke-linecap="round"/>
+              <ellipse cx="-22" cy="-3" rx="7.6" ry="5" fill="#F4A6A0" opacity="0.75"/>
+              <ellipse cx="22" cy="-3" rx="7.6" ry="5" fill="#F4A6A0" opacity="0.75"/>
+              <ellipse cx="-11.5" cy="-17" rx="6.3" ry="8.2" fill="#2E2015"/>
+              <ellipse cx="11.5" cy="-17" rx="6.3" ry="8.2" fill="#2E2015"/>
+              <circle cx="-13.4" cy="-20.2" r="2.6" fill="#fff"/><circle cx="9.6" cy="-20.2" r="2.6" fill="#fff"/>
+              <circle cx="-9" cy="-13.6" r="1.5" fill="#fff" opacity="0.9"/><circle cx="14" cy="-13.6" r="1.5" fill="#fff" opacity="0.9"/>
+              <path d="M-4.6 -4 Q0 1.4 4.6 -4" fill="none" stroke="#2E2015" stroke-width="2.2" stroke-linecap="round"/>
               <!-- Chuchichappe uf em Tuech -->
               <g transform="rotate(-8 0 -54)">
                 <path d="M-22 -54 C-31 -56 -30 -71 -18 -70 C-21 -81 -5 -83 0 -74 C5 -83 21 -81 18 -70 C30 -71 31 -56 22 -54 Z" fill="#FBF6EA" stroke="#2E2015" stroke-width="2.4" stroke-linejoin="round"/>
                 <rect x="-20" y="-57" width="40" height="13" rx="5" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4"/>
               </g>
-              <!-- Honiglöffel i de Tuech-Pfote (links, wie im Logo): d'Pfote isch e Buckel im Tuech -->
-              <line x1="-44" y1="-7" x2="-56" y2="-34" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
-              <circle cx="-58" cy="-38" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
-              <path d="M-63 -40 h11 M-63 -37 h11 M-62 -43 h10" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
-              <circle cx="-43" cy="-5" r="7" fill="#F7F1E3" stroke="#2E2015" stroke-width="2.4"/>
+              <!-- Honiglöffel wo s'linke Ärmli haltet (wie im Logo) -->
+              <line x1="-50" y1="-13" x2="-60" y2="-36" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="-62" cy="-40" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
+              <path d="M-67 -42 h11 M-67 -39 h11 M-66 -45 h10" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
             </g>
             </g>
           </g>
@@ -1684,6 +1687,9 @@ COOKIES.forEach((c, i) => {
 });
 
 /* --- Szene: Box auf dem Tisch (Cookies drin sind antippbar zum Usenäh) ----- */
+/* Wenn d'Box voll isch, gaht sie zue. Atippe machts nomol uf (z.B. zum es
+   Cookie usenäh) – bim Grössi-Wächsle oder Zuelege gaht's wieder zrugg. */
+let boxPeek = false;
 function renderSceneBox() {
   const boxG = document.getElementById("scene-box");
   let inner = "";
@@ -1713,10 +1719,28 @@ function renderSceneBox() {
   const x = 890 - w / 2, y = 458 - h;
   const title = state.size === "SONDER" ? "Dini Sonderbstellig" : `Dini ${state.size}-Box`;
   const tw = title.length * 7.6 + 18;
+  const titleLabel = `<rect x="${890 - tw / 2}" y="${y - 33}" width="${tw}" height="21" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
+    `<text x="890" y="${y - 18}" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">${title}</text>`;
+
+  // Voll? Denn isch d'Box zue – mit Deckel und Bändeli. Atippe macht sie wieder uf.
+  if (totalCookies() >= cap && !boxPeek) {
+    const by = y + 12, bh2 = h - 12;
+    inner += `<g data-openbox="1" class="scene-hot" tabindex="0" role="button" aria-label="Box isch voll und zue – atippe zum wieder ufmache">` +
+      `<rect x="${x}" y="${by}" width="${w}" height="${bh2}" rx="4" fill="#F0E6D2" stroke="#2E2015" stroke-width="2.5"/>` +
+      `<rect x="${x - 7}" y="${y - 4}" width="${w + 14}" height="18" rx="4" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
+      `<rect x="${x - 7}" y="${y + 2}" width="${w + 14}" height="7" fill="#F5A11C" opacity="0.9"/>` +
+      `<path d="M884 ${y - 5} q-15 -13 -21 -2 q7 9 21 2 Z M896 ${y - 5} q15 -13 21 -2 q-7 9 -21 2 Z" fill="#F5A11C" stroke="#C77E10" stroke-width="1.4" stroke-linejoin="round"/>` +
+      `<circle cx="890" cy="${y - 4}" r="4.5" fill="#F5A11C" stroke="#C77E10" stroke-width="1.4"/>` +
+      `<text x="890" y="${by + bh2 / 2 + (w >= 90 ? -2 : 4)}" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E2015">Voll! 🎉</text>` +
+      (w >= 90 ? `<text x="890" y="${by + bh2 / 2 + 14}" text-anchor="middle" font-size="10" fill="#7A6A52">tipp zum wieder ufmache</text>` : "") +
+      `</g>` + titleLabel;
+    boxG.innerHTML = inner;
+    return;
+  }
+
   inner += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
     `<path d="M${x} ${y} l-14 -12 l14 -2 z M${x + w} ${y} l14 -12 l-14 -2 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="2"/>` +
-    `<rect x="${890 - tw / 2}" y="${y - 33}" width="${tw}" height="21" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
-    `<text x="890" y="${y - 18}" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">${title}</text>`;
+    titleLabel;
   const flat = [];
   COOKIES.forEach((c) => VARIANTS.forEach((v) => {
     const k = keyOf(c.id, v.id);
@@ -1736,14 +1760,17 @@ function renderSceneBox() {
   boxG.innerHTML = inner;
 }
 const sceneBoxG = document.getElementById("scene-box");
-sceneBoxG.addEventListener("click", (e) => {
-  const g = e.target.closest("[data-remove]");
-  if (g) removeCookie(g.dataset.remove);
-});
+function sceneBoxActivate(target) {
+  const open = target.closest("[data-openbox]");
+  if (open) { boxPeek = true; render(); return true; }
+  const g = target.closest("[data-remove]");
+  if (g) { removeCookie(g.dataset.remove); return true; }
+  return false;
+}
+sceneBoxG.addEventListener("click", (e) => { sceneBoxActivate(e.target); });
 sceneBoxG.addEventListener("keydown", (e) => {
   if (e.key !== "Enter" && e.key !== " ") return;
-  const g = e.target.closest("[data-remove]");
-  if (g) { e.preventDefault(); removeCookie(g.dataset.remove); }
+  if (sceneBoxActivate(e.target)) e.preventDefault();
 });
 
 /* --- Bedienelemente (HTML-Spiegel) ----------------------------------------- */
@@ -1894,6 +1921,7 @@ function trimOverflow() {
 }
 function selectSize(key) {
   state.size = key;
+  boxPeek = false;
   document.getElementById("sonder-row").classList.toggle("hidden", key !== "SONDER");
   trimOverflow();
   render();
@@ -1903,6 +1931,7 @@ function addCookie(cid, vid) {
   if (totalCookies() >= capacity()) return;
   const k = keyOf(cid, vid);
   state.items[k] = (state.items[k] || 0) + 1;
+  boxPeek = false; // s'letschte Cookie macht d'Box wieder zue
   render();
 }
 function removeCookie(k) {
@@ -1919,6 +1948,7 @@ function addBoxToOrder() {
   });
   state.size = null;
   state.items = {};
+  boxPeek = false;
   document.getElementById("sonder-row").classList.add("hidden");
   render();
 }

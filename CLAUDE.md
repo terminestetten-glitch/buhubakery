@@ -13,6 +13,7 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 (`docs/idee-skizze.pdf`): **Die Website ist ein illustriertes Café.**
 - Theke mit Cookie-Vitrine, "Buhu Bakery"-Schild, Lampen, Bogenfenster, Tisch + Hocker, Herzballons.
 - **Build your own box**: Im Packaging-Regal rechts Boxgrösse wählen (XXS=1, XS=2, S=4, M=6, L=9, XL=12; ab 13 = "Sonderbstellig" mit Zahlenfeld 13–30), dann Cookies aus der Vitrine in die Box packen (Box füllt sich sichtbar auf dem Tisch; Cookie in der Box antippen = wieder entfernen; bewusst KEINE Flug-Animation – User wollte das nicht).
+- **Volli Box gaht zue**: sobald alli Plätz bsetzt sind, wird d'Box uf em Tisch zuegmacht (Deckel + Honig-Bändeli + "Voll! 🎉"). Atippe macht si wieder uf (`boxPeek` in index.html), s'letschte Cookie iiglegt macht si automatisch wieder zue.
 - **Mehrere Boxen pro Bestellung**: Knopf "+ No e Box drzue" legt die aktuelle Box in die Bestellung (Stapel erscheint neben der offenen Box auf dem Tisch), ×-Knopf in der Zusammenfassung entfernt sie wieder.
 - **Kaffee auch über die COFFEEMENU-Tafel in der Szene antippbar** (jede Zeile = 1× bestellen).
 - **Handy geht jetzt au im Hochformat** (Wunsch hat sich geändert): kei Dreh-Overlay meh, d'Szene het kei `min-width` meh und skaliert uf jedi Breiti, ohni dass me was verschiebe muss.
