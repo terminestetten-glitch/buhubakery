@@ -157,21 +157,46 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .hero p.lead { font-size: 1.1rem; color: var(--ink-soft); max-width: 36rem; }
 .hero-mascot { text-align: center; }
 .hero-mascot img { width: min(13rem, 55vw); height: auto; border-radius: 50%; box-shadow: var(--shadow); }
-.rotate-overlay { display: none; }
-@media (max-width: 700px) and (orientation: portrait) {
-  .rotate-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 1.2rem; background: var(--ground); text-align: center; padding: 2rem;
-  }
-  .rotate-overlay img { width: 9rem; border-radius: 50%; }
-  .rotate-overlay p { font-size: 1.1rem; font-weight: 600; max-width: 18rem; margin: 0; }
-}
-#buhu-figure { pointer-events: none; transition: transform 0.85s cubic-bezier(0.34, 1.15, 0.4, 1); }
-#buhu-body { scale: 0.72; filter: drop-shadow(0 4px 6px rgba(46,32,21,0.35)); animation: buhuFloat 3.2s ease-in-out infinite; }
+/* Hochformat isch usdrücklich erlaubt – d'Szene skaliert uf d'Bildschirmbreiti,
+   drum gits kei Dreh-Overlay und kei siitlichs Schiebe meh. */
+
+/* --- Buhu: schwebt, flügelet und fliegt zum nächschte Punkt --------------- */
+#buhu-figure { pointer-events: none; transition: transform 1s cubic-bezier(0.36, 0.02, 0.3, 1); }
+#buhu-scene-bubble { transition: opacity 0.25s ease; }
+#buhu-figure.is-flying #buhu-scene-bubble { opacity: 0; }
+#buhu-tilt { transition: transform 0.5s ease-out; }
+#buhu-body { scale: 0.72; filter: drop-shadow(0 5px 7px rgba(46,32,21,0.32)); animation: buhuFloat 3.2s ease-in-out infinite; }
+#buhu-figure.is-flying #buhu-body { animation-duration: 0.8s; }
 #buhu-scene-bubble .buhu-choice { pointer-events: auto; cursor: pointer; }
-@keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-@media (prefers-reduced-motion: reduce) { #buhu-figure { transition: none; } #buhu-body { animation: none; } }
+.buhu-wing { transform-box: fill-box; animation: buhuFlapR 0.45s ease-in-out infinite alternate; }
+.buhu-wing.wing-l { transform-origin: 100% 65%; animation-name: buhuFlapL; }
+.buhu-wing.wing-r { transform-origin: 0% 65%; animation-name: buhuFlapR; }
+#buhu-figure.is-flying .buhu-wing { animation-duration: 0.1s; }
+#buhu-sparkles { opacity: 0; transition: opacity 0.3s; }
+#buhu-figure.is-flying #buhu-sparkles { opacity: 0.9; }
+@keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@keyframes buhuFlapR { from { transform: rotate(-20deg); } to { transform: rotate(12deg); } }
+@keyframes buhuFlapL { from { transform: rotate(20deg); } to { transform: rotate(-12deg); } }
+@media (prefers-reduced-motion: reduce) {
+  #buhu-figure, #buhu-tilt { transition: none; }
+  #buhu-body, .buhu-wing { animation: none; }
+}
+
+/* --- Schritt-Uflüchte: s'grad aktuelle Bedienelement pulsiert sanft --------- */
+.step-glow { animation: stepGlowPulse 1.7s ease-in-out infinite; }
+@keyframes stepGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(245,161,28,0)); }
+  50%      { filter: drop-shadow(0 0 11px rgba(245,161,28,0.85)) drop-shadow(0 0 22px rgba(245,161,28,0.35)); }
+}
+.panel.step-glow-html {
+  animation: panelGlowPulse 1.7s ease-in-out infinite;
+  border-radius: 0.9rem;
+}
+@keyframes panelGlowPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(245,161,28,0); }
+  50%      { box-shadow: 0 0 0 3px rgba(245,161,28,0.55), 0 0 18px rgba(245,161,28,0.4); }
+}
+@media (prefers-reduced-motion: reduce) { .step-glow, .step-glow-html { animation: none; } }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.25rem; }
 .btn {
   display: inline-block;
@@ -222,11 +247,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   border: 1px solid var(--line);
   border-radius: 1.25rem;
   box-shadow: var(--shadow);
-  overflow-x: auto;
+  overflow: hidden;
 }
+/* Kei min-width: s'ganze Café passt immer i d'Breiti – au im Hochformat. */
 .scene-card svg {
   display: block;
-  min-width: 800px;
   width: 100%;
   height: auto;
 }
@@ -481,9 +506,55 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     <radialGradient id="dough-ovonoir" cx="42%" cy="36%" r="72%">
       <stop offset="0%" stop-color="#583E2A"/><stop offset="58%" stop-color="#3B2718"/><stop offset="100%" stop-color="#22150C"/>
     </radialGradient>
+    <radialGradient id="dough-cinnamon" cx="42%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#E3B36E"/><stop offset="55%" stop-color="#C4863F"/><stop offset="100%" stop-color="#8F5A26"/>
+    </radialGradient>
     <radialGradient id="melt-core" cx="42%" cy="38%" r="66%">
       <stop offset="0%" stop-color="#FFD27A"/><stop offset="55%" stop-color="#F5A11C"/><stop offset="100%" stop-color="#D9791A"/>
     </radialGradient>
+    <!-- Tüefi-Verläuf fürs Café: Wand/Bodä/Holz chöme so plastischer düre -->
+    <linearGradient id="wall-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D6CBB4"/><stop offset="55%" stop-color="#CDC1AC"/><stop offset="100%" stop-color="#BCAF95"/>
+    </linearGradient>
+    <linearGradient id="floor-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A8987F"/><stop offset="100%" stop-color="#93856E"/>
+    </linearGradient>
+    <linearGradient id="wood-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7C6748"/><stop offset="100%" stop-color="#5A4832"/>
+    </linearGradient>
+    <linearGradient id="wood-grad-dark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#63513A"/><stop offset="100%" stop-color="#493A28"/>
+    </linearGradient>
+    <linearGradient id="side-shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0.32"/>
+    </linearGradient>
+    <linearGradient id="counter-top-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A9895D"/><stop offset="100%" stop-color="#8A6D46"/>
+    </linearGradient>
+    <linearGradient id="side-wall-grad" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0%" stop-color="#B3A489"/><stop offset="100%" stop-color="#8F8168"/>
+    </linearGradient>
+    <linearGradient id="side-wall-grad-r" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B3A489"/><stop offset="100%" stop-color="#8F8168"/>
+    </linearGradient>
+    <linearGradient id="wall-floor-shadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+    <radialGradient id="stool-grad" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#8A7047"/><stop offset="100%" stop-color="#5A4832"/>
+    </radialGradient>
+    <linearGradient id="machine-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E8DCC6"/>
+    </linearGradient>
+    <linearGradient id="glass-top-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.75"/><stop offset="100%" stop-color="#D8EAF0" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="glass-front-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F7F1E3"/><stop offset="12%" stop-color="#EFE6D2"/><stop offset="88%" stop-color="#EFE6D2"/><stop offset="100%" stop-color="#DCD0B6"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#2E2015" flood-opacity="0.28"/>
+    </filter>
   </defs>
 </svg>
 
@@ -555,28 +626,21 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 
       <div class="scene-card">
         <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Packaging-Regal mit Boxgrössen, Tisch mit deiner Box">
-          <!-- Wand & Boden -->
-          <rect x="0" y="0" width="1200" height="565" fill="#CDC1AC"/>
-          <rect x="0" y="565" width="1200" height="95" fill="#A8987F"/>
+          <!-- Wand & Boden: als Ruum-„Chischtli" mit Seitewänd + Decki, dass Tüefi entstaht -->
+          <rect x="0" y="0" width="1200" height="565" fill="url(#wall-grad)"/>
+          <rect x="0" y="565" width="1200" height="95" fill="url(#floor-grad)"/>
+          <!-- Seitewänd links/rächts: dunkler, wie wenn de Ruum umenand geit -->
+          <rect x="0" y="0" width="22" height="565" fill="url(#side-wall-grad)"/>
+          <rect x="1178" y="0" width="22" height="565" fill="url(#side-wall-grad-r)"/>
+          <!-- Decki-Chante obe -->
+          <rect x="0" y="0" width="1200" height="14" fill="#00000022"/>
+          <!-- Weiche Schatte wo Wand uf Bode trifft -->
+          <rect x="0" y="540" width="1200" height="25" fill="url(#wall-floor-shadow)"/>
           <line x1="0" y1="565" x2="1200" y2="565" stroke="#8A7B63" stroke-width="3"/>
 
-          <!-- Deko: Girlande (JS füllt sie – wechselt mit Saison/Feiertag), Bildli, Guetzli-Glas, Pflanze -->
+          <!-- Deko: Girlande (JS füllt sie – wechselt mit Saison/Feiertag) + Pflanze -->
           <g>
             <g id="g-garland"></g>
-            <rect x="84" y="108" width="58" height="70" rx="4" fill="#6B573D" stroke="#2E2015" stroke-width="2"/>
-            <rect x="92" y="116" width="42" height="54" fill="#FBF3E4"/>
-            <circle cx="113" cy="143" r="14" fill="#C97B3D"/>
-            <circle cx="108" cy="138" r="2.5" fill="#4A3320"/>
-            <circle cx="118" cy="141" r="2.5" fill="#4A3320"/>
-            <circle cx="112" cy="149" r="2.5" fill="#4A3320"/>
-            <rect x="156" y="122" width="46" height="56" rx="4" fill="#6B573D" stroke="#2E2015" stroke-width="2"/>
-            <rect x="163" y="129" width="32" height="42" fill="#FBF3E4"/>
-            <use href="#heart" transform="translate(169 141)" fill="#F5A11C"/>
-            <rect x="396" y="270" width="32" height="48" rx="6" fill="#EFE6D2" opacity="0.85" stroke="#2E2015" stroke-width="2"/>
-            <rect x="400" y="262" width="24" height="10" rx="3" fill="#2E2015"/>
-            <circle cx="406" cy="306" r="6" fill="#C97B3D"/>
-            <circle cx="420" cy="304" r="6" fill="#4A3320"/>
-            <circle cx="413" cy="292" r="6" fill="#B57A3E"/>
             <g id="deco-plant">
               <ellipse cx="1170" cy="480" rx="10" ry="22" fill="#6B8F7B" transform="rotate(-18 1170 480)"/>
               <ellipse cx="1148" cy="486" rx="9" ry="20" fill="#7DA189" transform="rotate(-40 1148 486)"/>
@@ -596,130 +660,188 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <ellipse cx="170" cy="90" rx="12" ry="7" fill="#F5A11C" opacity="0.85"/>
           <ellipse cx="880" cy="90" rx="12" ry="7" fill="#F5A11C" opacity="0.85"/>
 
-          <!-- Coffee-Menu-Tafel (nur an Kafi-Täg sichtbar) -->
+          <!-- Coffee-Menu-Tafel: hanget a de Wand grad über de Kaffimaschine -->
           <g id="g-menu-board" class="hidden">
-            <line x1="345" y1="0" x2="345" y2="92" stroke="#8A7B63" stroke-width="2"/>
-            <line x1="465" y1="0" x2="465" y2="92" stroke="#8A7B63" stroke-width="2"/>
-            <rect x="315" y="92" width="180" height="132" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
-            <text x="405" y="115" text-anchor="middle" font-size="17" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">COFFEEMENU</text>
-            <text x="405" y="128" text-anchor="middle" font-size="9" fill="#7A6A52">— zum Bstelle eifach atippe —</text>
+            <line x1="432" y1="0" x2="432" y2="18" stroke="#8A7B63" stroke-width="2"/>
+            <line x1="532" y1="0" x2="532" y2="18" stroke="#8A7B63" stroke-width="2"/>
+            <rect x="392" y="16" width="180" height="136" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
+            <text x="482" y="38" text-anchor="middle" font-size="16" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">COFFEEMENU</text>
+            <text x="482" y="51" text-anchor="middle" font-size="8.5" fill="#7A6A52">☕ Pick up &amp; Coffee to go – atippe</text>
             <g font-size="12.5" fill="#5A4832" font-family="Georgia, serif">
               <g class="scene-hot" data-coffee="americano" tabindex="0" role="button" aria-label="En Americano bstelle">
-                <rect class="hot-halo" x="323" y="133" width="164" height="16" rx="4" fill="#F5A11C"/>
-                <text x="331" y="146">Americano</text><text x="479" y="146" text-anchor="end">4.20</text>
+                <rect class="hot-halo" x="400" y="57" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="408" y="70">Americano</text><text x="556" y="70" text-anchor="end">4.20</text>
               </g>
               <g class="scene-hot" data-coffee="cappuccino" tabindex="0" role="button" aria-label="En Cappuccino bstelle">
-                <rect class="hot-halo" x="323" y="150" width="164" height="16" rx="4" fill="#F5A11C"/>
-                <text x="331" y="163">Cappuccino</text><text x="479" y="163" text-anchor="end">4.80</text>
+                <rect class="hot-halo" x="400" y="74" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="408" y="87">Cappuccino</text><text x="556" y="87" text-anchor="end">4.80</text>
               </g>
               <g class="scene-hot" data-coffee="schale" tabindex="0" role="button" aria-label="E Schale bstelle">
-                <rect class="hot-halo" x="323" y="167" width="164" height="16" rx="4" fill="#F5A11C"/>
-                <text x="331" y="180">Schale</text><text x="479" y="180" text-anchor="end">4.50</text>
+                <rect class="hot-halo" x="400" y="91" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="408" y="104">Schale</text><text x="556" y="104" text-anchor="end">4.50</text>
               </g>
               <g class="scene-hot" data-coffee="espresso" tabindex="0" role="button" aria-label="En Espresso bstelle">
-                <rect class="hot-halo" x="323" y="184" width="164" height="16" rx="4" fill="#F5A11C"/>
-                <text x="331" y="197">Espresso</text><text x="479" y="197" text-anchor="end">3.50</text>
+                <rect class="hot-halo" x="400" y="108" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="408" y="121">Espresso</text><text x="556" y="121" text-anchor="end">3.50</text>
               </g>
               <g class="scene-hot" data-coffee="creme" tabindex="0" role="button" aria-label="En Kaffee Crème bstelle">
-                <rect class="hot-halo" x="323" y="201" width="164" height="16" rx="4" fill="#F5A11C"/>
-                <text x="331" y="214">Kaffee Crème</text><text x="479" y="214" text-anchor="end">4.00</text>
+                <rect class="hot-halo" x="400" y="125" width="164" height="16" rx="4" fill="#F5A11C"/>
+                <text x="408" y="138">Kaffee Crème</text><text x="556" y="138" text-anchor="end">4.00</text>
               </g>
             </g>
           </g>
 
-          <!-- Theke -->
-          <g>
-            <rect x="60" y="338" width="480" height="222" fill="#6B573D"/>
-            <g fill="#5A4832">
-              <rect x="80" y="352" width="14" height="208"/><rect x="116" y="352" width="14" height="208"/>
-              <rect x="152" y="352" width="14" height="208"/><rect x="188" y="352" width="14" height="208"/>
-              <rect x="224" y="352" width="14" height="208"/><rect x="260" y="352" width="14" height="208"/>
-              <rect x="296" y="352" width="14" height="208"/><rect x="332" y="352" width="14" height="208"/>
-              <rect x="368" y="352" width="14" height="208"/><rect x="404" y="352" width="14" height="208"/>
-              <rect x="440" y="352" width="14" height="208"/><rect x="476" y="352" width="14" height="208"/>
+          <!-- ABLAGEFLÄCHI hinder de Theke: da staht d'Kaffimaschine druf -->
+          <g id="g-backbar" filter="url(#soft-shadow)">
+            <rect x="60" y="268" width="510" height="120" fill="url(#wood-grad-dark)"/>
+            <rect x="530" y="268" width="40" height="120" fill="url(#side-shade)"/>
+            <g fill="none" stroke="#3A2E20" stroke-width="3">
+              <rect x="78" y="284" width="140" height="96" rx="4"/>
+              <rect x="232" y="284" width="140" height="96" rx="4"/>
+              <rect x="386" y="284" width="140" height="96" rx="4"/>
             </g>
-            <rect x="180" y="400" width="240" height="86" rx="8" fill="#2E2015"/>
-            <text x="300" y="437" text-anchor="middle" font-size="26" fill="#FBF3E4" font-family="Georgia, serif" font-style="italic">Buhu</text>
-            <text x="300" y="468" text-anchor="middle" font-size="26" fill="#FBF3E4" font-family="Georgia, serif" font-style="italic">Bakery</text>
-            <rect x="48" y="318" width="504" height="22" rx="6" fill="#2E2015"/>
+            <g fill="#8A7B63"><circle cx="208" cy="332" r="4"/><circle cx="362" cy="332" r="4"/><circle cx="516" cy="332" r="4"/></g>
+            <!-- Ablagi-Platte: gliiche 3D-Trick wie d'Theke-Deckfläche -->
+            <path d="M66 248 L564 248 L582 269 L48 269 Z" fill="url(#counter-top-grad)"/>
+            <path d="M66 248 L564 248" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
+            <path d="M48 269 L582 269" fill="none" stroke="#2E2015" stroke-width="2" opacity="0.5"/>
+            <path d="M66 248 L564 248 L582 269 L48 269 Z" fill="none" stroke="#2E2015" stroke-width="2"/>
+            <!-- Züüg uf de Ablagi -->
+            <g>
+              <rect x="92" y="206" width="34" height="42" rx="5" fill="#EFE6D2" opacity="0.9" stroke="#2E2015" stroke-width="2"/>
+              <rect x="96" y="198" width="26" height="10" rx="3" fill="#2E2015"/>
+              <circle cx="103" cy="236" r="6" fill="#C97B3D"/><circle cx="117" cy="234" r="6" fill="#4A3320"/><circle cx="110" cy="222" r="6" fill="#B57A3E"/>
+              <rect x="138" y="216" width="28" height="32" rx="4" fill="#EFE6D2" opacity="0.9" stroke="#2E2015" stroke-width="2"/>
+              <rect x="141" y="209" width="22" height="9" rx="3" fill="#2E2015"/>
+              <path d="M180 224 h44 l-5 24 h-34 z" fill="#F3EBDA" stroke="#2E2015" stroke-width="2"/>
+              <path d="M186 234 h32" stroke="#F5A11C" stroke-width="4"/>
+              <!-- Tasse-Stapel -->
+              <g fill="#FBF3E4" stroke="#2E2015" stroke-width="2">
+                <rect x="246" y="234" width="40" height="14" rx="4"/>
+                <rect x="250" y="222" width="32" height="13" rx="4"/>
+                <rect x="254" y="211" width="24" height="12" rx="4"/>
+              </g>
+              <!-- Tortestand mit Cookie -->
+              <path d="M306 248 h48 M330 248 v-14" stroke="#2E2015" stroke-width="3"/>
+              <ellipse cx="330" cy="232" rx="30" ry="7" fill="#F3EBDA" stroke="#2E2015" stroke-width="2"/>
+              <circle cx="330" cy="224" r="10" fill="#C08A50" stroke="#2E2015" stroke-width="1.6"/>
+              <circle cx="326" cy="222" r="2" fill="#4A3320"/><circle cx="334" cy="226" r="2" fill="#4A3320"/>
+            </g>
           </g>
 
-          <!-- Vitrine mit Cookies (JS füllt die Cookies ein) -->
-          <g>
-            <rect x="80" y="188" width="230" height="130" rx="8" fill="#EFE6D2" stroke="#2E2015" stroke-width="2.5" opacity="0.95"/>
-            <line x1="88" y1="252" x2="302" y2="252" stroke="#8A7B63" stroke-width="3"/>
-            <line x1="88" y1="312" x2="302" y2="312" stroke="#8A7B63" stroke-width="3"/>
-            <rect x="100" y="189" width="190" height="25" rx="6" fill="#F5A11C" stroke="#2E2015" stroke-width="2"/>
-            <text x="195" y="206" text-anchor="middle" font-size="13.5" letter-spacing="1" fill="#2E2015" font-weight="bold">COOKIES – TIPP MI A!</text>
-            <g id="vitrine-cookies"></g>
+          <!-- Kaffimaschine: staht sichtbar uf de Ablagi-Platte druf (Schatte + Siitefläche für Tüefi) -->
+          <g id="g-coffee-machine" class="hidden" filter="url(#soft-shadow)">
+            <ellipse cx="478" cy="250" rx="66" ry="9" fill="#2E2015" opacity="0.28"/>
+            <rect x="420" y="164" width="116" height="70" rx="6" fill="url(#machine-grad)" stroke="#2E2015" stroke-width="2.5"/>
+            <rect x="522" y="164" width="14" height="70" rx="6" fill="url(#side-shade)" opacity="0.6"/>
+            <path d="M420 170 a6 6 0 0 1 6 -6 h104 a6 6 0 0 1 6 6 v18 h-116 z" fill="#2E2015"/>
+            <rect x="430" y="170" width="34" height="12" rx="2" fill="#F5A11C"/>
+            <circle cx="510" cy="176" r="4" fill="#F5A11C"/>
+            <circle cx="524" cy="176" r="4" fill="#B0524A"/>
+            <rect x="438" y="190" width="22" height="12" fill="#2E2015"/>
+            <rect x="496" y="190" width="22" height="12" fill="#2E2015"/>
+            <line x1="449" y1="202" x2="449" y2="208" stroke="#2E2015" stroke-width="4"/>
+            <line x1="507" y1="202" x2="507" y2="208" stroke="#2E2015" stroke-width="4"/>
+            <path d="M442 212 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
+            <path d="M500 212 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
+            <rect x="426" y="230" width="104" height="9" rx="3" fill="#2E2015"/>
+            <rect x="416" y="239" width="124" height="9" rx="3" fill="#5A4832"/>
           </g>
 
-          <!-- Kasse -->
-          <g>
-            <rect x="336" y="272" width="52" height="46" rx="4" fill="#2E2015"/>
-            <rect x="342" y="280" width="40" height="16" rx="2" fill="#8A7B63"/>
-          </g>
+          <!-- Gang hinter de Theke: schmale Bodestrich wo de Buhu als Mitarbeiter staht -->
+          <rect x="60" y="388" width="510" height="16" fill="#8A7B63"/>
 
-          <!-- Kaffimaschine (nur an Kafi-Täg sichtbar) -->
-          <g id="g-coffee-machine" class="hidden">
-            <rect x="434" y="224" width="116" height="84" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
-            <path d="M434 230 a6 6 0 0 1 6 -6 h104 a6 6 0 0 1 6 6 v18 h-116 z" fill="#2E2015"/>
-            <rect x="444" y="230" width="34" height="12" rx="2" fill="#F5A11C"/>
-            <circle cx="524" cy="236" r="4" fill="#F5A11C"/>
-            <circle cx="538" cy="236" r="4" fill="#B0524A"/>
-            <rect x="452" y="248" width="22" height="12" fill="#2E2015"/>
-            <rect x="510" y="248" width="22" height="12" fill="#2E2015"/>
-            <line x1="463" y1="260" x2="463" y2="266" stroke="#2E2015" stroke-width="4"/>
-            <line x1="521" y1="260" x2="521" y2="266" stroke="#2E2015" stroke-width="4"/>
-            <path d="M456 270 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
-            <path d="M514 270 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
-            <rect x="440" y="296" width="104" height="10" rx="3" fill="#2E2015"/>
-            <rect x="430" y="306" width="124" height="12" rx="3" fill="#5A4832"/>
-            <rect x="412" y="320" width="160" height="19" rx="5" fill="#F5A11C" stroke="#2E2015" stroke-width="1.5"/>
-            <text x="492" y="334" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2E2015">☕ Pick up &amp; Coffee to go!</text>
+          <!-- THEKE: echte 3D-Blockform – Deckfläche (Tischplatte vo obe gseh, mit Tüefi) + Front mit Vitrine.
+               Zwüsche Ablagi (Bodä bi y=388) und Theke blibt bewusst e Gang frei – da staht de Buhu, als Mitarbeiter hinter de Theke. -->
+          <g id="g-counter" filter="url(#soft-shadow)">
+            <!-- Deckfläche: liecht Holz, schräg gezeichnet damit's use dass es e Tischplatte isch -->
+            <path d="M72 404 L558 404 L576 436 L54 436 Z" fill="url(#counter-top-grad)"/>
+            <path d="M72 404 L558 404" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
+            <path d="M54 436 L576 436" fill="none" stroke="#2E2015" stroke-width="2" opacity="0.5"/>
+            <path d="M72 404 L558 404 L576 436 L54 436 Z" fill="none" stroke="#2E2015" stroke-width="2"/>
+            <!-- Chasse: staht uf de Deckfläche -->
+            <g>
+              <rect x="480" y="404" width="38" height="26" rx="3" fill="#2E2015"/>
+              <rect x="484" y="409" width="30" height="12" rx="2" fill="#8A7B63"/>
+            </g>
+            <!-- Front: Lippe, Glasvitrine, Holzsockel -->
+            <rect x="48" y="434" width="540" height="18" rx="5" fill="#2E2015"/>
+            <text x="318" y="447" text-anchor="middle" font-size="12" letter-spacing="1.3" fill="#FBF3E4" font-weight="bold">COOKIES – TIPP MI A!</text>
+            <g id="g-vitrine">
+              <!-- Glasbox mit Tüefi: Front + rächtsi Siitefläche + inneri Ablag mit Schatte -->
+              <rect x="76" y="452" width="460" height="72" rx="8" fill="url(#glass-front-grad)" stroke="#2E2015" stroke-width="2.5"/>
+              <rect x="508" y="452" width="28" height="72" rx="8" fill="url(#side-shade)" opacity="0.55"/>
+              <rect x="76" y="452" width="460" height="18" rx="8" fill="#fff" opacity="0.25"/>
+              <rect x="80" y="507" width="452" height="15" fill="#2E2015" opacity="0.12"/>
+              <g id="vitrine-cookies"></g>
+            </g>
+            <rect x="60" y="524" width="510" height="36" fill="url(#wood-grad)"/>
+            <rect x="528" y="524" width="42" height="36" fill="url(#side-shade)"/>
+            <g fill="#5A4832">
+              <rect x="76" y="524" width="12" height="36"/><rect x="106" y="524" width="12" height="36"/>
+              <rect x="136" y="524" width="12" height="36"/><rect x="440" y="524" width="12" height="36"/>
+              <rect x="470" y="524" width="12" height="36"/><rect x="500" y="524" width="12" height="36"/>
+              <rect x="530" y="524" width="12" height="36"/>
+            </g>
+            <rect x="196" y="528" width="240" height="28" rx="6" fill="#2E2015"/>
+            <text x="316" y="547" text-anchor="middle" font-size="15" fill="#FBF3E4" font-family="Georgia, serif" font-style="italic">Buhu Bakery</text>
           </g>
 
           <!-- Packaging-Regal -->
-          <g id="g-shelf">
+          <g id="g-shelf" filter="url(#soft-shadow)">
             <text x="640" y="180" text-anchor="middle" font-size="13" letter-spacing="2" fill="#2E2015" font-weight="bold">PACKAGING</text>
-            <rect x="576" y="190" width="10" height="370" fill="#6B573D"/>
-            <rect x="694" y="190" width="10" height="370" fill="#6B573D"/>
-            <rect x="576" y="248" width="128" height="8" fill="#6B573D"/>
-            <rect x="576" y="330" width="128" height="8" fill="#6B573D"/>
-            <rect x="576" y="412" width="128" height="8" fill="#6B573D"/>
-            <rect x="576" y="494" width="128" height="8" fill="#6B573D"/>
+            <rect x="576" y="190" width="10" height="370" fill="url(#wood-grad)"/>
+            <rect x="694" y="190" width="10" height="370" fill="url(#wood-grad)"/>
+            <rect x="700" y="190" width="4" height="370" fill="url(#side-shade)" opacity="0.5"/>
+            <g>
+              <rect x="576" y="248" width="128" height="8" fill="url(#wood-grad)"/>
+              <rect x="576" y="248" width="128" height="2" fill="#fff" opacity="0.25"/>
+              <rect x="576" y="330" width="128" height="8" fill="url(#wood-grad)"/>
+              <rect x="576" y="330" width="128" height="2" fill="#fff" opacity="0.25"/>
+              <rect x="576" y="412" width="128" height="8" fill="url(#wood-grad)"/>
+              <rect x="576" y="412" width="128" height="2" fill="#fff" opacity="0.25"/>
+              <rect x="576" y="494" width="128" height="8" fill="url(#wood-grad)"/>
+              <rect x="576" y="494" width="128" height="2" fill="#fff" opacity="0.25"/>
+            </g>
             <g id="shelf-XXS" class="scene-hot" data-size="XXS" tabindex="0" role="button" aria-label="Boxgrössi XXS wähle, 1 Cookie">
               <rect class="hot-halo" x="589" y="225" width="36" height="28" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M594 230 l-5 -4 l5 -1 z M620 230 l5 -4 l-5 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="594" y="230" width="26" height="18" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="607" y="244" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E2015">XXS</text>
             </g>
             <g id="shelf-XS" class="scene-hot" data-size="XS" tabindex="0" role="button" aria-label="Boxgrössi XS wähle, 2 Cookies">
               <rect class="hot-halo" x="633" y="221" width="46" height="32" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M638 226 l-6 -5 l6 -1 z M674 226 l6 -5 l-6 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="638" y="226" width="36" height="22" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="656" y="242" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">XS</text>
             </g>
             <g id="shelf-S" class="scene-hot" data-size="S" tabindex="0" role="button" aria-label="Boxgrössi S wähle, 4 Cookies">
               <rect class="hot-halo" x="585" y="297" width="52" height="38" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M590 302 l-7 -6 l7 -1 z M632 302 l7 -6 l-7 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="590" y="302" width="42" height="28" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="611" y="321" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E2015">S</text>
             </g>
             <g id="shelf-M" class="scene-hot" data-size="M" tabindex="0" role="button" aria-label="Boxgrössi M wähle, 6 Cookies">
               <rect class="hot-halo" x="639" y="293" width="56" height="42" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M644 298 l-7 -6 l7 -1 z M690 298 l7 -6 l-7 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="644" y="298" width="46" height="32" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="667" y="319" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E2015">M</text>
             </g>
             <g id="shelf-L" class="scene-hot" data-size="L" tabindex="0" role="button" aria-label="Boxgrössi L wähle, 9 Cookies">
               <rect class="hot-halo" x="583" y="371" width="58" height="46" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M588 376 l-8 -7 l8 -1 z M636 376 l8 -7 l-8 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="588" y="376" width="48" height="36" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="612" y="399" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E2015">L</text>
             </g>
             <g id="shelf-XL" class="scene-hot" data-size="XL" tabindex="0" role="button" aria-label="Boxgrössi XL wähle, 12 Cookies">
               <rect class="hot-halo" x="637" y="365" width="62" height="52" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M642 370 l-8 -7 l8 -1 z M694 370 l8 -7 l-8 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="642" y="370" width="52" height="42" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="668" y="396" text-anchor="middle" font-size="14" font-weight="bold" fill="#2E2015">XL</text>
             </g>
             <g id="shelf-SONDER" class="scene-hot" data-size="SONDER" tabindex="0" role="button" aria-label="Sonderbstellig wähle, 13 oder meh Cookies">
               <rect class="hot-halo" x="587" y="445" width="106" height="54" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
+              <path d="M592 450 l-10 -8 l10 -1 z M688 450 l10 -8 l-10 -1 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="1.3"/>
               <rect x="592" y="450" width="96" height="44" rx="3" fill="#FBF3E4" stroke="#2E2015" stroke-width="2"/>
               <text x="640" y="470" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E2015">13+</text>
               <text x="640" y="486" text-anchor="middle" font-size="10" fill="#2E2015">Sonderbstellig</text>
@@ -738,16 +860,31 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <line x1="920" y1="340" x2="1070" y2="340" stroke="#2E2015" stroke-width="2"/>
           </g>
 
-          <!-- Tisch, Höckerli, dini Box -->
-          <g>
-            <rect x="765" y="470" width="250" height="16" rx="4" fill="#6B573D"/>
-            <rect x="785" y="486" width="12" height="80" fill="#5A4832"/>
-            <rect x="983" y="486" width="12" height="80" fill="#5A4832"/>
-            <g fill="#6B573D">
-              <ellipse cx="736" cy="502" rx="26" ry="8"/>
-              <rect x="716" y="504" width="7" height="62"/><rect x="748" y="504" width="7" height="62"/><rect x="732" y="506" width="7" height="60"/>
-              <ellipse cx="1044" cy="502" rx="26" ry="8"/>
-              <rect x="1024" y="504" width="7" height="62"/><rect x="1056" y="504" width="7" height="62"/><rect x="1040" y="506" width="7" height="60"/>
+          <!-- Tisch & Höckerli: 3D mit schräger Tischplatte, Bodeschatte und runde Sitzflächene -->
+          <g id="g-table" filter="url(#soft-shadow)">
+            <!-- Bodeschatte -->
+            <ellipse cx="890" cy="566" rx="140" ry="12" fill="#2E2015" opacity="0.2"/>
+            <ellipse cx="736" cy="568" rx="30" ry="8" fill="#2E2015" opacity="0.18"/>
+            <ellipse cx="1044" cy="568" rx="30" ry="8" fill="#2E2015" opacity="0.18"/>
+            <!-- Tischplatte: obereni Fläche schräg + Chante vorne -->
+            <path d="M782 458 L1000 458 L1016 478 L766 478 Z" fill="url(#counter-top-grad)" stroke="#2E2015" stroke-width="2"/>
+            <path d="M782 458 L1000 458" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
+            <rect x="766" y="478" width="250" height="10" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>
+            <!-- Tischbei -->
+            <rect x="785" y="488" width="12" height="78" fill="url(#wood-grad)"/>
+            <rect x="983" y="488" width="12" height="78" fill="url(#wood-grad)"/>
+            <rect x="991" y="488" width="4" height="78" fill="url(#side-shade)" opacity="0.6"/>
+            <!-- Höckerli links -->
+            <g>
+              <ellipse cx="736" cy="500" rx="27" ry="10" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="736" cy="497" rx="27" ry="10" fill="#8A7047" opacity="0.5"/>
+              <rect x="716" y="504" width="7" height="62" fill="#5A4832"/><rect x="748" y="504" width="7" height="62" fill="#5A4832"/><rect x="732" y="506" width="7" height="60" fill="#6B573D"/>
+            </g>
+            <!-- Höckerli rächts -->
+            <g>
+              <ellipse cx="1044" cy="500" rx="27" ry="10" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="1044" cy="497" rx="27" ry="10" fill="#8A7047" opacity="0.5"/>
+              <rect x="1024" y="504" width="7" height="62" fill="#5A4832"/><rect x="1056" y="504" width="7" height="62" fill="#5A4832"/><rect x="1040" y="506" width="7" height="60" fill="#6B573D"/>
             </g>
             <g id="scene-box"></g>
           </g>
@@ -759,39 +896,62 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <!-- Buhu, de Café-Mitarbeiter: füehrt Schritt für Schritt dur d'Bstellig -->
           <g id="buhu-figure">
             <g id="buhu-scene-bubble"></g>
+            <g id="buhu-tilt">
             <g id="buhu-body">
-              <defs><clipPath id="buhu-sil"><path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z"/></clipPath></defs>
-              <!-- Flügel (hinter em Chörper) -->
-              <g fill="#FBF3E4" stroke="#2E2015" stroke-width="2" opacity="0.95">
-                <ellipse cx="46" cy="-16" rx="15" ry="8.5" transform="rotate(-26 46 -16)"/>
-                <ellipse cx="49" cy="1" rx="13" ry="7.5" transform="rotate(-6 49 1)"/>
+              <defs>
+                <clipPath id="buhu-sil"><path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z"/></clipPath>
+                <linearGradient id="buhu-wing-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.75"/>
+                  <stop offset="55%" stop-color="#D9E9F0" stop-opacity="0.55"/>
+                  <stop offset="100%" stop-color="#BFD8E4" stop-opacity="0.4"/>
+                </linearGradient>
+              </defs>
+              <!-- Funkel: nume sichtbar, wenn de Buhu grad flügt -->
+              <g id="buhu-sparkles" fill="#F5A11C">
+                <path d="M-62 24 l2.6 6.4 6.4 2.6 -6.4 2.6 -2.6 6.4 -2.6 -6.4 -6.4 -2.6 6.4 -2.6 Z"/>
+                <path d="M62 -6 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z"/>
+                <circle cx="-52" cy="52" r="2.6"/>
               </g>
-              <!-- Geist-Chörper (creme) -->
-              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="#F3EBDA"/>
-              <!-- Bienebauch (schwarz) mit oranger Striife -->
+              <!-- Bieneflügel: durschichtig mit Äderli, flüget jederziit – schnäller im Flug -->
+              <g class="buhu-wing wing-l">
+                <path d="M-26,-36 C-42,-56 -66,-60 -80,-46 C-92,-34 -90,-14 -74,-2 C-60,8 -40,4 -28,-10 C-20,-19 -20,-29 -26,-36 Z" fill="url(#buhu-wing-grad)" stroke="#7A8B8F" stroke-width="1.3"/>
+                <path d="M-52,-28 C-64,-34 -74,-32 -80,-27 M-52,-28 C-60,-19 -66,-9 -70,-3 M-52,-28 C-46,-18 -38,-9 -30,-8 M-63,-32 Q-64,-20 -58,-9" fill="none" stroke="#8A9BA0" stroke-width="0.9" opacity="0.65"/>
+              </g>
+              <g class="buhu-wing wing-r">
+                <path d="M26,-36 C42,-56 66,-60 80,-46 C92,-34 90,-14 74,-2 C60,8 40,4 28,-10 C20,-19 20,-29 26,-36 Z" fill="url(#buhu-wing-grad)" stroke="#7A8B8F" stroke-width="1.3"/>
+                <path d="M52,-28 C64,-34 74,-32 80,-27 M52,-28 C60,-19 66,-9 70,-3 M52,-28 C46,-18 38,-9 30,-8 M63,-32 Q64,-20 58,-9" fill="none" stroke="#8A9BA0" stroke-width="0.9" opacity="0.65"/>
+              </g>
+              <!-- Geischt-Chörper (creme) -->
+              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="#F7F1E3"/>
+              <!-- Bienebauch (schwarz) mit zwei oranger Striife -->
               <g clip-path="url(#buhu-sil)">
                 <path d="M-46 14 C-30 22 -20 9 -8 17 C4 23 15 9 27 17 C37 21 46 15 46 64 L-46 64 Z" fill="#211A12"/>
-                <rect x="-64" y="24" width="128" height="20" fill="#F5A11C" transform="rotate(-27)"/>
+                <rect x="-64" y="22" width="128" height="17" fill="#F5A11C" transform="rotate(-27)"/>
+                <rect x="-64" y="47" width="128" height="13" fill="#F5A11C" transform="rotate(-27)"/>
+                <!-- weichs Liecht obe links -->
+                <ellipse cx="-15" cy="-34" rx="17" ry="10" fill="#FFFFFF" opacity="0.5" transform="rotate(-20 -15 -34)"/>
               </g>
               <!-- Umriss -->
-              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="none" stroke="#2E2015" stroke-width="2.6" stroke-linejoin="round"/>
-              <!-- Gsicht -->
-              <ellipse cx="-16" cy="3" rx="6" ry="3.8" fill="#F4A6A0" opacity="0.75"/>
-              <ellipse cx="14" cy="3" rx="6" ry="3.8" fill="#F4A6A0" opacity="0.75"/>
-              <ellipse cx="-10" cy="-8" rx="3.4" ry="5" fill="#2E2015"/>
-              <ellipse cx="8" cy="-8" rx="3.4" ry="5" fill="#2E2015"/>
-              <circle cx="-11" cy="-10" r="1.2" fill="#fff"/><circle cx="7" cy="-10" r="1.2" fill="#fff"/>
-              <path d="M-4 0 Q2 5 7 0" fill="none" stroke="#2E2015" stroke-width="2" stroke-linecap="round"/>
+              <path d="M-40 6 C-40 -32 -22 -54 0 -54 C22 -54 40 -32 40 6 C40 24 40 40 32 50 C27 56 20 50 16 44 C11 54 3 54 -1 44 C-6 54 -14 54 -18 44 C-24 52 -34 54 -38 44 C-40 34 -40 20 -40 6 Z" fill="none" stroke="#2E2015" stroke-width="2.8" stroke-linejoin="round"/>
+              <!-- Gsicht: grossi Chulleraugen, Bäckli, Schmunzler -->
+              <ellipse cx="-20" cy="4" rx="6.6" ry="4.2" fill="#F4A6A0" opacity="0.7"/>
+              <ellipse cx="20" cy="4" rx="6.6" ry="4.2" fill="#F4A6A0" opacity="0.7"/>
+              <ellipse cx="-11" cy="-9" rx="5.2" ry="6.8" fill="#2E2015"/>
+              <ellipse cx="11" cy="-9" rx="5.2" ry="6.8" fill="#2E2015"/>
+              <circle cx="-12.6" cy="-11.6" r="2" fill="#fff"/><circle cx="9.4" cy="-11.6" r="2" fill="#fff"/>
+              <circle cx="-9.2" cy="-6.4" r="1.1" fill="#fff" opacity="0.85"/><circle cx="12.8" cy="-6.4" r="1.1" fill="#fff" opacity="0.85"/>
+              <path d="M-5.5 3 Q0 9 5.5 3" fill="none" stroke="#2E2015" stroke-width="2.2" stroke-linecap="round"/>
               <!-- Chuchichappe -->
               <g transform="rotate(-8 0 -58)">
-                <rect x="-20" y="-60" width="40" height="12" rx="4" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4"/>
-                <path d="M-22 -58 C-31 -60 -30 -75 -18 -74 C-21 -85 -5 -87 0 -78 C5 -87 21 -85 18 -74 C30 -75 31 -60 22 -58 Z" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4" stroke-linejoin="round"/>
+                <path d="M-22 -58 C-31 -60 -30 -75 -18 -74 C-21 -85 -5 -87 0 -78 C5 -87 21 -85 18 -74 C30 -75 31 -60 22 -58 Z" fill="#FBF6EA" stroke="#2E2015" stroke-width="2.4" stroke-linejoin="round"/>
+                <rect x="-20" y="-61" width="40" height="13" rx="5" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4"/>
               </g>
-              <!-- Honiglöffel -->
-              <line x1="-30" y1="7" x2="-44" y2="-28" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
-              <circle cx="-45" cy="-32" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
-              <path d="M-51 -34 h12 M-51 -31 h12 M-50 -36 h11" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
-              <circle cx="-30" cy="8" r="6.5" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.2"/>
+              <!-- Honiglöffel i de Pfote -->
+              <line x1="-20" y1="22" x2="-39" y2="7" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
+              <circle cx="-43" cy="4" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
+              <path d="M-48 2 h11 M-48 5 h11 M-47 -1 h10" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
+              <circle cx="-19" cy="23" r="6.5" fill="#F7F1E3" stroke="#2E2015" stroke-width="2.2"/>
+            </g>
             </g>
           </g>
 
@@ -801,7 +961,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <!-- Barrierefreier Spiegel der Szene + Zusammenfassung -->
       <div class="builder">
         <div>
-          <div class="panel">
+          <div class="panel" id="size-panel">
             <h3><span class="step-num">1</span> Boxgrössi wähle</h3>
             <div class="size-row" role="group" aria-label="Boxgrössi" id="size-buttons"></div>
             <div class="sonder-row hidden" id="sonder-row">
@@ -811,7 +971,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               <span class="coffee-note">Für no meh: schriib mir eifach diräkt.</span>
             </div>
           </div>
-          <div class="panel">
+          <div class="panel" id="cookies-panel">
             <h3><span class="step-num">2</span> Cookies iipacke</h3>
             <ul class="item-list" id="cookie-list"></ul>
           </div>
@@ -867,11 +1027,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   </section>
 
 </main>
-
-<div class="rotate-overlay" role="status">
-  <img src="assets/logo.png" onerror="this.onerror=null;this.src=BUHU_LOGO_FALLBACK" alt="">
-  <p>Dreh dis Handy is Querformat 🔄<br>denn gseht s'Café am beschte us!</p>
-</div>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -1010,6 +1165,7 @@ const COOKIES = [
   { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
   { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
   { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
+  { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nume als Cookie, ohni Soft Melt Chärn.", drizzle: "#C9973F", garnish: "pecan", plainOnly: true, moods: ["comfort", "study"] },
 ];
 const VARIANTS = [
   { id: "plain", label: "eifach so" },
@@ -1101,6 +1257,7 @@ const WOB = {
   lotus:      [1.02, 0.96, 1.00, 1.04, 0.95, 1.03, 0.97, 1.01, 0.94, 1.04, 0.98, 1.00],
   ovoclassic: [0.98, 1.03, 0.95, 1.02, 0.97, 1.04, 0.96, 1.01, 1.03, 0.95, 1.02, 0.97],
   ovonoir:    [1.03, 0.97, 1.01, 0.94, 1.04, 0.96, 1.02, 0.98, 1.00, 1.03, 0.95, 1.01],
+  cinnamon:   [1.01, 0.95, 1.03, 0.97, 1.00, 0.94, 1.04, 0.96, 1.02, 0.95, 1.01, 0.97],
 };
 /* Drizzle: dünni wälleti Linie, criss-cross übere Cookie (wie uf de Foti) */
 function drizzleSVG(r, col, seed) {
@@ -1140,6 +1297,15 @@ function garnishSVG(c, r) {
       `<rect x="${-w / 2 + w * 0.08}" y="${-h / 2 + h * 0.12}" width="${w * 0.84}" height="${h * 0.76}" rx="${(h * 0.1).toFixed(1)}" fill="none" stroke="#9A5F28" stroke-width="${(sw * 0.7).toFixed(2)}" opacity="0.7"/>` +
       `<text x="0" y="${(h * 0.12).toFixed(1)}" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="${(h * 0.5).toFixed(1)}" fill="#8A4F1D" opacity="0.65">B</text>` +
       `<ellipse cx="${-w * 0.22}" cy="${-h * 0.24}" rx="${w * 0.22}" ry="${h * 0.14}" fill="#fff" opacity="0.16"/></g>`;
+  }
+  if (c.garnish === "pecan") {
+    // Pekannuss-Hälfti: gwellte Rand, Riefe i de Mitti
+    const w = r * 0.58, h = r * 0.4;
+    return `<g transform="translate(${cx} ${cy}) rotate(-10)">` +
+      `<path d="M0 ${(-h).toFixed(1)} C ${(w).toFixed(1)} ${(-h * 0.95).toFixed(1)} ${(w * 1.05).toFixed(1)} ${(h * 0.9).toFixed(1)} 0 ${(h).toFixed(1)} C ${(-w * 1.05).toFixed(1)} ${(h * 0.9).toFixed(1)} ${(-w).toFixed(1)} ${(-h * 0.95).toFixed(1)} 0 ${(-h).toFixed(1)} Z" fill="#B9793B" stroke="#6E4420" stroke-width="${sw.toFixed(2)}"/>` +
+      `<path d="M0 ${(-h * 0.8).toFixed(1)} Q${(w * 0.3).toFixed(1)} 0 0 ${(h * 0.8).toFixed(1)}" fill="none" stroke="#6E4420" stroke-width="${(sw * 0.8).toFixed(2)}" opacity="0.6"/>` +
+      `<path d="M${(-w * 0.32).toFixed(1)} ${(-h * 0.5).toFixed(1)} Q${(-w * 0.06).toFixed(1)} 0 ${(-w * 0.2).toFixed(1)} ${(h * 0.45).toFixed(1)}" fill="none" stroke="#6E4420" stroke-width="${(sw * 0.55).toFixed(2)}" opacity="0.4"/>` +
+      `<ellipse cx="${(-w * 0.3).toFixed(1)}" cy="${(-h * 0.35).toFixed(1)}" rx="${(w * 0.24).toFixed(1)}" ry="${(h * 0.2).toFixed(1)}" fill="#fff" opacity="0.18"/></g>`;
   }
   // Ovomaltine-Schoggi-Stück (Würfel), evtl. mit Fleur de Sel
   const s = r * 0.42, col = c.garnishCol || "#8A5A34";
@@ -1484,7 +1650,7 @@ function renderComingSoon() {
 }
 
 /* --- Szene: Cookies in der Vitrine ---------------------------------------- */
-const VITRINE_POS = [[140, 240], [250, 240], [140, 296], [250, 296]];
+const VITRINE_POS = [[126, 489], [216, 489], [306, 489], [396, 489], [486, 489]];
 const vitrine = document.getElementById("vitrine-cookies");
 COOKIES.forEach((c, i) => {
   const [x, y] = VITRINE_POS[i];
@@ -1496,6 +1662,7 @@ COOKIES.forEach((c, i) => {
   g.setAttribute("aria-label", c.name + " i d'Box lege");
   g.dataset.cookie = c.id;
   g.innerHTML =
+    `<ellipse cx="0" cy="15" rx="19" ry="5" fill="#2E2015" opacity="0.22"/>` +
     `<circle class="mood-halo" r="26" fill="none" stroke="#F5A11C" stroke-width="3" stroke-dasharray="5 4"/>` +
     `<circle class="hot-halo" r="24" fill="none" stroke="#FBF3E4" stroke-width="3"/>` +
     `<g class="c-body">${cookieSVG(c, 20, false)}</g>`;
@@ -1511,16 +1678,16 @@ function renderSceneBox() {
   if (n > 0) {
     const shown = Math.min(n, 3);
     for (let i = 0; i < shown; i++) {
-      const bw = 56, bh = 20, bx = 776, by = 470 - bh * (i + 1);
+      const bw = 56, bh = 20, bx = 776, by = 458 - bh * (i + 1);
       inner += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="3" fill="#E8DCC6" stroke="#2E2015" stroke-width="2"/>` +
         `<line x1="${bx}" y1="${by + bh / 2}" x2="${bx + bw}" y2="${by + bh / 2}" stroke="#C77E10" stroke-width="2"/>`;
     }
-    inner += `<text x="804" y="${470 - 20 * shown - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">${n}× parat 📦</text>`;
+    inner += `<text x="804" y="${458 - 20 * shown - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">${n}× parat 📦</text>`;
   }
   if (!state.size) {
-    inner += `<rect x="845" y="414" width="90" height="56" rx="5" fill="none" stroke="#2E2015" stroke-width="2.5" stroke-dasharray="7 6"/>` +
-      `<rect x="798" y="389" width="184" height="22" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
-      `<text x="890" y="404" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">← Wähl e Grössi im Regal</text>`;
+    inner += `<rect x="845" y="402" width="90" height="56" rx="5" fill="none" stroke="#2E2015" stroke-width="2.5" stroke-dasharray="7 6"/>` +
+      `<rect x="798" y="377" width="184" height="22" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
+      `<text x="890" y="392" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">← Wähl e Grössi im Regal</text>`;
     boxG.innerHTML = inner;
     return;
   }
@@ -1529,7 +1696,7 @@ function renderSceneBox() {
   const cell = cap > 12 ? 20 : 26, pad = 10;
   const rC = cap > 12 ? 8 : 11;
   const w = cols * cell + pad * 2, h = rows * cell + pad * 2;
-  const x = 890 - w / 2, y = 470 - h;
+  const x = 890 - w / 2, y = 458 - h;
   const title = state.size === "SONDER" ? "Dini Sonderbstellig" : `Dini ${state.size}-Box`;
   const tw = title.length * 7.6 + 18;
   inner += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
@@ -1599,7 +1766,8 @@ COOKIES.forEach((c) => {
   const li = document.createElement("li");
   li.className = "item-row";
   li.dataset.cookie = c.id;
-  const vhtml = VARIANTS.map((v) =>
+  const variantsForC = c.plainOnly ? VARIANTS.filter((v) => v.id === "plain") : VARIANTS;
+  const vhtml = variantsForC.map((v) =>
     `<div class="qty-line"><small>${v.label}</small><div class="qty">` +
     `<button data-op="-" data-v="${v.id}" aria-label="Ein ${c.name} (${v.label}) weniger">−</button>` +
     `<output data-v="${v.id}">0</output>` +
@@ -1609,7 +1777,7 @@ COOKIES.forEach((c) => {
     `<svg class="item-icon" viewBox="-24 -24 48 48" aria-hidden="true">${cookieSVG(c, 19, false)}</svg>` +
     `<div class="item-info"><strong>${c.name}<span class="match-badge hidden">passt zu dinere Mood</span></strong><small>${c.note}</small></div>` +
     `<div class="vqty">${vhtml}</div>`;
-  VARIANTS.forEach((v) => {
+  variantsForC.forEach((v) => {
     const k = keyOf(c.id, v.id);
     const plus = li.querySelector(`button[data-op="+"][data-v="${v.id}"]`);
     const minus = li.querySelector(`button[data-op="-"][data-v="${v.id}"]`);
@@ -1752,7 +1920,10 @@ document.querySelectorAll("#g-shelf .scene-hot").forEach((el) => {
   el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
 vitrine.querySelectorAll(".scene-hot").forEach((el) => {
-  const go = () => addCookie(el.dataset.cookie, state.variant);
+  const go = () => {
+    const c = COOKIES.find((cc) => cc.id === el.dataset.cookie);
+    addCookie(el.dataset.cookie, c && c.plainOnly ? "plain" : state.variant);
+  };
   el.addEventListener("click", go);
   el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
@@ -1811,11 +1982,11 @@ function render() {
     const match = !!state.mood && c.moods.includes(state.mood);
     const sceneC = vitrine.querySelector(`[data-cookie="${c.id}"]`);
     sceneC.classList.toggle("mood-match", match);
-    sceneC.querySelector(".c-body").innerHTML = cookieSVG(c, 20, state.variant === "melt");
+    sceneC.querySelector(".c-body").innerHTML = cookieSVG(c, 20, !c.plainOnly && state.variant === "melt");
     const row = cookieList.querySelector(`[data-cookie="${c.id}"]`);
     row.classList.toggle("mood-match-row", match);
     row.querySelector(".match-badge").classList.toggle("hidden", !match);
-    VARIANTS.forEach((v) => {
+    (c.plainOnly ? VARIANTS.filter((v) => v.id === "plain") : VARIANTS).forEach((v) => {
       const k = keyOf(c.id, v.id);
       rowRefs[k].out.textContent = state.items[k] || 0;
       rowRefs[k].minus.disabled = !(state.items[k] > 0);
@@ -1917,23 +2088,50 @@ function render() {
 }
 
 /* --- Buhu, de Café-Mitarbeiter (füehrt dur d'Schritt) --------------------- */
+/* Buhu, de Café-Mitarbeiter: staht im Gang zwüsche Ablagefläche (hinte, mit de
+   Kaffimaschine) und Theke (vorne, mit de Vitrine) – gnau wie hinter emene Tresen. */
 const BUHU_STEPS = {
-  greet:  { x: 395,  y: 292, bcx: 645, bcy: 58 },
-  select: { x: 335,  y: 292, bcx: 655, bcy: 58 },
-  coffee: { x: 505,  y: 286, bcx: 858, bcy: 150 },
-  pack:   { x: 1082, y: 442, bcx: 928, bcy: 250 },
-  bye:    { x: 620,  y: 288, bcx: 655, bcy: 58 },
+  greet:  { x: 285,  y: 356, bcx: 645, bcy: 60 },
+  select: { x: 305,  y: 356, bcx: 655, bcy: 60 },
+  coffee: { x: 478,  y: 356, bcx: 700, bcy: 155 },
+  cup:    { x: 478,  y: 356, bcx: 700, bcy: 155 },
+  pack:   { x: 1092, y: 420, bcx: 928, bcy: 240 },
+  bye:    { x: 480,  y: 356, bcx: 700, bcy: 60 },
 };
 let buhuBye = false;
 let coffeeChoice = null; // null = no gfragt, "yes" oder "no"
+let buhuPos = null, buhuFlyTimer = null;
 
-function setBuhuBubble(text, cx, cy, tx, ty, withChoice) {
+/* De Buhu flügt zum nöie Punkt: er leit sich i d'Flugrichtig, flüglet schnäller,
+   funklet – und d'Sprächblase blendet während em Flug us. */
+function flyBuhuTo(pos) {
+  const fig = document.getElementById("buhu-figure");
+  const tilt = document.getElementById("buhu-tilt");
+  const from = buhuPos;
+  fig.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+  buhuPos = pos;
+  if (!from || (from.x === pos.x && from.y === pos.y)) return;
+  const dx = pos.x - from.x, dy = pos.y - from.y;
+  const lean = Math.max(-15, Math.min(15, dx / 20));
+  fig.classList.add("is-flying");
+  tilt.style.transform = `rotate(${lean.toFixed(1)}deg) translateY(${dy > 0 ? 5 : -8}px)`;
+  clearTimeout(buhuFlyTimer);
+  buhuFlyTimer = setTimeout(() => {
+    fig.classList.remove("is-flying");
+    tilt.style.transform = "rotate(0deg)";
+  }, 1000);
+}
+
+function setBuhuBubble(text, cx, cy, tx, ty, choices, onChoice) {
   const wrap = 30, words = text.split(" "), lines = [];
   let cur = "";
   for (const w of words) { if ((cur + " " + w).trim().length > wrap) { lines.push(cur.trim()); cur = w; } else cur += " " + w; }
   if (cur.trim()) lines.push(cur.trim());
-  const fs = 13, pad = 10, lh = 17, btnH = withChoice ? 30 : 0;
-  const w = Math.max(150, Math.max(...lines.map((l) => l.length)) * fs * 0.56 + pad * 2);
+  const fs = 13, pad = 10, lh = 17, btnH = choices ? 30 : 0;
+  const btnW = choices ? choices.map((c) => Math.max(58, c.label.length * 6.7 + 16)) : [];
+  const btnGap = 10;
+  const btnTotal = choices ? btnW.reduce((a, b) => a + b, 0) + btnGap * (choices.length - 1) : 0;
+  const w = Math.max(150, btnTotal + pad * 2, Math.max(...lines.map((l) => l.length)) * fs * 0.56 + pad * 2);
   const h = lines.length * lh + pad * 2 + btnH;
   const bx = cx - w / 2, by = cy - h / 2;
   const baseY = ty > by + h ? by + h : (ty < by ? by : cy);
@@ -1942,27 +2140,61 @@ function setBuhuBubble(text, cx, cy, tx, ty, withChoice) {
   t += `<path d="M${(baseX - 9).toFixed(0)} ${baseY.toFixed(0)} L${tx.toFixed(0)} ${ty.toFixed(0)} L${(baseX + 9).toFixed(0)} ${baseY.toFixed(0)} Z" fill="#FBF3E4"/>`;
   t += `<path d="M${(baseX - 9).toFixed(0)} ${baseY.toFixed(0)} L${tx.toFixed(0)} ${ty.toFixed(0)} L${(baseX + 9).toFixed(0)} ${baseY.toFixed(0)}" fill="none" stroke="#2E2015" stroke-width="2" stroke-linejoin="round"/>`;
   lines.forEach((l, i) => { t += `<text x="${cx.toFixed(0)}" y="${(by + pad + lh * i + 12).toFixed(0)}" text-anchor="middle" font-size="${fs}" fill="#2E2015" font-family="'Segoe UI',system-ui,sans-serif">${l.replace(/</g, "&lt;")}</text>`; });
-  if (withChoice) {
-    const byB = by + h - btnH + 3, bw = 64;
-    t += `<g class="buhu-choice" data-choice="yes"><rect x="${(cx - bw - 5).toFixed(0)}" y="${byB.toFixed(0)}" width="${bw}" height="22" rx="11" fill="#F5A11C" stroke="#2E2015" stroke-width="1.6"/><text x="${(cx - bw / 2 - 5).toFixed(0)}" y="${(byB + 15).toFixed(0)}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">Ja gern ☕</text></g>`;
-    t += `<g class="buhu-choice" data-choice="no"><rect x="${(cx + 5).toFixed(0)}" y="${byB.toFixed(0)}" width="${bw}" height="22" rx="11" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.6"/><text x="${(cx + bw / 2 + 5).toFixed(0)}" y="${(byB + 15).toFixed(0)}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">Nei, merci</text></g>`;
+  if (choices) {
+    const byB = by + h - btnH + 3;
+    let bxx = cx - btnTotal / 2;
+    choices.forEach((c, i) => {
+      t += `<g class="buhu-choice" data-choice="${c.value}">` +
+        `<rect x="${bxx.toFixed(0)}" y="${byB.toFixed(0)}" width="${btnW[i].toFixed(0)}" height="22" rx="11" fill="${c.primary ? "#F5A11C" : "#FBF3E4"}" stroke="#2E2015" stroke-width="1.6"/>` +
+        `<text x="${(bxx + btnW[i] / 2).toFixed(0)}" y="${(byB + 15).toFixed(0)}" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E2015">${c.label}</text></g>`;
+      bxx += btnW[i] + btnGap;
+    });
   }
   const el = document.getElementById("buhu-scene-bubble");
   el.innerHTML = t;
-  el.querySelectorAll(".buhu-choice").forEach((g) => g.addEventListener("click", () => onCoffeeChoice(g.dataset.choice)));
+  if (onChoice) el.querySelectorAll(".buhu-choice").forEach((g) => g.addEventListener("click", () => onChoice(g.dataset.choice)));
 }
-function onCoffeeChoice(c) { coffeeChoice = c; render(); }
+
+/* Wo im Café + i de Liste uflüchtet, je nach Schritt wo grad dra isch */
+const STEP_GLOW_SVG = {
+  greet:  ["g-shelf"],
+  select: ["g-vitrine"],
+  coffee: ["g-menu-board", "g-coffee-machine"],
+  cup:    ["g-coffee-machine"],
+  pack:   ["g-table"],
+};
+const STEP_GLOW_HTML = {
+  greet:  ["size-panel"],
+  select: ["cookies-panel"],
+  coffee: ["coffee-panel"],
+  cup:    ["coffee-panel"],
+  pack:   ["pickup-panel"],
+};
+function updateStepGlow(step) {
+  document.querySelectorAll(".step-glow").forEach((el) => el.classList.remove("step-glow"));
+  document.querySelectorAll(".step-glow-html").forEach((el) => el.classList.remove("step-glow-html"));
+  (STEP_GLOW_SVG[step] || []).forEach((id) => { const el = document.getElementById(id); if (el) el.classList.add("step-glow"); });
+  (STEP_GLOW_HTML[step] || []).forEach((id) => { const el = document.getElementById(id); if (el) el.classList.add("step-glow-html"); });
+}
 
 function setBuhu(step, ready) {
   const s = BUHU_STEPS[step];
   if (!s) return;
-  document.getElementById("buhu-figure").style.transform = `translate(${s.x}px, ${s.y}px)`;
-  const withChoice = step === "coffee" && coffeeChoice === null;
-  let line;
+  flyBuhuTo(s);
+  updateStepGlow(step);
+  let line, choices = null, onChoice = null;
   if (step === "coffee") {
-    line = coffeeChoice === "yes"
-      ? "Super – tipp uf d'COFFEEMENU-Tafel ☕ oder unte i de Liste."
-      : "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?";
+    if (coffeeChoice === "yes") {
+      line = "Super – tipp uf d'COFFEEMENU-Tafel ☕ oder unte i de Liste.";
+    } else {
+      line = "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?";
+      choices = [{ value: "yes", label: "Ja gern ☕", primary: true }, { value: "no", label: "Nei, merci" }];
+      onChoice = (v) => { coffeeChoice = v; render(); };
+    }
+  } else if (step === "cup") {
+    line = "Kafi isch notiert! Hesch en eigene Becher debii oder bruchsch eine vo mir?";
+    choices = [{ value: "eigene", label: "Han min eigene ♻️", primary: true }, { value: "einweg", label: "Bruch eine" }];
+    onChoice = (v) => { state.cup = v; render(); };
   } else {
     line = ({
       greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Boxgrössi – ich hilf der.",
@@ -1971,13 +2203,14 @@ function setBuhu(step, ready) {
       bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
     })[step];
   }
-  setBuhuBubble(line, s.bcx - s.x, s.bcy - s.y, 0, -38, withChoice);
+  setBuhuBubble(line, s.bcx - s.x, s.bcy - s.y, 0, -38, choices, onChoice);
 }
 function updateBuhu(ready) {
   if (buhuBye) return;
   const cap = capacity(), n = totalCookies();
   let step;
   if (!state.size && state.savedBoxes.length === 0) step = "greet";
+  else if (totalCoffees() > 0 && !state.cup) step = "cup";   // Kafi gwählt → sofort d'Becher-Frag
   else if (!state.size || n < cap) step = "select";
   else if (isCoffeeDay() && totalCoffees() === 0 && coffeeChoice !== "no") step = "coffee";
   else step = "pack";

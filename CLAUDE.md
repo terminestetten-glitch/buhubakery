@@ -15,12 +15,16 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Build your own box**: Im Packaging-Regal rechts Boxgrösse wählen (XXS=1, XS=2, S=4, M=6, L=9, XL=12; ab 13 = "Sonderbstellig" mit Zahlenfeld 13–30), dann Cookies aus der Vitrine in die Box packen (Box füllt sich sichtbar auf dem Tisch; Cookie in der Box antippen = wieder entfernen; bewusst KEINE Flug-Animation – User wollte das nicht).
 - **Mehrere Boxen pro Bestellung**: Knopf "+ No e Box drzue" legt die aktuelle Box in die Bestellung (Stapel erscheint neben der offenen Box auf dem Tisch), ×-Knopf in der Zusammenfassung entfernt sie wieder.
 - **Kaffee auch über die COFFEEMENU-Tafel in der Szene antippbar** (jede Zeile = 1× bestellen).
-- **Handy nur im Querformat**: Im Hochformat legt sich ein Overlay über die Seite ("Dreh dis Handy") – expliziter Wunsch des Users.
+- **Handy geht jetzt au im Hochformat** (Wunsch hat sich geändert): kei Dreh-Overlay meh, d'Szene het kei `min-width` meh und skaliert uf jedi Breiti, ohni dass me was verschiebe muss.
 - **Jede Sorte in 2 Varianten**: "eifach so" oder "mit Soft Melt Chärn" (flüssiger Kern, im Bild als oranger Punkt). Umschalter-Chips über der Szene bestimmen, welche Variante beim Antippen in der Vitrine gilt; in der Liste hat jede Sorte zwei Zähler.
 - **Cookie Mood**: Need comfort / Celebrating / Hangry / Study session / Date night → hebt passende Cookies hervor.
 - **Kaffee nur an Abhol-Tagen**: Kaffeemaschine + COFFEEMENU (Americano, Cappuccino, Schale, Espresso, Kaffee Crème) erscheinen nur an konfigurierten Tagen (`CONFIG.coffeeDays` in index.html, 0=So…6=Sa; aktuell Fr+Sa als Platzhalter). Es gibt einen "Kafi-Tag simulieren"-Vorschau-Button.
 - **Becher-Wahl bei Kaffee**: Wenn Kaffee im Warenkorb ist, muss gewählt werden: eigener Becher mitbringen ♻️ oder Einweg. Ohne Wahl bleibt der Bestell-Knopf gesperrt.
 - Bestellung = mailto-Link mit fertig ausgefüllter Bestellübersicht (kein Backend!).
+- **Buhu (Café-Mitarbeiter) fliegt jetzt zwüsche de Schritt-Punkte** (Flügel flügle schneller während em Flug, Sprächblase blendet us), staht standardmässig im Gang hinter de Theke (zwüsche Theke-Deckfläche und Ablagefläche mit de Kaffimaschine – wie en Mitarbeiter hinter em Tresen).
+- **Becher-Frag jetzt über Buhu**: sobald Kafi im Warenkorb isch und kei Becher gwählt, fragt Buhu direkt i de Sprächblase ("eigene Becher ♻️" oder "bruch eine") – nöd nur über d'Chips im Panel.
+- **Schritt-Uflüchte**: s'passendi Bedienelement pulsiert sanft, je nach dem was Buhu grad vorschlaht (Regal → Vitrine → Kafi-Menü/Maschine → Kalender-Panel bi Schritt 4).
+- **Theke isch als echte 3D-Blockform gezeichnet**: sichtbari Deckfläche (Tischplatte-Trick, gliich wie bi de Box-Deckel) + Front mit iibauter Glasvitrine (Cookies liege dinne i re Reihe, nöd meh als separati Vitrine obe druf). D'Ablagefläche hinter de Theke het de gliiche Trick für iri Platte.
 
 ## Branding
 - Logo: **Biene im Geisterkostüm** (Buhu = Geist) mit Kochmütze und Honiglöffel. **Original eingebaut**:
@@ -39,13 +43,13 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Kein Backend/keine Datenbank**: Bestellung per mailto → keine Datenspeicherung, kein Datenschutz-Albtraum, nichts zu hacken. Security-Oberfläche minimal.
 - **Tap statt Drag & Drop** zum Cookie-Hinzufügen: Drag & Drop ist auf Touchscreens unzuverlässig; Cookie "fliegt" stattdessen animiert in die Box (bei `prefers-reduced-motion` ohne Animation).
 - **Mobile-first**, beide Farbmodi (hell/dunkel) über CSS-Tokens; die Café-Illustration hat bewusst fixe Farben.
-- Szene ist SVG mit klickbaren Elementen; **alle Funktionen gehen zusätzlich über die HTML-Liste darunter** (Barrierefreiheit + kleine Bildschirme). Szene scrollt horizontal (min-width 800px).
+- Szene ist SVG mit klickbaren Elementen; **alle Funktionen gehen zusätzlich über die HTML-Liste darunter** (Barrierefreiheit + kleine Bildschirme). Szene skaliert responsiv (kei horizontales Scrollen meh, kei min-width).
 - **Hosting: GitHub Pages** via Workflow `.github/workflows/deploy.yml` (deployt bei Push auf `main`).
   Vorschau während der Arbeit: Claude-Artifact.
 - Branch-Konvention: Feature-Branches `claude/...`, Merge nach `main` deployt.
 
 ## Sortiment & Preise
-- **Echte Sorten (vom User)**: Oreo, Lotus (Biscoff), Ovomaltine Classic, Ovomaltine Noir – je "eifach so" oder "Soft Melt Chärn". Mood-Zuordnung in `COOKIES` in index.html ist von Claude geraten → bei Gelegenheit bestätigen lassen.
+- **Echte Sorten (vom User)**: Oreo, Lotus (Biscoff), Ovomaltine Classic, Ovomaltine Noir – je "eifach so" oder "Soft Melt Chärn". Cinnamon Dream (Zimt-Cookie mit Pekannuss) isch **nume als "eifach so"** verfügbar, kei Soft-Melt-Variante (`plainOnly: true` in `COOKIES`). Mood-Zuordnung in `COOKIES` in index.html ist von Claude geraten → bei Gelegenheit bestätigen lassen.
 - **Preise noch Platzhalter**: XXS 4 / XS 7.50 / S 14 / M 20 / L 28 / XL 36 CHF; Sonderbstellig 3 CHF/Cookie; Kaffee 3.50–4.80 CHF. Soft Melt kostet aktuell gleich viel wie normal → fragen, ob Aufpreis.
 
 ## Offene Punkte (beim User nachfragen, wenn passend)
