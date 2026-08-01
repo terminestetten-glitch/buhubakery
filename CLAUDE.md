@@ -25,6 +25,9 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Buhu (Café-Mitarbeiter) fliegt jetzt zwüsche de Schritt-Punkte** (Flügel flügle schneller während em Flug, Sprächblase blendet us), staht standardmässig im Gang hinter de Theke (zwüsche Theke-Deckfläche und Ablagefläche mit de Kaffimaschine – wie en Mitarbeiter hinter em Tresen).
 - **Becher-Frag jetzt über Buhu**: sobald Kafi im Warenkorb isch und kei Becher gwählt, fragt Buhu direkt i de Sprächblase ("eigene Becher ♻️" oder "bruch eine") – nöd nur über d'Chips im Panel.
 - **Schritt-Uflüchte**: s'passendi Bedienelement pulsiert sanft, je nach dem was Buhu grad vorschlaht (Regal → Vitrine → Kafi-Menü/Maschine → Kalender-Panel bi Schritt 4).
+- **Ruum-Perspektive**: Rückwand goht bis y=300, dedrunter en tüüfe Bodä (300–660) mit Diele wo uf de Fluchtpunkt (620, 262) zuelaufed, plus Quer-Fuge wo nach hinde enger werded. Alles isch nach Tüefi gstaffelet: Ablagi hinde (Bodä y≈350) → Buhu im Gang → Theke vorne (Deckflächi y≈404) → Tisch/Höckerli. Fänschter und Regal ghöred a d'Rückwand und dörfed nöd under y=300 abeglange.
+- **Boxe wieder bearbeite**: jedi zuegleiti Box i de Zämefassig het en ✏️-Knopf (`editSavedBox`) wo si zrugg uf de Tisch holt.
+- **Variante-Wahl au i de Szene**: d'Chips "eifach so" / "mit Soft Melt Chärn" sind zuesätzlich direkt a de Vitrine (`#g-variant-scene`). Bi Sorte mit `plainOnly` (Cinnamon Dream) erschiint es "nur eifach"-Schildli, wenn Soft Melt gwählt isch.
 - **Theke isch als echte 3D-Blockform gezeichnet**: sichtbari Deckfläche (Tischplatte-Trick, gliich wie bi de Box-Deckel) + Front mit iibauter Glasvitrine (Cookies liege dinne i re Reihe, nöd meh als separati Vitrine obe druf). D'Ablagefläche hinter de Theke het de gliiche Trick für iri Platte.
 
 ## Branding
