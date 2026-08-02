@@ -1103,7 +1103,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               </label>
               <span class="coffee-note">Für no meh: schriib mir eifach diräkt.</span>
             </div>
-            <p class="coffee-note" style="margin-top:1rem;">Jede Cookie chunt einzeln iipackt. Und wie söll d'ganzi Bstellig verpackt sii?</p>
+            <p class="coffee-note" style="margin-top:1rem;" id="packaging-note"></p>
             <div class="cup-row" role="group" aria-label="Verpackig" id="packaging-buttons"></div>
           </div>
           <div class="panel" id="cookies-panel">
@@ -1375,9 +1375,14 @@ function boxPrice() {
   const meltCount = Object.entries(state.items).reduce((sum, [k, n]) => k.includes("melt") ? sum + n : sum, 0);
   return basePrice + (meltCount * 0.50);
 }
-/* D'Verpackig gilt für d'ganzi Bstellig, drum eimal uf s'Total statt pro Box. */
+/* D'Verpackig gilt für d'ganzi Bstellig, drum eimal uf s'Total statt pro Box.
+   Ab 4 Cookies gits e Ussevrpackig – drunter (XXS, XS) chunt me d'einzeln
+   iipackte Cookies eifach so über, ohni Tüte. */
+const PACKAGING_MIN_COOKIES = 4;
+const orderCookieCount = () =>
+  state.savedBoxes.reduce((sum, b) => sum + Object.values(b.items).reduce((a, n) => a + n, 0), 0) + totalCookies();
+const needsOuterPackaging = () => orderCookieCount() >= PACKAGING_MIN_COOKIES;
 const packagingChoice = () => PACKAGING.find((p) => p.id === state.packaging) || PACKAGING[0];
-const packagingSurcharge = () => packagingChoice().surcharge;
 const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols;
 const chf = (n) => CONFIG.currency + " " + n.toFixed(2);
 const boxTitle = (size, qty) => size === "SONDER" ? `Sonderbstellig (${qty} Cookies)` : `Box ${size} (${SIZES[size].capacity} Cookies)`;
@@ -1860,11 +1865,15 @@ function renderSceneBox() {
   const bagPaper = "#C89B67";   // brus Chraftpapier, wie d'echte Tüte
   const bagCuff  = "#D8B183";   // umgschlageni Chante, es bitzli heller
 
+  // Under 4 Cookies gits kei Ussevrpackig – d'iipackte Cookies chömed eifach so
+  const bare = !needsOuterPackaging();
   const container = isGift ? "Box" : "Tüte";
-  const title = state.size === "SONDER" ? "Dini Sonderbstellig" : `Dini ${state.size}-${container}`;
+  const title = bare
+    ? (cap === 1 ? "Din Cookie" : `Dini ${cap} Cookies`)
+    : (state.size === "SONDER" ? "Dini Sonderbstellig" : `Dini ${state.size}-${container}`);
   const tw = title.length * 7.6 + 18;
   // Bi de Tüte mues s'Schildli höcher, susch staht's im Hänkel
-  const tly = y - 33 - (isGift ? 0 : 22);
+  const tly = y - 33 - (isGift || bare ? 0 : 22);
   const titleLabel = `<rect x="${890 - tw / 2}" y="${tly}" width="${tw}" height="21" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
     `<text x="890" y="${tly + 15}" text-anchor="middle" font-size="13" fill="#2E2015" font-weight="bold">${title}</text>`;
 
@@ -1876,7 +1885,8 @@ function renderSceneBox() {
   };
 
   // Voll? Denn isch zue – Tüte wird obe umgschlage, Gschänk-Box übercht en Deckel.
-  if (totalCookies() >= cap && !boxPeek) {
+  // Ohni Ussevrpackig gits nüt zum zuemache, drum überspringe mer das.
+  if (!bare && totalCookies() >= cap && !boxPeek) {
     const label = isGift ? "Gschänk-Box isch voll und zue" : "Tüte isch voll und zuegfaltet";
     inner += `<g data-openbox="1" class="scene-hot" tabindex="0" role="button" aria-label="${label} – atippe zum wieder ufmache">`;
     if (isGift) {
@@ -1909,7 +1919,9 @@ function renderSceneBox() {
   }
 
   // Offe: Gschänk-Box mit Deckel-Läppli, susch e Papiertüte mit ufgschlagener Chante
-  if (isGift) {
+  if (bare) {
+    // Kei Ussevrpackig: d'iipackte Cookies liged eifach uf em Tisch
+  } else if (isGift) {
     inner += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>` +
       `<path d="M${x} ${y} l-14 -12 l14 -2 z M${x + w} ${y} l14 -12 l-14 -2 z" fill="#E8DCC6" stroke="#2E2015" stroke-width="2"/>`;
   } else {
@@ -2241,6 +2253,12 @@ function render() {
   document.querySelectorAll("#g-shelf .scene-hot").forEach((el) => el.classList.toggle("is-selected", el.dataset.size === state.size));
   sonderInput.value = state.sonderQty;
 
+  // Verpackigs-Wahl gits erscht ab 4 Cookies – drunter chunt me d'Cookies eifach so über
+  const outerPk = needsOuterPackaging();
+  document.getElementById("packaging-buttons").classList.toggle("hidden", !outerPk);
+  document.getElementById("packaging-note").textContent = outerPk
+    ? "Jede Cookie chunt einzeln iipackt. Und wie söll d'ganzi Bstellig verpackt sii?"
+    : `Jede Cookie chunt einzeln iipackt. E Tüte oder Gschänk-Box gits ab ${PACKAGING_MIN_COOKIES} Cookies.`;
   document.querySelectorAll("[data-packaging]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.packaging === state.packaging)));
   document.querySelectorAll(".variant-chip").forEach((chip) => chip.setAttribute("aria-pressed", String(chip.dataset.variant === state.variant)));
   document.querySelectorAll("#g-variant-scene .scene-hot").forEach((el) => {
@@ -2332,13 +2350,15 @@ function render() {
   if (totalCoffees() > 0 && state.cup) {
     addLine(state.cup === "eigene" ? "Eigene Becher ♻️" : "Einweg-Becher", "");
   }
-  // Verpackig: eimal für d'ganzi Bstellig, nöd pro Box
+  // Verpackig: eimal für d'ganzi Bstellig, nöd pro Box – und erscht ab 4 Cookies
   const hasSomething = state.savedBoxes.length > 0 || curValid;
-  if (hasSomething) {
+  if (hasSomething && needsOuterPackaging()) {
     const pk = packagingChoice();
     total += pk.surcharge;
     addLine(pk.surcharge > 0 ? `🎁 ${pk.short}` : `🛍️ ${pk.short}`,
       pk.surcharge > 0 ? chf(pk.surcharge) : "inbegriffe");
+  } else if (hasSomething) {
+    addLine("🍪 Einzeln iipackt", "inbegriffe");
   }
   if (state.pickupDate) {
     addLine("📅 Wunschtag", formatPickupDate(state.pickupDate));
@@ -2366,9 +2386,13 @@ function render() {
       coffeeLines.forEach((k) => { body += `- ${state.coffees[k.id]}× ${k.name}\n`; });
       body += `- Becher: ${state.cup === "eigene" ? "ich bring min eigene mit ♻️" : "Einweg bitte"}\n`;
     }
-    const pk = packagingChoice();
-    body += `\nVerpackig: ${pk.short}${pk.surcharge > 0 ? ` (+${chf(pk.surcharge)})` : ""}\n`;
-    body += "   • jede Cookie einzeln iipackt\n";
+    if (needsOuterPackaging()) {
+      const pk = packagingChoice();
+      body += `\nVerpackig: ${pk.short}${pk.surcharge > 0 ? ` (+${chf(pk.surcharge)})` : ""}\n`;
+      body += "   • jede Cookie einzeln iipackt\n";
+    } else {
+      body += "\nVerpackig: jede Cookie einzeln iipackt (kei Tüte nötig)\n";
+    }
     const noteVal = document.getElementById("order-note").value.trim();
     const pickupLine = state.pickupDate ? formatPickupDate(state.pickupDate) : "";
     body += `\nTotal: ${chf(total)}\n\nWunschtermin für d'Abholig: ${pickupLine}\n${noteVal ? "Bemerkig: " + noteVal + "\n" : ""}Name: \n\nMerci & en Gruess!`;

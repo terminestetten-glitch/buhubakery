@@ -68,7 +68,10 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
     | Schöni Verpackig | +0.50 | gleiche Tüte, mit Bändeli & Bienen-Sticker |
     | Gschänk-Box 🎁 | +2.50 | Box mit Deckel und Schleife |
   - Die Boxgrösse bestimmt weiterhin nur, wie viele Cookies reinpassen.
-  - Achtung: die Tüten sind **braun** (Kraftpapier), nicht weiss – vom User korrigiert.
+  - Achtung: die Tüten sind **braun** (Kraftpapier) **mit Tragriemli**, nicht weiss – vom User korrigiert.
+  - **Erst ab 4 Cookies** gibt es überhaupt eine Aussenverpackung (`PACKAGING_MIN_COOKIES`). Bei XXS (1) und XS (2)
+    bekommt man die einzeln verpackten Cookies einfach so – keine Wahl, kein Aufpreis, und in der Szene liegen
+    sie ohne Tüte auf dem Tisch.
 
 ## Zahlung (vom User, 02.08.2026)
 - **TWINT, vor der Abholung**. Die Handynummer für TWINT kommt in der Bestätigungsmail (nicht öffentlich auf der Site).
