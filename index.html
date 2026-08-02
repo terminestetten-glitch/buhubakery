@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BuhuBakery – Bau dir dini Cookie-Box</title>
-<meta name="description" content="BuhuBakery – handgemachte Cookies aus der Schweiz. Wähl dini Boxgrösse, pack dini Lieblingscookies ii und hol sie ab. De Schreck isch nur, wenn's kei meh het!">
+<title>BuhuBakery – Bau dir dini Cookie-Tüte</title>
+<meta name="description" content="BuhuBakery – handgemachte Cookies aus der Schweiz. Wähl dini Grössi, pack dini Lieblingscookies ii und hol sie ab. De Schreck isch nur, wenn's kei meh het!">
 <style>
 /* ==========================================================================
    BuhuBakery – Design-Tokens
@@ -660,8 +660,20 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <stop offset="0%" stop-color="#FFD27A"/><stop offset="55%" stop-color="#F5A11C"/><stop offset="100%" stop-color="#D9791A"/>
     </radialGradient>
     <!-- Tüefi-Verläuf fürs Café: Wand/Bodä/Holz chöme so plastischer düre -->
+    <!-- Kissaten-Stimmig: warmi Holzwand statt hälle Putz -->
     <linearGradient id="wall-grad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#D6CBB4"/><stop offset="55%" stop-color="#CDC1AC"/><stop offset="100%" stop-color="#BCAF95"/>
+      <stop offset="0%" stop-color="#8A7154"/><stop offset="55%" stop-color="#7A6349"/><stop offset="100%" stop-color="#6A553E"/>
+    </linearGradient>
+    <!-- Papierlaterne: warms Papier mit Schiin vo inne -->
+    <radialGradient id="lantern-paper" cx="42%" cy="38%" r="68%">
+      <stop offset="0%" stop-color="#FFEBBE"/><stop offset="70%" stop-color="#F6D9A0"/><stop offset="100%" stop-color="#E4BE7E"/>
+    </radialGradient>
+    <radialGradient id="lantern-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD98A" stop-opacity="0.42"/><stop offset="100%" stop-color="#FFD98A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Shoji-Papier: s'Taglicht schiint vo usse dure -->
+    <linearGradient id="shoji-paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF8EA"/><stop offset="60%" stop-color="#F5EDD8"/><stop offset="100%" stop-color="#E8DCC0"/>
     </linearGradient>
     <linearGradient id="floor-grad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#A8987F"/><stop offset="100%" stop-color="#93856E"/>
@@ -719,7 +731,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
       <a href="#sortiment">Sortiment</a>
-      <a href="#cafe">Cookie-Box baue</a>
+      <a href="#cafe">Cookie-Tüte baue</a>
       <a href="#ueber-mich">Über mich</a>
       <a href="#bestellen">Abholig</a>
       <a href="#froege">Fröge</a>
@@ -734,7 +746,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <div>
         <span class="eyebrow">Handgmachti Cookies us de Schwiiz</span>
         <h1 class="slogan">«De Schreck isch nur, wenn's kei meh het.»</h1>
-        <p class="lead">…drum bstell en jetzt, bevor de Kolleg de letscht wett. Bi de BuhuBakery packsch dir dini Cookie-Box grad sälber – diräkt da im virtuelle Café.</p>
+        <p class="lead">…drum bstell en jetzt, bevor de Kolleg de letscht wett. Bi de BuhuBakery packsch dir dini Cookie-Tüte grad sälber – diräkt da im virtuelle Café.</p>
         <ul class="hero-facts">
           <li><span aria-hidden="true">🏠</span> <strong>Us minere eigene Chuchi</strong></li>
           <li><span aria-hidden="true">🍪</span> <strong>Frisch bache uf Bstellig</strong></li>
@@ -771,8 +783,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <h2>Build your own box</h2>
       <p class="section-intro">So gaht's:</p>
       <ol class="steps-intro">
-        <li><strong>1.</strong> Wähl im Regal rächts dini Boxgrössi.</li>
-        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – si lande diräkt i dini Box uf em Tisch. Wettsch eine wieder use? Eifach de Cookie i de Box atippe.</li>
+        <li><strong>1.</strong> Wähl im Regal rächts dini Grössi.</li>
+        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – si lande diräkt i dini Tüte uf em Tisch. Wettsch eine wieder use? Eifach de Cookie i de Tüte atippe.</li>
         <li><strong>3.</strong> Nöd a jedem Tag gits Kafi – nur a de Täg mit ☕-Symbol chasch en drzue näh.</li>
         <li><strong>4.</strong> Wähl dis Wunsch-Abholdatum im Kalender.</li>
       </ol>
@@ -793,7 +805,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       </div>
 
       <div class="scene-card">
-        <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Packaging-Regal mit Boxgrössen, Tisch mit deiner Box">
+        <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Packaging-Regal mit de Grössine, Tisch mit dinere Tüte">
           <!-- RUUM: Rückwand obe (bis y=300), denn en tüüfe Bodä wo nach hinde flüchtet.
                D'Fluchtlinie liit bi (620, 262) – dört lauft alles zäme. -->
           <rect x="0" y="0" width="1200" height="300" fill="url(#wall-grad)"/>
@@ -832,31 +844,143 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <rect x="0" y="300" width="1200" height="4" fill="#A2937A"/>
           <line x1="0" y1="316" x2="1200" y2="316" stroke="#6E6151" stroke-width="2"/>
 
-          <!-- Deko: Girlande (JS füllt sie – wechselt mit Saison/Feiertag) + Pflanze -->
-          <g>
-            <g id="g-garland"></g>
-            <g id="deco-plant">
-              <ellipse cx="1148" cy="646" rx="38" ry="9" fill="#2E2015" opacity="0.18"/>
-              <ellipse cx="1150" cy="556" rx="11" ry="25" fill="#6B8F7B" transform="rotate(-18 1150 556)"/>
-              <ellipse cx="1126" cy="563" rx="10" ry="23" fill="#7DA189" transform="rotate(-40 1126 563)"/>
-              <ellipse cx="1172" cy="565" rx="10" ry="23" fill="#5C7F6B" transform="rotate(20 1172 565)"/>
-              <path d="M1122 594 L1176 594 L1169 646 L1129 646 Z" fill="#B0524A"/>
-              <rect x="1117" y="587" width="64" height="11" rx="3" fill="#8A3F35"/>
+          <!-- Kissaten-Deko: Noren, Porzellan-Wandregal und en Zwiig i de Vase -->
+          <g id="g-japan-decor">
+            <!-- Porzellan-Wandregal über de Ablagi. Bewusst nur EI Brätt: drüber staht
+                 s'Wandschild, dört wären d'Tasse verdeckt. -->
+            <g>
+              <rect x="88" y="196" width="212" height="8" rx="2" fill="#8A6D46" stroke="#2E2015" stroke-width="1.8"/>
+              <rect x="88" y="196" width="212" height="2.5" fill="#C9A97A" opacity="0.6"/>
+              <!-- Sälber glasierti Keramik: d'Glasur lauft vom Rand abe und ändet wällig.
+                   Bewusst KEI graadi Linie – die würd wie en Füllstand usgseh. -->
+              <g stroke="#3B2C1E" stroke-width="1.5" stroke-linejoin="round">
+                <!-- Yunomi, blaui Glasur mit Tropfe -->
+                <path d="M97 172 q11 -3 22 0 l-2 24 h-18 z" fill="#F2E9D6"/>
+                <path d="M97.4 174 q10.6 -2.6 21.2 0 l-0.5 7 q-2.6 5 -4.6 1.5 q-2.4 6.5 -4.6 1 q-2.2 7 -4.4 1.5 q-2.4 5.5 -4.6 0.5 z" fill="#7E97A6" stroke="none"/>
+                <path d="M97 172 q11 -3 22 0 l-2 24 h-18 z" fill="none"/>
+                <!-- Tasse mit Henkel, warmi Rostglasur -->
+                <path d="M129 168 q10 -2.5 19 0 l-2 28 h-15 z" fill="#F2E9D6"/>
+                <path d="M129.4 170 q9.6 -2.2 18.2 0 l-0.6 9 q-2.4 6 -4.6 2 q-2 7.5 -4.4 1.5 q-2.2 6 -4.4 1 z" fill="#B5763E" stroke="none"/>
+                <path d="M129 168 q10 -2.5 19 0 l-2 28 h-15 z" fill="none"/>
+                <path d="M148 174 q8 5 -1 12" fill="none"/>
+                <!-- Schlanki Vase, salbeigrüen -->
+                <path d="M159 164 q8 -2 15 0 l-2 10 q4 8 2 22 h-15 q-2 -14 2 -22 z" fill="#EFE6D2"/>
+                <path d="M159.4 166 q7.2 -1.6 14.2 0 l-1 8 q-2 5.5 -4 1.5 q-1.8 6 -3.8 1 q-2 5 -4 0.5 z" fill="#6E8A78" stroke="none"/>
+                <path d="M159 164 q8 -2 15 0 l-2 10 q4 8 2 22 h-15 q-2 -14 2 -22 z" fill="none"/>
+                <!-- Chännli, dunkli Glasur -->
+                <path d="M184 168 q11 -3 21 0 l-3 28 h-15 z" fill="#F2E9D6"/>
+                <path d="M184.4 170 q10.6 -2.6 20.2 0 l-0.7 10 q-2.6 6.5 -4.8 2 q-2.2 7 -4.6 1.5 q-2.4 6 -4.6 1 z" fill="#4E5F63" stroke="none"/>
+                <path d="M184 168 q11 -3 21 0 l-3 28 h-15 z" fill="none"/>
+                <path d="M205 172 l7 -4 l-4 8" fill="#F2E9D6"/>
+                <!-- Breiti Schale, Honig-Glasur -->
+                <path d="M216 174 q13 -3 25 0 q-1 14 -12.5 22 q-11.5 -8 -12.5 -22 z" fill="#F0E6D2"/>
+                <path d="M216.4 176 q12.6 -2.6 24.2 0 l-0.6 6 q-3 5.5 -5.4 1 q-2.6 6.5 -5.4 1 q-2.8 6 -5.4 0.5 q-2.6 5 -5.2 0.5 z" fill="#D9A44E" stroke="none"/>
+                <path d="M216 174 q13 -3 25 0 q-1 14 -12.5 22 q-11.5 -8 -12.5 -22 z" fill="none"/>
+                <!-- Chlises Bächerli, rostrot -->
+                <path d="M251 174 q8 -2 15 0 l-2 22 h-11 z" fill="#EFE6D2"/>
+                <path d="M251.4 176 q7.4 -1.7 14.2 0 l-0.6 7 q-2 5.5 -3.8 1.5 q-1.8 6 -3.6 1 q-2 5 -3.8 0.5 z" fill="#A8564A" stroke="none"/>
+                <path d="M251 174 q8 -2 15 0 l-2 22 h-11 z" fill="none"/>
+                <!-- Flachi Schale, blaugrau -->
+                <path d="M273 178 q12 -3 23 0 q-2 12 -11.5 18 q-9.5 -6 -11.5 -18 z" fill="#F2E9D6"/>
+                <path d="M273.4 180 q11.6 -2.6 22.2 0 l-0.6 5 q-2.8 5 -5 0.5 q-2.4 6 -5 0.5 q-2.6 5.5 -5 0.5 q-2.4 4.5 -4.8 0 z" fill="#7E97A6" stroke="none"/>
+                <path d="M273 178 q12 -3 23 0 q-2 12 -11.5 18 q-9.5 -6 -11.5 -18 z" fill="none"/>
+              </g>
+              <!-- Sprenkel im Ton, wie bi handglasierte Stück -->
+              <g fill="#5A4632" opacity="0.45">
+                <circle cx="104" cy="190" r="0.9"/><circle cx="112" cy="193" r="0.7"/><circle cx="108" cy="186" r="0.6"/>
+                <circle cx="136" cy="190" r="0.9"/><circle cx="142" cy="193" r="0.7"/>
+                <circle cx="163" cy="192" r="0.8"/><circle cx="169" cy="188" r="0.6"/>
+                <circle cx="191" cy="190" r="0.9"/><circle cx="198" cy="193" r="0.7"/>
+                <circle cx="224" cy="191" r="0.8"/><circle cx="233" cy="189" r="0.7"/>
+                <circle cx="256" cy="191" r="0.8"/><circle cx="261" cy="188" r="0.6"/>
+                <circle cx="281" cy="191" r="0.8"/><circle cx="288" cy="189" r="0.7"/>
+              </g>
+            </g>
+
+            <!-- Kirschbaum links näbe de Arbetsflächi: staht uf de gliiche Linie wie
+                 ihri Underchante (y=388) und wachst ufe bis zur Mitti vom Wandschild (y=110). -->
+            <g transform="translate(30 388)">
+              <ellipse cy="2" rx="26" ry="7" fill="#2E2015" opacity="0.26"/>
+              <g fill="none" stroke="#3E2C1C" stroke-width="6" stroke-linecap="round">
+                <path d="M0 -34 C-5 -100 6 -160 2 -206"/>
+              </g>
+              <g fill="none" stroke="#3E2C1C" stroke-width="4" stroke-linecap="round">
+                <path d="M2 -206 C-2 -236 -12 -252 -24 -266"/>
+                <path d="M2 -206 C10 -234 24 -250 40 -262"/>
+                <path d="M1 -158 C15 -168 25 -184 28 -202"/>
+                <path d="M-2 -108 C-16 -118 -24 -132 -26 -148"/>
+              </g>
+              <g fill="none" stroke="#3E2C1C" stroke-width="2.6" stroke-linecap="round">
+                <path d="M-24 -266 C-32 -274 -40 -277 -46 -276"/>
+                <path d="M40 -262 C48 -270 56 -272 62 -270"/>
+              </g>
+              <g stroke="#FFFFFF" stroke-width="1.7" fill="#FBC5D2">
+                <circle cx="-46" cy="-277" r="9"/><circle cx="-32" cy="-271" r="7.5"/>
+                <circle cx="-20" cy="-266" r="7"/><circle cx="62" cy="-271" r="9"/>
+                <circle cx="48" cy="-266" r="7.5"/><circle cx="36" cy="-259" r="7"/>
+                <circle cx="28" cy="-203" r="8"/><circle cx="18" cy="-190" r="6.5"/>
+                <circle cx="-26" cy="-149" r="8"/><circle cx="-17" cy="-134" r="6.5"/>
+                <circle cx="4" cy="-232" r="6.5"/><circle cx="-10" cy="-244" r="6"/>
+              </g>
+              <g fill="#F5A11C">
+                <circle cx="-46" cy="-277" r="2.5"/><circle cx="-20" cy="-266" r="2"/>
+                <circle cx="62" cy="-271" r="2.5"/><circle cx="36" cy="-259" r="2"/>
+                <circle cx="28" cy="-203" r="2.2"/><circle cx="-26" cy="-149" r="2.2"/>
+              </g>
+              <!-- Töpferte Bodetopf, staht uf de Linie y=0 (= 388) -->
+              <path d="M-23 -34 h46 l-5 34 h-36 z" fill="#5B6E68" stroke="#2E2015" stroke-width="2.2"/>
+              <path d="M-20 -18 h40 l-3 18 h-34 z" fill="#4C5D58"/>
+              <rect x="-27" y="-41" width="54" height="11" rx="4" fill="#6E827B" stroke="#2E2015" stroke-width="2.2"/>
+              <g fill="#8FA3A8" opacity="0.5"><circle cx="-7" cy="-12" r="1.5"/><circle cx="9" cy="-5" r="1.3"/></g>
             </g>
           </g>
 
-          <!-- Lampen -->
-          <g stroke="#2E2015" stroke-width="3" fill="#2E2015">
-            <line x1="340" y1="0" x2="340" y2="58"/>
-            <path d="M318 58 L362 58 L352 84 L328 84 Z"/>
-            <line x1="880" y1="0" x2="880" y2="58"/>
-            <path d="M858 58 L902 58 L892 84 L868 84 Z"/>
+          <!-- Deko: Girlande (JS füllt sie – wechselt mit em Feiertag) + Pflanze -->
+          <g>
+            <g id="g-garland"></g>
+            <g id="deco-plant">
+              <!-- Bambus im dunkle Keramiktopf – schlicht und uufrächt statt buschig -->
+              <ellipse cx="1148" cy="648" rx="40" ry="9" fill="#2E2015" opacity="0.2"/>
+              <g stroke="#6E9B7E" stroke-width="8" stroke-linecap="round" fill="none">
+                <path d="M1132 588 C1130 540 1134 500 1130 462"/>
+                <path d="M1150 588 C1152 534 1150 486 1156 444"/>
+                <path d="M1166 588 C1170 546 1168 512 1174 484"/>
+              </g>
+              <g stroke="#3E5F4C" stroke-width="2.2" opacity="0.9">
+                <path d="M1127 560h7M1131 520h7M1146 556h8M1149 512h8M1163 552h8M1167 518h8"/>
+              </g>
+              <g fill="#8FB59B">
+                <ellipse cx="1114" cy="470" rx="17" ry="5" transform="rotate(-22 1114 470)"/>
+                <ellipse cx="1146" cy="450" rx="16" ry="4.6" transform="rotate(-14 1146 450)"/>
+                <ellipse cx="1176" cy="474" rx="16" ry="4.6" transform="rotate(20 1176 474)"/>
+                <ellipse cx="1190" cy="500" rx="15" ry="4.4" transform="rotate(30 1190 500)"/>
+                <ellipse cx="1112" cy="508" rx="15" ry="4.4" transform="rotate(-30 1112 508)"/>
+              </g>
+              <!-- Topf: dunkli Glasur mit hellem Rand -->
+              <path d="M1122 586 L1176 586 L1170 648 L1128 648 Z" fill="#4A5A5E" stroke="#2E2015" stroke-width="2"/>
+              <path d="M1126 610 L1173 610 L1170 648 L1128 648 Z" fill="#3C4A4E"/>
+              <rect x="1117" y="578" width="64" height="12" rx="4" fill="#5E7176" stroke="#2E2015" stroke-width="2"/>
+              <g fill="#8FA3A8" opacity="0.5"><circle cx="1140" cy="624" r="1.4"/><circle cx="1156" cy="632" r="1.2"/><circle cx="1148" cy="606" r="1.2"/></g>
+            </g>
           </g>
-          <ellipse cx="340" cy="90" rx="12" ry="7" fill="#F5A11C" opacity="0.85"/>
-          <ellipse cx="880" cy="90" rx="12" ry="7" fill="#F5A11C" opacity="0.85"/>
+
+          <!-- Papier-Schirmlampe (Akari-Art): warms, weichs Liecht statt de harte Pendel -->
+          <g id="g-lanterns">
+            <ellipse cx="340" cy="110" rx="140" ry="120" fill="url(#lantern-halo)"/>
+            <g>
+              <line x1="340" y1="0" x2="340" y2="40" stroke="#2E2015" stroke-width="2.6"/>
+              <path d="M296 118 C296 76 316 42 340 42 C364 42 384 76 384 118 Z"
+                    fill="url(#lantern-paper)" stroke="#A8763E" stroke-width="2.4" stroke-linejoin="round"/>
+              <g stroke="#D9AE72" stroke-width="1.5" opacity="0.85">
+                <path d="M303 78h74M299 96h82M296.5 112h87"/>
+              </g>
+              <ellipse cx="322" cy="76" rx="10" ry="16" fill="#FFF6DF" opacity="0.5"/>
+              <ellipse cx="340" cy="118" rx="44" ry="7" fill="#FFEBBE" stroke="#A8763E" stroke-width="2"/>
+              <ellipse cx="340" cy="120" rx="30" ry="4" fill="#FFF6DF" opacity="0.85"/>
+            </g>
+          </g>
           <!-- Warmi Liechtkegel under de Lampe -->
-          <path d="M322 88 L358 88 L406 268 L274 268 Z" fill="url(#lamp-glow)"/>
-          <path d="M862 88 L898 88 L946 268 L814 268 Z" fill="url(#lamp-glow)"/>
+          <path d="M300 124 L380 124 L432 268 L248 268 Z" fill="url(#lamp-glow)"/>
 
           <!-- Wandschild "Buhu Bakery" links a de Rückwand -->
           <g>
@@ -868,14 +992,27 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <text x="180" y="140" text-anchor="middle" font-size="9.5" letter-spacing="2.4" fill="#F5A11C">HANDGMACHTI COOKIES</text>
           </g>
 
-          <!-- Hängendi Pflanze bim Fänschter -->
+          <!-- Kokedama: Moos-Chugle a de Schnuer, japanischi Art z'pflanze -->
           <g>
-            <line x1="1160" y1="0" x2="1160" y2="58" stroke="#8A7B63" stroke-width="2"/>
-            <path d="M1140 58 h40 l-5 20 h-30 z" fill="#B0524A" stroke="#2E2015" stroke-width="1.8"/>
-            <path d="M1146 78 q-6 34 4 58 M1160 78 q4 40 -2 66 M1173 78 q8 30 0 52" fill="none" stroke="#6B8F7B" stroke-width="3" stroke-linecap="round"/>
-            <ellipse cx="1150" cy="120" rx="5" ry="8" fill="#7DA189" transform="rotate(-20 1150 120)"/>
-            <ellipse cx="1158" cy="146" rx="5" ry="8" fill="#6B8F7B" transform="rotate(12 1158 146)"/>
-            <ellipse cx="1173" cy="126" rx="5" ry="8" fill="#5C7F6B" transform="rotate(24 1173 126)"/>
+            <line x1="1160" y1="0" x2="1160" y2="70" stroke="#8A7B63" stroke-width="1.8"/>
+            <g stroke="#8A7B63" stroke-width="1.4" fill="none">
+              <path d="M1160 70 C1144 74 1136 86 1138 98M1160 70 C1176 74 1184 86 1182 98"/>
+            </g>
+            <circle cx="1160" cy="100" r="21" fill="#5C6B52" stroke="#3E4A38" stroke-width="1.8"/>
+            <g fill="#6E7F60" opacity="0.8">
+              <circle cx="1152" cy="94" r="5"/><circle cx="1168" cy="104" r="4.5"/><circle cx="1158" cy="110" r="4"/>
+            </g>
+            <g stroke="#7DA189" stroke-width="2.6" fill="none" stroke-linecap="round">
+              <path d="M1152 82 C1146 62 1140 52 1132 44"/>
+              <path d="M1162 80 C1164 58 1170 46 1178 38"/>
+              <path d="M1168 84 C1176 70 1184 64 1192 60"/>
+            </g>
+            <g fill="#8FB59B">
+              <ellipse cx="1131" cy="42" rx="7" ry="4" transform="rotate(-38 1131 42)"/>
+              <ellipse cx="1179" cy="36" rx="7" ry="4" transform="rotate(34 1179 36)"/>
+              <ellipse cx="1193" cy="59" rx="6.5" ry="3.8" transform="rotate(18 1193 59)"/>
+              <ellipse cx="1145" cy="60" rx="6" ry="3.6" transform="rotate(-26 1145 60)"/>
+            </g>
           </g>
 
           <!-- Coffee-Menu-Tafel: hanget a de Wand grad über de Kaffimaschine -->
@@ -925,26 +1062,22 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <path d="M66 248 L564 248" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
             <path d="M48 269 L582 269" fill="none" stroke="#2E2015" stroke-width="2" opacity="0.5"/>
             <path d="M66 248 L564 248 L582 269 L48 269 Z" fill="none" stroke="#2E2015" stroke-width="2"/>
-            <!-- Züüg uf de Ablagi -->
-            <g>
-              <rect x="92" y="206" width="34" height="42" rx="5" fill="#EFE6D2" opacity="0.9" stroke="#2E2015" stroke-width="2"/>
-              <rect x="96" y="198" width="26" height="10" rx="3" fill="#2E2015"/>
-              <circle cx="103" cy="236" r="6" fill="#C97B3D"/><circle cx="117" cy="234" r="6" fill="#4A3320"/><circle cx="110" cy="222" r="6" fill="#B57A3E"/>
-              <rect x="138" y="216" width="28" height="32" rx="4" fill="#EFE6D2" opacity="0.9" stroke="#2E2015" stroke-width="2"/>
-              <rect x="141" y="209" width="22" height="9" rx="3" fill="#2E2015"/>
-              <path d="M180 224 h44 l-5 24 h-34 z" fill="#F3EBDA" stroke="#2E2015" stroke-width="2"/>
-              <path d="M186 234 h32" stroke="#F5A11C" stroke-width="4"/>
-              <!-- Tasse-Stapel -->
-              <g fill="#FBF3E4" stroke="#2E2015" stroke-width="2">
-                <rect x="246" y="234" width="40" height="14" rx="4"/>
-                <rect x="250" y="222" width="32" height="13" rx="4"/>
-                <rect x="254" y="211" width="24" height="12" rx="4"/>
+            <!-- Ablagi bewusst läär: nur d'Maschine und links dernäbe d'Einweg-Becher.
+                 D'Tasse und s'Gschirr stönd im Wandregal drüber. -->
+            <g id="g-cups-stack">
+              <!-- Stapel Einweg-Becher, umkehrt ufenand -->
+              <g stroke="#2E2015" stroke-width="1.8" fill="#F3EBDA">
+                <path d="M344 210 q12 -3 24 0 l-3 38 h-18 z"/>
+                <path d="M347 220 q10 -2 18 0" fill="none" stroke="#C9A97A" stroke-width="1.4"/>
+                <path d="M374 216 q11 -3 22 0 l-3 32 h-16 z"/>
+                <path d="M377 225 q9 -2 16 0" fill="none" stroke="#C9A97A" stroke-width="1.4"/>
               </g>
-              <!-- Tortestand mit Cookie -->
-              <path d="M306 248 h48 M330 248 v-14" stroke="#2E2015" stroke-width="3"/>
-              <ellipse cx="330" cy="232" rx="30" ry="7" fill="#F3EBDA" stroke="#2E2015" stroke-width="2"/>
-              <circle cx="330" cy="224" r="10" fill="#C08A50" stroke="#2E2015" stroke-width="1.6"/>
-              <circle cx="326" cy="222" r="2" fill="#4A3320"/><circle cx="334" cy="226" r="2" fill="#4A3320"/>
+              <!-- Deckeli-Stapel -->
+              <g stroke="#2E2015" stroke-width="1.6" fill="#E4D8C2">
+                <ellipse cx="322" cy="240" rx="15" ry="4"/>
+                <ellipse cx="322" cy="235" rx="15" ry="4"/>
+                <ellipse cx="322" cy="230" rx="15" ry="4"/>
+              </g>
             </g>
           </g>
 
@@ -1031,7 +1164,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           </g>
 
           <!-- Packaging-Regal -->
-          <g id="g-shelf" filter="url(#soft-shadow)">
+          <g id="g-shelf" filter="url(#soft-shadow)" transform="translate(0 -26)">
             <text x="655" y="92" text-anchor="middle" font-size="13" letter-spacing="2" fill="#2E2015" font-weight="bold">PACKAGING</text>
             <ellipse cx="655" cy="372" rx="72" ry="9" fill="#2E2015" opacity="0.18"/>
             <rect x="594" y="100" width="10" height="270" fill="url(#wood-grad)"/>
@@ -1048,7 +1181,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               <rect x="594" y="354" width="122" height="2" fill="#fff" opacity="0.25"/>
             </g>
             <!-- XXS & XS: kei Tüte, sondern d'einzeln iipackte Cookies -->
-            <g id="shelf-XXS" class="scene-hot" data-size="XXS" tabindex="0" role="button" aria-label="Boxgrössi XXS wähle, 1 Cookie">
+            <g id="shelf-XXS" class="scene-hot" data-size="XXS" tabindex="0" role="button" aria-label="Grössi XXS wähle, 1 Cookie">
               <rect class="hot-halo" x="605" y="118" width="36" height="39" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <text x="623" y="130" text-anchor="middle" font-size="10" font-weight="bold" fill="#2E2015">XXS</text>
               <rect x="615" y="135" width="17" height="20" rx="2.5" fill="#FFFFFF" fill-opacity="0.62" stroke="#9E9276" stroke-width="1.1"/>
@@ -1056,7 +1189,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               <circle cx="623.5" cy="146.5" r="5.6" fill="#7C5636" stroke="#241A12" stroke-width="1.1"/>
               <circle cx="621.5" cy="145" r="1.2" fill="#42291A"/><circle cx="625.5" cy="148" r="1.2" fill="#42291A"/>
             </g>
-            <g id="shelf-XS" class="scene-hot" data-size="XS" tabindex="0" role="button" aria-label="Boxgrössi XS wähle, 2 Cookies">
+            <g id="shelf-XS" class="scene-hot" data-size="XS" tabindex="0" role="button" aria-label="Grössi XS wähle, 2 Cookies">
               <rect class="hot-halo" x="641" y="118" width="46" height="39" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <text x="664" y="130" text-anchor="middle" font-size="10" font-weight="bold" fill="#2E2015">XS</text>
               <g>
@@ -1073,28 +1206,28 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               </g>
             </g>
             <!-- Ab S: brui Chraftpapier-Tüte mit Tragriemli -->
-            <g id="shelf-S" class="scene-hot" data-size="S" tabindex="0" role="button" aria-label="Boxgrössi S wähle, 4 Cookies">
+            <g id="shelf-S" class="scene-hot" data-size="S" tabindex="0" role="button" aria-label="Grössi S wähle, 4 Cookies">
               <rect class="hot-halo" x="601" y="189" width="52" height="38" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <path d="M615 196 C615 188 639 188 639 196" fill="none" stroke="#A87C48" stroke-width="2.4" stroke-linecap="round"/>
               <path d="M608 196 L646 196 L644 222 L610 222 Z" fill="#C89B67" stroke="#2E2015" stroke-width="1.8" stroke-linejoin="round"/>
               <rect x="607" y="193" width="40" height="6" rx="1.5" fill="#D8B183" stroke="#2E2015" stroke-width="1.6"/>
               <text x="627" y="214" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E2015">S</text>
             </g>
-            <g id="shelf-M" class="scene-hot" data-size="M" tabindex="0" role="button" aria-label="Boxgrössi M wähle, 6 Cookies">
+            <g id="shelf-M" class="scene-hot" data-size="M" tabindex="0" role="button" aria-label="Grössi M wähle, 6 Cookies">
               <rect class="hot-halo" x="649" y="185" width="56" height="42" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <path d="M665 192 C665 183 691 183 691 192" fill="none" stroke="#A87C48" stroke-width="2.4" stroke-linecap="round"/>
               <path d="M656 192 L698 192 L696 222 L658 222 Z" fill="#C89B67" stroke="#2E2015" stroke-width="1.8" stroke-linejoin="round"/>
               <rect x="655" y="189" width="44" height="6.5" rx="1.5" fill="#D8B183" stroke="#2E2015" stroke-width="1.6"/>
               <text x="677" y="212" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E2015">M</text>
             </g>
-            <g id="shelf-L" class="scene-hot" data-size="L" tabindex="0" role="button" aria-label="Boxgrössi L wähle, 9 Cookies">
+            <g id="shelf-L" class="scene-hot" data-size="L" tabindex="0" role="button" aria-label="Grössi L wähle, 9 Cookies">
               <rect class="hot-halo" x="599" y="247" width="58" height="46" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <path d="M615 254 C615 245 641 245 641 254" fill="none" stroke="#A87C48" stroke-width="2.6" stroke-linecap="round"/>
               <path d="M606 254 L650 254 L648 288 L608 288 Z" fill="#C89B67" stroke="#2E2015" stroke-width="1.8" stroke-linejoin="round"/>
               <rect x="605" y="251" width="46" height="7" rx="1.5" fill="#D8B183" stroke="#2E2015" stroke-width="1.6"/>
               <text x="628" y="276" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E2015">L</text>
             </g>
-            <g id="shelf-XL" class="scene-hot" data-size="XL" tabindex="0" role="button" aria-label="Boxgrössi XL wähle, 12 Cookies">
+            <g id="shelf-XL" class="scene-hot" data-size="XL" tabindex="0" role="button" aria-label="Grössi XL wähle, 12 Cookies">
               <rect class="hot-halo" x="647" y="241" width="62" height="52" rx="5" fill="none" stroke="#F5A11C" stroke-width="4"/>
               <path d="M665 248 C665 238 693 238 693 248" fill="none" stroke="#A87C48" stroke-width="2.6" stroke-linecap="round"/>
               <path d="M654 248 L704 248 L702 288 L656 288 Z" fill="#C89B67" stroke="#2E2015" stroke-width="1.8" stroke-linejoin="round"/>
@@ -1111,18 +1244,26 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             </g>
           </g>
 
-          <!-- Bogefänschter: ganz obe a de Rückwand, ändet über em Bode-Aasatz -->
-          <g>
-            <path d="M790 270 L790 140 Q865 62 940 140 L940 270 Z" fill="#EFE6D2" stroke="#2E2015" stroke-width="3"/>
-            <line x1="865" y1="102" x2="865" y2="270" stroke="#2E2015" stroke-width="2"/>
-            <line x1="790" y1="180" x2="940" y2="180" stroke="#2E2015" stroke-width="2"/>
-            <line x1="790" y1="228" x2="940" y2="228" stroke="#2E2015" stroke-width="2"/>
-            <rect x="782" y="266" width="166" height="10" rx="3" fill="#B3A489" stroke="#2E2015" stroke-width="2"/>
-            <path d="M970 270 L970 140 Q1045 62 1120 140 L1120 270 Z" fill="#EFE6D2" stroke="#2E2015" stroke-width="3"/>
-            <line x1="1045" y1="102" x2="1045" y2="270" stroke="#2E2015" stroke-width="2"/>
-            <line x1="970" y1="180" x2="1120" y2="180" stroke="#2E2015" stroke-width="2"/>
-            <line x1="970" y1="228" x2="1120" y2="228" stroke="#2E2015" stroke-width="2"/>
-            <rect x="962" y="266" width="166" height="10" rx="3" fill="#B3A489" stroke="#2E2015" stroke-width="2"/>
+          <!-- Shoji-Fänschter: Papier mit Holzraster (Kumiko) statt em europäische Boge -->
+          <g id="g-windows">
+            <!-- Linkes Fänschter -->
+            <rect x="786" y="70" width="158" height="200" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="3"/>
+            <rect x="795" y="79" width="140" height="182" fill="url(#shoji-paper)"/>
+            <g stroke="#A6845A" stroke-width="4">
+              <path d="M841.7 79v182M888.3 79v182"/>
+              <path d="M795 124.5h140M795 170h140M795 215.5h140"/>
+            </g>
+            <rect x="795" y="79" width="140" height="182" fill="none" stroke="#7C6242" stroke-width="2.5"/>
+            <rect x="778" y="266" width="174" height="11" rx="3" fill="#7C6242" stroke="#2E2015" stroke-width="2"/>
+            <!-- Rächts Fänschter -->
+            <rect x="966" y="70" width="158" height="200" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="3"/>
+            <rect x="975" y="79" width="140" height="182" fill="url(#shoji-paper)"/>
+            <g stroke="#A6845A" stroke-width="4">
+              <path d="M1021.7 79v182M1068.3 79v182"/>
+              <path d="M975 124.5h140M975 170h140M975 215.5h140"/>
+            </g>
+            <rect x="975" y="79" width="140" height="182" fill="none" stroke="#7C6242" stroke-width="2.5"/>
+            <rect x="958" y="266" width="174" height="11" rx="3" fill="#7C6242" stroke="#2E2015" stroke-width="2"/>
           </g>
 
           <!-- Tisch & Höckerli: 3D mit schräger Tischplatte, Bodeschatte und runde Sitzflächene -->
@@ -1148,14 +1289,31 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <rect x="994" y="435" width="4" height="83" fill="url(#side-shade)" opacity="0.6"/>
             <!-- Höckerli links -->
             <g>
-              <ellipse cx="730" cy="450" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
-              <ellipse cx="730" cy="447" rx="29" ry="10.5" fill="#8A7047" opacity="0.5"/>
+              <ellipse cx="730" cy="452" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <!-- Zabuton: weichs Sitzchüssi druf -->
+              <ellipse cx="730" cy="443" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="730" cy="440" rx="28" ry="11" fill="#A06B65"/>
+              <path d="M706 440 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
+              <circle cx="730" cy="440" r="2.2" fill="#6E4744"/>
               <rect x="709" y="454" width="8" height="66" fill="#5A4832"/><rect x="743" y="454" width="8" height="66" fill="#5A4832"/><rect x="726" y="456" width="8" height="64" fill="#6B573D"/>
+            </g>
+            <!-- Chlises Tischliechtli: warms Cherzli i re Papierlaterne -->
+            <g transform="translate(800 400)">
+              <ellipse cy="24" rx="17" ry="4.5" fill="#2E2015" opacity="0.22"/>
+              <ellipse cy="24" rx="42" ry="26" fill="url(#lantern-halo)"/>
+              <rect x="-13" y="-26" width="26" height="46" rx="5" fill="url(#lantern-paper)" stroke="#A8763E" stroke-width="1.8"/>
+              <g stroke="#D9AE72" stroke-width="1.2" opacity="0.85"><path d="M-13 -12h26M-13 2h26"/></g>
+              <ellipse cx="-5" cy="-14" rx="4" ry="7" fill="#FFF6DF" opacity="0.55"/>
+              <rect x="-16" y="-30" width="32" height="6" rx="2.5" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>
+              <rect x="-16" y="19" width="32" height="6" rx="2.5" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>
             </g>
             <!-- Höckerli rächts -->
             <g>
-              <ellipse cx="1050" cy="450" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
-              <ellipse cx="1050" cy="447" rx="29" ry="10.5" fill="#8A7047" opacity="0.5"/>
+              <ellipse cx="1050" cy="452" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="1050" cy="443" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="1050" cy="440" rx="28" ry="11" fill="#A06B65"/>
+              <path d="M1026 440 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
+              <circle cx="1050" cy="440" r="2.2" fill="#6E4744"/>
               <rect x="1029" y="454" width="8" height="66" fill="#5A4832"/><rect x="1063" y="454" width="8" height="66" fill="#5A4832"/><rect x="1046" y="456" width="8" height="64" fill="#6B573D"/>
             </g>
             <g id="scene-box"></g>
@@ -1252,8 +1410,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <div class="builder">
         <div>
           <div class="panel" id="size-panel">
-            <h3><span class="step-num">1</span> Boxgrössi wähle</h3>
-            <div class="size-row" role="group" aria-label="Boxgrössi" id="size-buttons"></div>
+            <h3><span class="step-num">1</span> Grössi wähle</h3>
+            <div class="size-row" role="group" aria-label="Grössi" id="size-buttons"></div>
             <div class="sonder-row hidden" id="sonder-row">
               <label>Wie vill Cookies? (13–30)
                 <input type="number" id="sonder-qty" min="13" max="30" value="13">
@@ -1286,9 +1444,9 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
         </div>
         <div class="panel summary" aria-live="polite">
           <h3>Dini Bstellig</h3>
-          <p class="fill-state" id="fill-state">Wähl zerscht e Boxgrössi im Regal.</p>
+          <p class="fill-state" id="fill-state">Wähl zerscht e Grössi im Regal.</p>
           <ul id="summary-list"></ul>
-          <button class="btn" id="add-box-btn" type="button" aria-disabled="true">+ No e Box drzue</button>
+          <button class="btn" id="add-box-btn" type="button" aria-disabled="true">+ No eini drzue</button>
           <a class="btn btn-primary" id="order-btn" href="#" aria-disabled="true">Aafrag per E-Mail schicke</a>
         </div>
       </div>
@@ -1802,28 +1960,21 @@ function cookieSVG(c, r, melt) {
 
 /* --- Saison- & Feiertags-Deko ----------------------------------------------- */
 /* Freie Zone für Streu-Deko: obere Himmel-Strecke rechts vom Wimpel-Banner */
-/* Geometrie vo de Bogefänschter, dass d'Schnee-Chappe em Boge folgt statt eifach
-   e Ellipse z'sii. Werte gliich wie im SVG: M x0 140 Q apex 62 x1 140 */
-const WINDOW_ARCHES = [
-  { x0: 790, x1: 940, apex: 865, yBase: 140, ctrlY: 62 },
-  { x0: 970, x1: 1120, apex: 1045, yBase: 140, ctrlY: 62 },
-];
-/* y uf de Bogekurve für e bestimmti x-Position */
-function archY(w, x) {
-  const t = (x - w.x0) / (w.x1 - w.x0), u = 1 - t;
-  return u * u * w.yBase + 2 * u * t * w.ctrlY + t * t * w.yBase;
-}
-/* Schnee-Chappe wo em Boge folgt, mit Zapfe wo a de Kurve abehanged */
-function archSnowSVG(w, thick = 26) {
-  const cap = `<path d="M${w.x0 - 6} ${w.yBase + 4} Q${w.apex} ${w.ctrlY - thick} ${w.x1 + 6} ${w.yBase + 4}` +
-    ` L${w.x1} ${w.yBase} Q${w.apex} ${w.ctrlY + 8} ${w.x0} ${w.yBase} Z"` +
+/* Obercharte vo de Shoji-Fänschter – drufabe leit sich de Wienachtsschnee. */
+const WINDOW_TOPS = [{ x0: 786, x1: 944, y: 70 }, { x0: 966, x1: 1124, y: 70 }];
+/* Schnee uf em Fänschterrahme, mit ere wällige Chante und Zapfe */
+function windowSnowSVG(w, thick = 16) {
+  const mid = (w.x0 + w.x1) / 2;
+  const cap = `<path d="M${w.x0 - 5} ${w.y + 7} Q${mid} ${w.y - thick} ${w.x1 + 5} ${w.y + 7}` +
+    ` L${w.x1 + 5} ${w.y + 13} Q${mid} ${w.y + 4} ${w.x0 - 5} ${w.y + 13} Z"` +
     ` fill="#FBF3E4" stroke="#DCE6E0" stroke-width="1"/>`;
-  const drips = [0.16, 0.34, 0.5, 0.66, 0.84].map((f, i) => {
-    const x = w.x0 + f * (w.x1 - w.x0), y = archY(w, x) + 4, len = 11 + (i % 2) * 9;
+  const drips = [0.18, 0.38, 0.58, 0.8].map((f, i) => {
+    const x = w.x0 + f * (w.x1 - w.x0), y = w.y + 12, len = 10 + (i % 2) * 8;
     return `<path d="M${x - 4} ${y} L${x} ${y + len} L${x + 4} ${y} Z" fill="#EAF2EF" stroke="#DCE6E0" stroke-width="0.6"/>`;
   }).join("");
   return cap + drips;
 }
+/* Schnee-Chappe wo em Boge folgt, mit Zapfe wo a de Kurve abehanged */
 
 /* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
 const GRL = { x0: 40, y0: 24, xc: 300, yc: 64, x1: 560, y1: 24, N: 10 };
@@ -1839,20 +1990,6 @@ function grlEach(fn, n = GRL.N) {
   return out;
 }
 /* Wiederverwendbari Icons */
-function flowerIcon(r, col, center = "#F5A11C") {
-  return [0, 72, 144, 216, 288].map((a) =>
-    `<ellipse cx="0" cy="${(-r * 0.9).toFixed(1)}" rx="${(r * 0.5).toFixed(1)}" ry="${(r * 0.9).toFixed(1)}" fill="${col}" stroke="rgba(46,32,21,0.3)" stroke-width="0.5" transform="rotate(${a})"/>`).join("") +
-    `<circle r="${(r * 0.42).toFixed(1)}" fill="${center}"/>`;
-}
-function leafIcon(s, col) {
-  return `<path d="M0 ${-s} C ${s * 0.72} ${-s * 0.5} ${s * 0.72} ${s * 0.5} 0 ${s} C ${-s * 0.72} ${s * 0.5} ${-s * 0.72} ${-s * 0.5} 0 ${-s} Z" fill="${col}" stroke="#2E2015" stroke-width="0.7"/>` +
-    `<path d="M0 ${-s} L0 ${s} M0 ${-s * 0.3} L${s * 0.4} ${-s * 0.55} M0 ${s * 0.1} L${-s * 0.4} ${-s * 0.15}" stroke="#2E2015" stroke-width="0.6" fill="none" opacity="0.5"/>`;
-}
-function snowflakeIcon(s, col = "#FBF3E4") {
-  return [0, 60, 120].map((a) =>
-    `<g transform="rotate(${a})"><line x1="${-s}" y1="0" x2="${s}" y2="0" stroke="${col}" stroke-width="1.8" stroke-linecap="round"/>` +
-    `<path d="M${s * 0.55} 0 L${s * 0.78} ${-s * 0.28} M${s * 0.55} 0 L${s * 0.78} ${s * 0.28} M${-s * 0.55} 0 L${-s * 0.78} ${-s * 0.28} M${-s * 0.55} 0 L${-s * 0.78} ${s * 0.28}" stroke="${col}" stroke-width="1.4" stroke-linecap="round"/></g>`).join("");
-}
 
 /* --- Girlande je nach Saison/Feiertag (ersetzt d'Standard-Girlande) --------- */
 function garlandSVG(holiday) {
@@ -1892,42 +2029,19 @@ function garlandSVG(holiday) {
       `<g transform="translate(${x.toFixed(1)} ${(y + 13).toFixed(1)})"><ellipse rx="8" ry="11" fill="${cols[i % cols.length]}" stroke="#2E2015" stroke-width="1.2"/>` +
       `<path d="M-6 -2 Q0 -6 6 -2 M-6 3 Q0 7 6 3" stroke="#2E2015" stroke-width="1" fill="none" opacity="0.5"/></g>`, 11);
   }
-  if (season === "fruehling") {
-    // Blueme-Girlande
-    return grlString("#6B8F7B") + grlEach((x, y, i) => {
-      const col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
-      return `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l0 8" stroke="#6B8F7B" stroke-width="1.6"/>` +
-        `<g transform="translate(${x.toFixed(1)} ${(y + 14).toFixed(1)})">${flowerIcon(7, col)}</g>`;
-    }, 11);
-  }
-  if (season === "sommer") {
-    // Warmi Scheibe-Girlande (Zitrone/Sunne-Töne)
-    const cols = ["#FBC94C", "#F5A11C", "#FBF3E4"];
-    return grlString() + grlEach((x, y, i) =>
-      `<path d="M${(x - 15).toFixed(1)} ${y.toFixed(1)} A 15 15 0 0 0 ${(x + 15).toFixed(1)} ${y.toFixed(1)} Z" fill="${cols[i % 3]}" stroke="#2E2015" stroke-width="1.2"/>` +
-      `<circle cx="${x.toFixed(1)}" cy="${(y + 8).toFixed(1)}" r="2" fill="#C77E10" opacity="0.5"/>`, 12);
-  }
-  if (season === "herbst") {
-    // Blätter-Girlande
-    const cols = ["#C97B3D", "#B5772E", "#8A4F1D", "#D89B52"];
-    return grlString("#8A4F1D") + grlEach((x, y, i) =>
-      `<g transform="translate(${x.toFixed(1)} ${(y + 11).toFixed(1)}) rotate(${(i % 2 ? 20 : -20)})">${leafIcon(9, cols[i % cols.length])}</g>`, 12);
-  }
-  if (season === "winter") {
-    // Schneeflocke-Girlande
-    return grlString("#B7C7CE") + grlEach((x, y, i) =>
-      `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l0 ${6 + (i % 2) * 5}" stroke="#B7C7CE" stroke-width="1.4"/>` +
-      `<g transform="translate(${x.toFixed(1)} ${(y + 12 + (i % 2) * 5).toFixed(1)})">${snowflakeIcon(7)}</g>`, 11);
-  }
-  // Standard: hübschi Wimpel-Girlande (Honig/Creme/Braun)
-  const cols = ["#F5A11C", "#FBF3E4", "#C77E10", "#8A4F1D"];
-  return grlString() + grlEach((x, y, i) => {
-    const col = cols[i % cols.length], w = 15, h = 30;
+  // Ohni Feiertag: chlini Papierlaterne a de Schnuer – passt zum Kissaten
+  const cols = ["#F6D9A0", "#F2C7CE", "#EFE6D2", "#E8B98A"];
+  return grlString("#6B573D") + grlEach((x, y, i) => {
+    const col = cols[i % cols.length], rx = 9, ry = 11;
     return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">` +
-      `<circle r="2.2" fill="#8A7B63"/>` +
-      `<path d="M${-w} 3 Q${-w} ${h * 0.4} 0 ${h} Q${w} ${h * 0.4} ${w} 3 Q0 8 ${-w} 3 Z" fill="${col}" stroke="#2E2015" stroke-width="1.3" stroke-linejoin="round"/>` +
-      `<path d="M${-w * 0.55} 5 Q${-w * 0.5} ${h * 0.35} 0 ${h * 0.85}" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.28" stroke-linecap="round"/></g>`;
-  });
+      `<line x1="0" y1="0" x2="0" y2="6" stroke="#6B573D" stroke-width="1.4"/>` +
+      `<rect x="-5" y="5" width="10" height="3" rx="1.2" fill="#4A3320"/>` +
+      `<ellipse cy="${8 + ry}" rx="${rx}" ry="${ry}" fill="${col}" stroke="#A8763E" stroke-width="1.3"/>` +
+      `<g stroke="#C79A62" stroke-width="0.8" opacity="0.8">` +
+      `<path d="M${-rx + 1} ${8 + ry - 4}h${2 * rx - 2}M${-rx} ${8 + ry}h${2 * rx}M${-rx + 1} ${8 + ry + 4}h${2 * rx - 2}"/></g>` +
+      `<ellipse cx="-3" cy="${8 + ry - 3}" rx="2.4" ry="3.6" fill="#FFF6DF" opacity="0.55"/>` +
+      `<rect x="-4" y="${8 + 2 * ry - 1}" width="8" height="3" rx="1.2" fill="#4A3320"/></g>`;
+  }, 9);
 }
 
 function holidayDecorSVG(holiday) {
@@ -1982,7 +2096,7 @@ function holidayDecorSVG(holiday) {
       `<g transform="translate(0 98)"><path d="M-8 -3 q-11 -4 -15 5 M-8 2 q-12 1 -15 10 M8 -3 q11 -4 15 5 M8 2 q12 1 15 10" stroke="#2E2015" stroke-width="1.6" fill="none"/>` +
       `<ellipse rx="9" ry="11" fill="#2E2015"/><circle cy="-10" r="5.5" fill="#2E2015"/>` +
       `<circle cx="-2" cy="-11" r="1.5" fill="#F5A11C"/><circle cx="2" cy="-11" r="1.5" fill="#F5A11C"/></g></g>`;
-    const ghost = `<g transform="translate(955 150)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
+    const ghost = `<g transform="translate(955 128)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
       `<circle cx="-5" cy="-3" r="2" fill="#2E2015"/><circle cx="5" cy="-3" r="2" fill="#2E2015"/><ellipse cx="0" cy="4" rx="2.4" ry="3" fill="#2E2015"/></g>`;
     return floorPumpkins + deskPumpkins + web + spider + ghost;
   }
@@ -1995,7 +2109,7 @@ function holidayDecorSVG(holiday) {
         `<rect x="${x + fw * 0.42}" y="${y + fh * 0.16}" width="${fw * 0.16}" height="${fh * 0.68}" fill="#FBF3E4"/>` +
         `<path d="M${x + 4} ${y + 6} q${fw * 0.2} ${fh * 0.14} ${fw * 0.42} 0" stroke="#fff" stroke-width="2" fill="none" opacity="0.18"/></g>`;
     };
-    return flagInWindow(865, 196) + flagInWindow(1045, 196);
+    return flagInWindow(865, 170) + flagInWindow(1045, 170);
   }
   if (holiday === "weihnachten") {
     // Lichterkette a de Theke
@@ -2022,7 +2136,7 @@ function holidayDecorSVG(holiday) {
       `<ellipse cx="0" cy="4" rx="34" ry="7" fill="#FBF3E4" opacity="0.7"/>` +
       tier(-16, 66, -80) + tier(-70, 54, -140) + tier(-124, 42, -196) + tier(-176, 30, -250) +
       baubles + star + `</g>`;
-    const snowCap = WINDOW_ARCHES.map((w) => archSnowSVG(w, 22)).join("");
+    const snowCap = WINDOW_TOPS.map((w) => windowSnowSVG(w)).join("");
     return lights + snowCap + tree;
   }
   return "";
@@ -2059,7 +2173,7 @@ COOKIES.forEach((c, i) => {
   g.setAttribute("class", "scene-hot");
   g.setAttribute("tabindex", "0");
   g.setAttribute("role", "button");
-  g.setAttribute("aria-label", c.name + " i d'Box lege");
+  g.setAttribute("aria-label", c.name + " i d'Tüte lege");
   g.dataset.cookie = c.id;
   g.innerHTML =
     `<ellipse cx="0" cy="15" rx="19" ry="5" fill="#2E2015" opacity="0.22"/>` +
@@ -2592,13 +2706,13 @@ function render() {
     const edit = document.createElement("button");
     edit.className = "box-edit";
     edit.dataset.edit = i;
-    edit.setAttribute("aria-label", `Box ${i + 1} wieder bearbeite`);
+    edit.setAttribute("aria-label", `Tüte ${i + 1} wieder bearbeite`);
     edit.textContent = "✏️";
     li.lastElementChild.appendChild(edit);
     const btn = document.createElement("button");
     btn.className = "box-x";
     btn.dataset.i = i;
-    btn.setAttribute("aria-label", `Box ${i + 1} us de Bstellig entferne`);
+    btn.setAttribute("aria-label", `Tüte ${i + 1} us de Bstellig entferne`);
     btn.textContent = "×";
     li.lastElementChild.appendChild(btn);
     boxContentLines(b.items).forEach((t) => addLine("· " + t, "", "sub"));
@@ -2607,10 +2721,10 @@ function render() {
   const curValid = state.size && totalCookies() > 0;
   if (!state.size) {
     fill.innerHTML = state.savedBoxes.length > 0
-      ? "Wettsch <strong>no e Box</strong>? Wähl eifach wieder e Grössi im Regal – susch schick d'Aafrag ab!"
-      : "Wähl zerscht e <strong>Boxgrössi</strong> im Regal (oder unte bi Schritt 1).";
+      ? "Wettsch <strong>no eini</strong>? Wähl eifach wieder e Grössi im Regal – susch schick d'Aafrag ab!"
+      : "Wähl zerscht e <strong>Grössi</strong> im Regal (oder unte bi Schritt 1).";
   } else {
-    let f = `Aktuelli Box: <strong>${totalCookies()} vo ${capacity()}</strong> Plätzli belegt ${full ? "– voll! 🎉" : ""}`;
+    let f = `Aktuelli Tüte: <strong>${totalCookies()} vo ${capacity()}</strong> Plätzli belegt ${full ? "– voll! 🎉" : ""}`;
     if (totalCoffees() > 0 && !state.cup) f += "<br>→ Wähl bi Schritt 3 no, öb du en eigene Becher mitbringsch.";
     fill.innerHTML = f;
     if (curValid) {
@@ -2653,7 +2767,7 @@ function render() {
     const allBoxes = [...state.savedBoxes];
     if (curValid) allBoxes.push({ size: state.size, sonderQty: state.sonderQty, items: state.items, price: boxPrice() });
     allBoxes.forEach((b, i) => {
-      body += `\nBox ${i + 1}: ${boxTitle(b.size, b.sonderQty)} – ${chf(b.price)}\n`;
+      body += `\nTüte ${i + 1}: ${boxTitle(b.size, b.sonderQty)} – ${chf(b.price)}\n`;
       boxContentLines(b.items).forEach((t) => { body += `   • ${t}\n`; });
     });
     const coffeeLines = COFFEES.filter((k) => (state.coffees[k.id] || 0) > 0);
@@ -2672,7 +2786,7 @@ function render() {
     const noteVal = document.getElementById("order-note").value.trim();
     const pickupLine = state.pickupDate ? formatPickupDate(state.pickupDate) : "";
     body += `\nTotal: ${chf(total)}\n\nWunschtermin für d'Abholig: ${pickupLine}\n${noteVal ? "Bemerkig: " + noteVal + "\n" : ""}Name: \n\nMerci & en Gruess!`;
-    orderBtn.href = `mailto:${CONFIG.orderEmail}?subject=${encodeURIComponent("Cookie-Box Aafrag – BuhuBakery")}&body=${encodeURIComponent(body)}`;
+    orderBtn.href = `mailto:${CONFIG.orderEmail}?subject=${encodeURIComponent("Cookie-Tüte Aafrag – BuhuBakery")}&body=${encodeURIComponent(body)}`;
   } else {
     orderBtn.href = "#";
   }
@@ -2791,9 +2905,9 @@ function setBuhu(step, ready) {
     onChoice = (v) => { state.cup = v; render(); };
   } else {
     line = ({
-      greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Boxgrössi – ich hilf der.",
-      select: "Tipp d'Cookies i de Vitrine aa – ich leg si der i d'Box. 🍪",
-      pack:   ready ? "Alles parat! Schick mer d'Aafrag – ich richt der s. ✅" : "So, ich pack dini Box zäme… 📦",
+      greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Grössi – ich hilf der.",
+      select: "Tipp d'Cookies i de Vitrine aa – ich leg si der i d'Tüte. 🍪",
+      pack:   ready ? "Alles parat! Schick mer d'Aafrag – ich richt der s. ✅" : "So, ich pack dini Tüte zäme… 📦",
       bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
     })[step];
   }
