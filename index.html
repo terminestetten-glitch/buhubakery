@@ -1584,8 +1584,11 @@ function boxPrice() {
    Ab 4 Cookies gits e Ussevrpackig – drunter (XXS, XS) chunt me d'einzeln
    iipackte Cookies eifach so über, ohni Tüte. */
 const PACKAGING_MIN_COOKIES = 4;
+/* Zellt wird d'Boxgrössi, nöd was scho drin liit: wär e S-Box wählt, chriegt e Tüte –
+   au wenn si na läär isch. Susch würd d'Tüte erscht bim viertä Cookie erschiine. */
+const boxCapacityOf = (b) => (b.size === "SONDER" ? b.sonderQty : SIZES[b.size].capacity);
 const orderCookieCount = () =>
-  state.savedBoxes.reduce((sum, b) => sum + Object.values(b.items).reduce((a, n) => a + n, 0), 0) + totalCookies();
+  state.savedBoxes.reduce((sum, b) => sum + boxCapacityOf(b), 0) + capacity();
 const needsOuterPackaging = () => orderCookieCount() >= PACKAGING_MIN_COOKIES;
 const packagingChoice = () => PACKAGING.find((p) => p.id === state.packaging) || PACKAGING[0];
 /* Uufpriis vo de gwählte Verpackig – hängt vo de Gsamt-Aazahl Cookies ab. */
