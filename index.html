@@ -336,6 +336,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .item-info { flex: 1; min-width: 0; }
 .item-info strong { display: block; font-size: 0.98rem; }
 .item-info small { color: var(--ink-soft); font-size: 0.8rem; }
+.item-info small.allergens { display: block; margin-top: 0.2rem; font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+.allergy-note { margin-top: 1rem; padding: 0.7rem 0.9rem; border-left: 3px solid var(--accent); background: var(--ground); border-radius: 0 0.5rem 0.5rem 0; }
 .match-badge {
   display: inline-block;
   background: var(--accent-bright);
@@ -1128,6 +1130,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <div class="panel" id="cookies-panel">
             <h3><span class="step-num">2</span> Cookies iipacke</h3>
             <ul class="item-list" id="cookie-list"></ul>
+            <p class="coffee-note allergy-note" id="allergy-note"></p>
           </div>
           <div class="panel" id="coffee-panel">
             <h3><span class="step-num">3</span> Kafi drzue? <span id="coffee-day-label"></span></h3>
@@ -1325,12 +1328,17 @@ const PACKAGING = [
     note: "fertig zum verschänke" },
 ];
 
+/* Allergene: `allergens` isch s'Bsundrige pro Sorte. Gluten, Eier und Milch hend
+   ALLI – das staht eimal zentral in ALLERGY_GENERAL statt bi jedere Sorte. */
+const ALLERGY_GENERAL = "Alli Cookies enthalted Gluten, Eier und Milch. Bache wird i re Privatchuchi, wo au Nüss verarbeitet werded.";
 const COOKIES = [
-  { id: "oreo",       name: "Oreo",               note: "Dunkle Schoggi-Cookie mit wiisser Schoggi-Drizzle & halbem Oreo.", drizzle: "#F1EBDB", garnish: "oreo",    moods: ["comfort", "celebrating"] },
-  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
-  { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
-  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
-  { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nume als Cookie, ohni Soft Melt Chärn.", drizzle: "#C9973F", garnish: "pecan", plainOnly: true, moods: ["comfort", "study"] },
+  // id "oreo" blibt us technische Gründ (gspeicherti Bstellige), de Name isch bewusst neutral:
+  // s'Guetzli isch e Lidl-Eigemarke, drum kei fremdi Marke im Produktname.
+  { id: "oreo",       name: "Cookies & Cream",    note: "Dunkle Schoggi-Cookie mit wiisser Schoggi-Drizzle & halbem Kakao-Guetzli.", allergens: ["Soja"], drizzle: "#F1EBDB", garnish: "oreo",    moods: ["comfort", "celebrating"] },
+  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", allergens: ["Soja"], drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
+  { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                allergens: ["Haselnuss", "Gerstemalz", "Soja"], drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
+  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           allergens: ["Haselnuss", "Gerstemalz", "Soja"], drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
+  { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nume als Cookie, ohni Soft Melt Chärn.", allergens: ["Pekannuss"], drizzle: "#C9973F", garnish: "pecan", plainOnly: true, moods: ["comfort", "study"] },
 ];
 const VARIANTS = [
   { id: "plain", label: "eifach so" },
@@ -2047,7 +2055,9 @@ COOKIES.forEach((c) => {
     `</div></div>`).join("");
   li.innerHTML =
     `<svg class="item-icon" viewBox="-24 -24 48 48" aria-hidden="true">${cookieSVG(c, 19, false)}</svg>` +
-    `<div class="item-info"><strong>${c.name}<span class="match-badge hidden">passt zu dinere Mood</span></strong><small>${c.note}</small></div>` +
+    `<div class="item-info"><strong>${c.name}<span class="match-badge hidden">passt zu dinere Mood</span></strong><small>${c.note}</small>` +
+    (c.allergens && c.allergens.length ? `<small class="allergens">Enthaltet zuesätzlich: ${c.allergens.join(", ")}</small>` : "") +
+    `</div>` +
     `<div class="vqty">${vhtml}</div>`;
   variantsForC.forEach((v) => {
     const k = keyOf(c.id, v.id);
@@ -2059,6 +2069,9 @@ COOKIES.forEach((c) => {
   });
   cookieList.appendChild(li);
 });
+
+document.getElementById("allergy-note").textContent =
+  ALLERGY_GENERAL + " Bi ere schwere Allergie schriib mer bitte churz vorher.";
 
 const pickupCalendarEl = document.getElementById("pickup-calendar");
 const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];

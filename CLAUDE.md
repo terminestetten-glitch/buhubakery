@@ -80,6 +80,17 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
   können also direkt schreiben. Auf der Site nur die E-Mail zeigen.
 - **`bestellung@buhubakery.ch` existiert** (vom User bestätigt) – Bestellungen kommen an.
 
+## Allergene (Stand 02.08.2026)
+- **Alle Sorten**: Gluten, Eier, Milch (vom User bestätigt) → zentral in `ALLERGY_GENERAL`, nicht pro Sorte wiederholen.
+- Privatküche, in der auch Nüsse verarbeitet werden → immer mit erwähnen.
+- Pro Sorte zusätzlich (`allergens` in `COOKIES`):
+  Cookies & Cream = Soja · Lotus = Soja · Ovomaltine Classic/Noir = Haselnuss, Gerstemalz, Soja · Cinnamon Dream = Pekannuss.
+- **Haselnuss bei Ovomaltine** steckt in der Schokolade selbst (vom User gemeldet).
+- ⚠️ **Soja und Gerstemalz hat Claude aus den üblichen Rezepturen abgeleitet, NICHT vom User bestätigt.**
+  Muss gegen die echten Verpackungen geprüft werden, bevor die Site öffentlich beworben wird.
+- **Namensänderung**: Die "Oreo"-Sorte heisst neu **"Cookies & Cream"** – es sind in Wahrheit *Neo*-Guetzli von Lidl.
+  Bewusst ein neutraler Name statt einer fremden Marke. Die interne `id` bleibt `"oreo"` (gespeicherte Bestellungen).
+
 ## Haltbarkeit (vom User, 02.08.2026)
 - **Ca. 5–6 Tage.** Danach noch geniessbar, aber nicht mehr saftig, sondern eher krümelig.
   Diese ehrliche Formulierung übernehmen, nicht zu "5–6 Tage haltbar" verkürzen.
