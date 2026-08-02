@@ -73,9 +73,16 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
     bekommt man die einzeln verpackten Cookies einfach so – keine Wahl, kein Aufpreis, und in der Szene liegen
     sie ohne Tüte auf dem Tisch.
 
-## Zahlung (vom User, 02.08.2026)
+## Zahlung & Kontakt (vom User, 02.08.2026)
 - **TWINT, vor der Abholung**. Die Handynummer für TWINT kommt in der Bestätigungsmail (nicht öffentlich auf der Site).
 - Kein Bargeld erwähnt → nur TWINT anbieten.
+- **WhatsApp braucht keinen eigenen Link**: Kundinnen haben die Nummer ohnehin aus der Bestätigungsmail (TWINT),
+  können also direkt schreiben. Auf der Site nur die E-Mail zeigen.
+- **`bestellung@buhubakery.ch` existiert** (vom User bestätigt) – Bestellungen kommen an.
+
+## Haltbarkeit (vom User, 02.08.2026)
+- **Ca. 5–6 Tage.** Danach noch geniessbar, aber nicht mehr saftig, sondern eher krümelig.
+  Diese ehrliche Formulierung übernehmen, nicht zu "5–6 Tage haltbar" verkürzen.
 
 ## Abholung (vom User, 02.08.2026)
 - **Ort**: Dübendorf. Genaue Adresse gibt's erst nach der Bestellung (bewusst so).
