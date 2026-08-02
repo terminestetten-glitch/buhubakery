@@ -88,8 +88,11 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Haselnuss bei Ovomaltine** steckt in der Schokolade selbst (vom User gemeldet).
 - ⚠️ **Soja und Gerstemalz hat Claude aus den üblichen Rezepturen abgeleitet, NICHT vom User bestätigt.**
   Muss gegen die echten Verpackungen geprüft werden, bevor die Site öffentlich beworben wird.
-- **Namensänderung**: Die "Oreo"-Sorte heisst neu **"Cookies & Cream"** – es sind in Wahrheit *Neo*-Guetzli von Lidl.
-  Bewusst ein neutraler Name statt einer fremden Marke. Die interne `id` bleibt `"oreo"` (gespeicherte Bestellungen).
+- **Namensänderung**: Die "Oreo"-Sorte heisst neu **"Neo Cookies"** – es sind Neo-Guetzli von Lidl, nicht Oreo.
+  Claude hatte zuerst den neutralen Namen "Cookies & Cream" vorgeschlagen (Markenbedenken); der User hat
+  "Neo Cookies" ausdrücklich gewünscht. Das ist auch konsistent, da Lotus und Ovomaltine ebenfalls
+  nach der Marke benannt sind. **Nicht erneut aufbringen.**
+  Die interne `id` bleibt `"oreo"` (Zeichnung `garnish: "oreo"`, `WOB.oreo`, Gradient `dough-oreo`).
 
 ## Haltbarkeit (vom User, 02.08.2026)
 - **Ca. 5–6 Tage.** Danach noch geniessbar, aber nicht mehr saftig, sondern eher krümelig.
