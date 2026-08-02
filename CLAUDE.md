@@ -76,6 +76,10 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 1. Mood-Zuordnung der Sorten bestätigen (in `COOKIES` von Claude geraten).
 2. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!).
    **Kein Instagram** (User hat keins, Stand 02.08.2026) → im Footer/Design nicht anbieten. WhatsApp noch offen.
+   **Impressum (vom User, 02.08.2026)**: Laura Blessing, Dübendorf, bestellung@buhubakery.ch.
+   Anmerkung: Der User will die genaue Adresse bewusst nicht öffentlich zeigen. Für den Schweizer Online-Handel
+   verlangt UWG Art. 3 Abs. 1 lit. s aber Name **und** vollständige Adresse inkl. Strasse. Einmal darauf hingewiesen –
+   Entscheid liegt beim User; nicht bei jeder Gelegenheit erneut aufbringen.
    **Domain**: User hat eine Domain bei **GoDaddy** gekauft (vermutlich buhubakery.ch). Plan: GitHub Pages + Custom Domain.
    Nötige Schritte: (a) Branch nach main mergen → Workflow deployt; (b) Repo-Settings → Pages → Custom Domain eintragen + "Enforce HTTPS";
    (c) Bei GoDaddy DNS: A-Records für @ auf 185.199.108.153 / 185.199.109.153 / 185.199.110.153 / 185.199.111.153, CNAME für www auf terminestetten-glitch.github.io.
