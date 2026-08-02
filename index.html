@@ -172,11 +172,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .buhu-wing.wing-l { transform-origin: 100% 65%; animation-name: buhuFlapL; }
 .buhu-wing.wing-r { transform-origin: 0% 65%; animation-name: buhuFlapR; }
 #buhu-figure.is-flying .buhu-wing { animation-duration: 0.1s; }
-/* Schritt-Uflüchte: s'Element, wo grad dra isch, pulsiert warm uf. */
-.step-glow { animation: stepGlow 1.9s ease-in-out infinite; }
+/* Schritt-Uflüchte: es blinkt en Rahme um s'Element, wo grad dra isch. */
+.step-glow { animation: stepGlow 1.3s ease-in-out infinite; }
 @keyframes stepGlow {
   0%, 100% { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)); }
-  50%      { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)) drop-shadow(0 0 10px #F5A11C) drop-shadow(0 0 4px #F5A11C); }
+  50%      { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30))
+                     drop-shadow(0 0 18px #F5A11C) drop-shadow(0 0 9px #F5A11C)
+                     drop-shadow(0 0 3px #F5A11C) brightness(1.14); }
 }
 .panel.step-glow-panel { animation: stepGlowPanel 1.9s ease-in-out infinite; }
 @keyframes stepGlowPanel {
