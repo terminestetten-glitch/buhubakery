@@ -110,9 +110,14 @@ Reihenfolge: Header → Hero (mit 3 Fakten + 2 CTAs) → Bald-neu-Band → **Sor
   (Sortiment, Cookie-Liste, FAQ) – dort ändern, nicht im Markup.
 - **Über mich**: Foto-Platzhalter zeigt aktuell das Logo. Zum Ersetzen das `<img>` in `.about-photo`
   auf ein echtes Bild zeigen lassen (Kommentar steht im Markup).
+  **Der User hat am 02.08.2026 ein Porträtfoto im Chat geschickt** – Claude kann angehängte Bilder aber nicht
+  als Datei speichern. Das Foto muss vom User selbst als `assets/laura.jpg` ins Repo gelegt werden.
+- **Hero hat bewusst KEINE Buttons**: "Bau dir dini Box" / "Was gits?" wurden vom User entfernt, weil sie
+  das Logo nach unten gedrückt haben. Das Logo ist der Blickfang. Nicht ungefragt wieder einbauen.
 
 ## Abholung (vom User, 02.08.2026)
 - **Ort**: Dübendorf. Genaue Adresse gibt's erst nach der Bestellung (bewusst so).
+- **Abhol-Tage**: grundsätzlich **jeden Tag** – der Kalender in Schritt 4 lässt bewusst jeden Tag zu.
 - **Vorlaufzeit**: mindestens 2 Tage.
 - **Kaffee-Tage**: Sonntag ist fix (`CONFIG.coffeeDays: [0]`). Weitere Tage hängen vom Job des Users ab
   und werden bei Bedarf pro Datum im Admin-Panel gesetzt.
