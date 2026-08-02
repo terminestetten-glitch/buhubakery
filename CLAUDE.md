@@ -65,8 +65,14 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
   - **Jeder Cookie einzeln verpackt** – immer, keine Wahl. In der Szene als durchsichtiges Säckli um jeden Cookie.
   - **Die ganze Bestellung** kommt in **eine** Aussenverpackung, Wahl gilt **pro Bestellung** (nicht pro Box):
     | Papiertüte | +0.00 | braunes Kraftpapier, schlicht |
-    | Schöni Verpackig | +0.50 | gleiche Tüte, mit Bändeli & Bienen-Sticker |
+    | Schöni Verpackig | **gestaffelt** | gleiche Tüte, mit Bändeli & Bienen-Sticker |
     | Gschänk-Box 🎁 | +2.50 | Box mit Deckel und Schleife |
+  - **Staffelung der schönen Verpackung** (User, 02.08.2026): bis und mit L (≤9 Cookies) 0.50,
+    darüber 1.00, ab 30 Cookies 2.50. Darum ist `surcharge` eine **Funktion** `(n) => …`, die die
+    Gesamtzahl Cookies der Bestellung bekommt – nicht mehr eine Zahl. Wer hier etwas ändert, muss
+    `packagingPrice()` benutzen, nie `p.surcharge` direkt.
+  - Die Preise auf den Auswahl-Buttons aktualisieren sich in `render()` mit, weil sie von der
+    Bestellgrösse abhängen.
   - Die Boxgrösse bestimmt weiterhin nur, wie viele Cookies reinpassen.
   - Achtung: die Tüten sind **braun** (Kraftpapier) **mit Tragriemli**, nicht weiss – vom User korrigiert.
   - **Erst ab 4 Cookies** gibt es überhaupt eine Aussenverpackung (`PACKAGING_MIN_COOKIES`). Bei XXS (1) und XS (2)
