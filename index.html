@@ -238,6 +238,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .sorte-card strong { font-size: 1rem; }
 .sorte-card .desc { color: var(--ink-soft); font-size: 0.85rem; line-height: 1.5; }
 .sorte-card .allerg { color: var(--accent); font-size: 0.76rem; font-weight: 600; }
+.allerg.may, .allergens.may { font-style: italic; }
 .sorte-tag {
   align-self: flex-start; margin-top: auto;
   font-size: 0.7rem; font-weight: 800; border-radius: 2rem; padding: 0.15rem 0.65rem;
@@ -1507,7 +1508,7 @@ const COOKIES = [
   // Achtung: d'interni id heisst us historische Gründ no "oreo" (Zeichnig, Wobble-Tabälle).
   // S'Produkt sind aber Neo-Guetzli vo de Lidl – drum de Name "Neo Cookies".
   { id: "oreo",       name: "Neo Cookies",        note: "Dunkle Schoggi-Cookie mit wiisser Schoggi-Drizzle & halbem Neo-Guetzli.", allergens: ["Soja"], drizzle: "#F1EBDB", garnish: "oreo",    moods: ["comfort", "celebrating"] },
-  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", allergens: ["Soja"], drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
+  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit wiisse Schoggi-Stückli, Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", allergens: ["Soja"], mayContain: "Nüss (i de wiisse Schoggi)", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
   { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                allergens: ["Haselnuss", "Gerstemalz", "Soja"], drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
   { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkli Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           allergens: ["Haselnuss", "Gerstemalz", "Soja"], drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
   { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nume als Cookie, ohni Soft Melt Chärn.", allergens: ["Pekannuss"], drizzle: "#C9973F", garnish: "pecan", plainOnly: true, moods: ["comfort", "study"] },
@@ -2229,6 +2230,7 @@ COOKIES.forEach((c) => {
     `<svg class="item-icon" viewBox="-24 -24 48 48" aria-hidden="true">${cookieSVG(c, 19, false)}</svg>` +
     `<div class="item-info"><strong>${c.name}<span class="match-badge hidden">passt zu dinere Mood</span></strong><small>${c.note}</small>` +
     (c.allergens && c.allergens.length ? `<small class="allergens">Enthaltet zuesätzlich: ${c.allergens.join(", ")}</small>` : "") +
+    (c.mayContain ? `<small class="allergens may">Cha ${c.mayContain} enthalte</small>` : "") +
     `</div>` +
     `<div class="vqty">${vhtml}</div>`;
   variantsForC.forEach((v) => {
@@ -2258,6 +2260,7 @@ COOKIES.forEach((c) => {
     `<strong>${c.name}</strong>` +
     `<span class="desc">${c.note}</span>` +
     (c.allergens && c.allergens.length ? `<span class="allerg">Enthaltet zuesätzlich: ${c.allergens.join(", ")}</span>` : "") +
+    (c.mayContain ? `<span class="allerg may">Cha ${c.mayContain} enthalte</span>` : "") +
     (c.plainOnly
       ? `<span class="sorte-tag plain-only">nume als Cookie</span>`
       : `<span class="sorte-tag">au als Soft Melt 🫠</span>`);

@@ -84,7 +84,10 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Alle Sorten**: Gluten, Eier, Milch (vom User bestätigt) → zentral in `ALLERGY_GENERAL`, nicht pro Sorte wiederholen.
 - Privatküche, in der auch Nüsse verarbeitet werden → immer mit erwähnen.
 - Pro Sorte zusätzlich (`allergens` in `COOKIES`):
-  Cookies & Cream = Soja · Lotus = Soja · Ovomaltine Classic/Noir = Haselnuss, Gerstemalz, Soja · Cinnamon Dream = Pekannuss.
+  Neo Cookies = Soja · Lotus = Soja · Ovomaltine Classic/Noir = Haselnuss, Gerstemalz, Soja · Cinnamon Dream = Pekannuss.
+- **`mayContain`** ist ein eigenes Feld für Spuren-Warnungen – bewusst getrennt von `allergens`, weil
+  "cha enthalte" und "enthaltet" bei Allergien nicht dasselbe heissen. Wird kursiv dargestellt.
+  Aktuell: **Lotus** enthält weisse Schokolade von Lidl, in der jegliche Nüsse sein können (vom User, 02.08.2026).
 - **Haselnuss bei Ovomaltine** steckt in der Schokolade selbst (vom User gemeldet).
 - ⚠️ **Soja und Gerstemalz hat Claude aus den üblichen Rezepturen abgeleitet, NICHT vom User bestätigt.**
   Muss gegen die echten Verpackungen geprüft werden, bevor die Site öffentlich beworben wird.
