@@ -938,6 +938,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <!-- Deko: Girlande (JS füllt sie – wechselt mit em Feiertag) + Pflanze -->
           <g>
             <g id="g-garland"></g>
+            <g id="g-garland2"></g>
             <g id="deco-plant">
               <!-- Bambus im dunkle Keramiktopf – schlicht und uufrächt statt buschig -->
               <ellipse cx="1148" cy="648" rx="40" ry="9" fill="#2E2015" opacity="0.2"/>
@@ -992,26 +993,34 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <text x="180" y="140" text-anchor="middle" font-size="9.5" letter-spacing="2.4" fill="#F5A11C">HANDGMACHTI COOKIES</text>
           </g>
 
-          <!-- Kokedama: Moos-Chugle a de Schnuer, japanischi Art z'pflanze -->
+          <!-- Hängendi Moos-Chugle (Kokedama) mit ablaufende Ranke -->
           <g>
-            <line x1="1160" y1="0" x2="1160" y2="70" stroke="#8A7B63" stroke-width="1.8"/>
-            <g stroke="#8A7B63" stroke-width="1.4" fill="none">
-              <path d="M1160 70 C1144 74 1136 86 1138 98M1160 70 C1176 74 1184 86 1182 98"/>
+            <g stroke="#8A7B63" stroke-width="1.5" fill="none">
+              <path d="M1150 0 C1150 40 1142 66 1134 82"/>
+              <path d="M1170 0 C1170 40 1178 66 1186 82"/>
             </g>
-            <circle cx="1160" cy="100" r="21" fill="#5C6B52" stroke="#3E4A38" stroke-width="1.8"/>
-            <g fill="#6E7F60" opacity="0.8">
-              <circle cx="1152" cy="94" r="5"/><circle cx="1168" cy="104" r="4.5"/><circle cx="1158" cy="110" r="4"/>
+            <circle cx="1160" cy="98" r="23" fill="#5E6E54" stroke="#3E4A38" stroke-width="2"/>
+            <g fill="#6F8062" opacity="0.85">
+              <ellipse cx="1150" cy="90" rx="8" ry="6" transform="rotate(-20 1150 90)"/>
+              <ellipse cx="1170" cy="102" rx="7" ry="5.5" transform="rotate(15 1170 102)"/>
+              <ellipse cx="1157" cy="109" rx="6.5" ry="5" transform="rotate(-8 1157 109)"/>
             </g>
-            <g stroke="#7DA189" stroke-width="2.6" fill="none" stroke-linecap="round">
-              <path d="M1152 82 C1146 62 1140 52 1132 44"/>
-              <path d="M1162 80 C1164 58 1170 46 1178 38"/>
-              <path d="M1168 84 C1176 70 1184 64 1192 60"/>
+            <path d="M1137 92 q10 8 22 6" fill="none" stroke="#4A5742" stroke-width="1.4" opacity="0.6"/>
+            <!-- Ranke, wo abelaufed -->
+            <g stroke="#6E9B7E" stroke-width="2.4" fill="none" stroke-linecap="round">
+              <path d="M1146 116 C1140 138 1146 158 1140 178"/>
+              <path d="M1160 120 C1162 146 1156 166 1160 190"/>
+              <path d="M1174 116 C1182 136 1178 154 1184 170"/>
             </g>
             <g fill="#8FB59B">
-              <ellipse cx="1131" cy="42" rx="7" ry="4" transform="rotate(-38 1131 42)"/>
-              <ellipse cx="1179" cy="36" rx="7" ry="4" transform="rotate(34 1179 36)"/>
-              <ellipse cx="1193" cy="59" rx="6.5" ry="3.8" transform="rotate(18 1193 59)"/>
-              <ellipse cx="1145" cy="60" rx="6" ry="3.6" transform="rotate(-26 1145 60)"/>
+              <ellipse cx="1140" cy="134" rx="7" ry="4" transform="rotate(-28 1140 134)"/>
+              <ellipse cx="1146" cy="156" rx="6.5" ry="3.8" transform="rotate(20 1146 156)"/>
+              <ellipse cx="1139" cy="178" rx="6" ry="3.6" transform="rotate(-18 1139 178)"/>
+              <ellipse cx="1163" cy="142" rx="7" ry="4" transform="rotate(22 1163 142)"/>
+              <ellipse cx="1156" cy="168" rx="6.5" ry="3.8" transform="rotate(-16 1156 168)"/>
+              <ellipse cx="1161" cy="190" rx="6" ry="3.6" transform="rotate(12 1161 190)"/>
+              <ellipse cx="1180" cy="136" rx="6.5" ry="3.8" transform="rotate(26 1180 136)"/>
+              <ellipse cx="1185" cy="170" rx="6" ry="3.6" transform="rotate(18 1185 170)"/>
             </g>
           </g>
 
@@ -1065,28 +1074,20 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <!-- Ablagi bewusst läär: nur d'Maschine und links dernäbe d'Einweg-Becher.
                  D'Tasse und s'Gschirr stönd im Wandregal drüber. -->
             <g id="g-cups-stack">
-              <!-- Töpferti To-go-Becher i de gliiche Glasur wie s'Gschirr im Wandregal -->
-              <g stroke="#3B2C1E" stroke-width="1.6" stroke-linejoin="round">
-                <!-- vorderer Becher, blaui Glasur -->
-                <path d="M338 202 q14 -3.5 28 0 l-4 46 h-20 z" fill="#F2E9D6"/>
-                <path d="M338.5 205 q13.5 -3 27 0 l-0.9 13 q-3.2 6 -5.6 1.6 q-3 7 -5.6 1.4 q-2.8 7.4 -5.4 1.6 q-3 6 -5.6 0.6 z" fill="#7E97A6" stroke="none"/>
-                <path d="M338 202 q14 -3.5 28 0 l-4 46 h-20 z" fill="none"/>
-                <!-- hinderer Becher, Honig-Glasur -->
-                <path d="M370 210 q12.5 -3 25 0 l-4 38 h-17 z" fill="#F2E9D6"/>
-                <path d="M370.5 213 q12 -2.8 24 0 l-0.8 11 q-2.8 5.6 -5 1.4 q-2.6 6.4 -5 1.2 q-2.6 6.6 -4.8 1.4 q-2.6 5.4 -5 0.6 z" fill="#D9A44E" stroke="none"/>
-                <path d="M370 210 q12.5 -3 25 0 l-4 38 h-17 z" fill="none"/>
-              </g>
-              <g fill="#5A4632" opacity="0.45">
-                <circle cx="348" cy="236" r="0.9"/><circle cx="356" cy="240" r="0.7"/>
-                <circle cx="379" cy="238" r="0.8"/><circle cx="386" cy="234" r="0.7"/>
-              </g>
-            </g>
-            </g>
-              <!-- Deckeli-Stapel -->
-              <g stroke="#2E2015" stroke-width="1.6" fill="#E4D8C2">
-                <ellipse cx="322" cy="240" rx="15" ry="4"/>
-                <ellipse cx="322" cy="235" rx="15" ry="4"/>
-                <ellipse cx="322" cy="230" rx="15" ry="4"/>
+              <!-- Ineenandergstapleti To-go-Becher mit Honig-Banderole -->
+              <g stroke="#2E2015" stroke-width="1.6" stroke-linejoin="round">
+                <path d="M340 200 q13 -3.5 26 0 l-4 48 h-18 z" fill="#F7F1E3"/>
+                <path d="M341 208 q12 -3 24 0" fill="none" stroke="#D8CDB4" stroke-width="1.3"/>
+                <path d="M342 216 q11.5 -3 23 0" fill="none" stroke="#D8CDB4" stroke-width="1.3"/>
+                <path d="M343.6 228 q10.8 -2.6 21.6 0 l-1.4 15 q-9.4 -2.2 -18.8 0 z" fill="#F5A11C" stroke="none"/>
+                <path d="M343.6 228 q10.8 -2.6 21.6 0 l-1.4 15 q-9.4 -2.2 -18.8 0 z" fill="none" stroke="#C77E10" stroke-width="1"/>
+                <circle cx="354.5" cy="235.5" r="3.4" fill="#2E2015"/>
+                <path d="M351.6 234 h5.8 M351.4 237 h6.2" stroke="#F5A11C" stroke-width="0.9"/>
+                <path d="M340 200 q13 -3.5 26 0 l-4 48 h-18 z" fill="none"/>
+                <path d="M370 208 q12 -3 24 0 l-4 40 h-16 z" fill="#EFE6D2"/>
+                <path d="M371 216 q11 -2.6 22 0" fill="none" stroke="#D8CDB4" stroke-width="1.2"/>
+                <path d="M372.6 230 q10 -2.4 20 0 l-1.2 13 q-8.8 -2 -17.6 0 z" fill="#F5A11C" stroke="none"/>
+                <path d="M370 208 q12 -3 24 0 l-4 40 h-16 z" fill="none"/>
               </g>
             </g>
           </g>
@@ -1104,8 +1105,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <rect x="496" y="190" width="22" height="12" fill="#2E2015"/>
             <line x1="449" y1="202" x2="449" y2="208" stroke="#2E2015" stroke-width="4"/>
             <line x1="507" y1="202" x2="507" y2="208" stroke="#2E2015" stroke-width="4"/>
-            <path d="M442 212 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
-            <path d="M500 212 h14 v8 a7 7 0 0 1 -14 0 z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>
+            <!-- Zwei Tasse under de Uusläuf, gliichi Glasur wie s'Gschirr im Regal -->
+            <g stroke="#3B2C1E" stroke-width="1.4" stroke-linejoin="round">
+              <path d="M441 210 q8 -2 16 0 l-2 13 h-12 z" fill="#F2E9D6"/>
+              <path d="M441.4 216 q7.4 -1.6 14.6 0 l-0.4 7 h-13.8 z" fill="#7E97A6" stroke="none"/>
+              <path d="M441 210 q8 -2 16 0 l-2 13 h-12 z" fill="none"/>
+              <path d="M457 213 q6 4 -1 8" fill="none"/>
+              <path d="M499 210 q8 -2 16 0 l-2 13 h-12 z" fill="#F2E9D6"/>
+              <path d="M499.4 216 q7.4 -1.6 14.6 0 l-0.4 7 h-13.8 z" fill="#D9A44E" stroke="none"/>
+              <path d="M499 210 q8 -2 16 0 l-2 13 h-12 z" fill="none"/>
+              <path d="M515 213 q6 4 -1 8" fill="none"/>
+            </g>
             <rect x="426" y="230" width="104" height="9" rx="3" fill="#2E2015"/>
             <rect x="416" y="239" width="124" height="9" rx="3" fill="#5A4832"/>
           </g>
@@ -1295,11 +1305,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <g id="g-tatami-corner" opacity="0.68">
             <ellipse cx="1084" cy="392" rx="112" ry="10" fill="#2E2015" opacity="0.16"/>
             <!-- Plattform -->
-            <path d="M1002 322 L1160 322 L1188 376 L974 376 Z" fill="#BE9E70" stroke="#2E2015" stroke-width="1.8"/>
+            <path d="M1016 320 L1158 328 L1184 372 L968 362 Z" fill="#BE9E70" stroke="#2E2015" stroke-width="1.8"/>
             <g stroke="#9E7F55" stroke-width="1.4" opacity="0.8">
-              <path d="M1042 322 L1026 376M1082 322 L1082 376M1122 322 L1140 376"/>
+              <path d="M1052 322 L1028 366M1088 324 L1082 369M1124 326 L1136 371"/>
             </g>
-            <path d="M974 376 L1188 376 L1191 386 L971 386 Z" fill="#8A6D46" stroke="#2E2015" stroke-width="1.6"/>
+            <path d="M968 362 L1184 372 L1186 382 L966 372 Z" fill="#8A6D46" stroke="#2E2015" stroke-width="1.6"/>
             <!-- Zabuton-Chüssi -->
             <g stroke="#2E2015" stroke-width="1.5">
               <g><ellipse cx="1028" cy="348" rx="23" ry="9" fill="#8A5A55"/><ellipse cx="1028" cy="344" rx="23" ry="9" fill="#A06B65"/>
@@ -1310,8 +1320,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
                  <path d="M1064 360 q20 -5 40 0" fill="none" stroke="#E0BE83" stroke-width="1.4"/></g>
             </g>
             <!-- Flache Tisch i de Mitti -->
-            <path d="M1046 322 L1128 322 L1138 338 L1038 338 Z" fill="#A9895D" stroke="#2E2015" stroke-width="1.7"/>
-            <path d="M1046 322 L1128 322" stroke="#D8BD8F" stroke-width="1.5" opacity="0.7"/>
+            <path d="M1050 318 L1130 322 L1140 338 L1042 334 Z" fill="#A9895D" stroke="#2E2015" stroke-width="1.7"/>
+            <path d="M1050 318 L1130 322" stroke="#D8BD8F" stroke-width="1.5" opacity="0.7"/>
             <rect x="1044" y="338" width="7" height="16" fill="#6B573D"/>
             <rect x="1124" y="338" width="7" height="16" fill="#6B573D"/>
             <!-- es Tässli und es Chännli druf -->
@@ -1348,15 +1358,14 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               <circle cx="730" cy="440" r="2.2" fill="#6E4744"/>
               <rect x="709" y="454" width="8" height="66" fill="#5A4832"/><rect x="743" y="454" width="8" height="66" fill="#5A4832"/><rect x="726" y="456" width="8" height="64" fill="#6B573D"/>
             </g>
-            <!-- Chlises Tischliechtli: warms Cherzli i re Papierlaterne -->
-            <g transform="translate(800 400)">
-              <ellipse cy="24" rx="17" ry="4.5" fill="#2E2015" opacity="0.22"/>
-              <ellipse cy="24" rx="42" ry="26" fill="url(#lantern-halo)"/>
-              <rect x="-13" y="-26" width="26" height="46" rx="5" fill="url(#lantern-paper)" stroke="#A8763E" stroke-width="1.8"/>
-              <g stroke="#D9AE72" stroke-width="1.2" opacity="0.85"><path d="M-13 -12h26M-13 2h26"/></g>
-              <ellipse cx="-5" cy="-14" rx="4" ry="7" fill="#FFF6DF" opacity="0.55"/>
-              <rect x="-16" y="-30" width="32" height="6" rx="2.5" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>
-              <rect x="-16" y="19" width="32" height="6" rx="2.5" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>
+            <!-- Chlises Windliecht mit Cherzli uf em Tisch -->
+            <g transform="translate(798 424)">
+              <ellipse cy="0" rx="14" ry="4" fill="#2E2015" opacity="0.22"/>
+              <ellipse cy="-8" rx="34" ry="24" fill="url(#lantern-halo)"/>
+              <path d="M-11 0 q11 -2.5 22 0 l-1.5 -26 q-9.5 -2 -19 0 z" fill="#F6D9A0" opacity="0.7" stroke="#A8763E" stroke-width="1.6"/>
+              <ellipse cy="-27" rx="10.5" ry="3" fill="#E8C98F" stroke="#A8763E" stroke-width="1.4"/>
+              <path d="M0 -14 q4 -4 0 -8 q-4 4 0 8 z" fill="#F5A11C"/>
+              <ellipse cy="-11" rx="3.4" ry="4.4" fill="#FFF0C4" opacity="0.85"/>
             </g>
             <!-- Höckerli rächts -->
             <g>
@@ -2029,13 +2038,16 @@ function windowSnowSVG(w, thick = 16) {
 
 /* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
 const GRL = { x0: 40, y0: 24, xc: 300, yc: 64, x1: 560, y1: 24, N: 10 };
+/* Zwöiti Schnuer: vom Kafi-Menü bis i d'rächt Egge, dass es obe nöd läär wirkt */
+const GRL2 = { x0: 500, y0: 34, xc: 850, yc: 76, x1: 1190, y1: 30, N: 10 };
+let GRL_CUR = GRL;
 function grlPt(t) {
-  const u = 1 - t;
-  return [u * u * GRL.x0 + 2 * u * t * GRL.xc + t * t * GRL.x1,
-          u * u * GRL.y0 + 2 * u * t * GRL.yc + t * t * GRL.y1];
+  const G = GRL_CUR, u = 1 - t;
+  return [u * u * G.x0 + 2 * u * t * G.xc + t * t * G.x1,
+          u * u * G.y0 + 2 * u * t * G.yc + t * t * G.y1];
 }
-const grlString = (col = "#8A7B63") => `<path d="M${GRL.x0} ${GRL.y0} Q${GRL.xc} ${GRL.yc} ${GRL.x1} ${GRL.y1}" stroke="${col}" stroke-width="2.5" fill="none"/>`;
-function grlEach(fn, n = GRL.N) {
+const grlString = (col = "#8A7B63") => `<path d="M${GRL_CUR.x0} ${GRL_CUR.y0} Q${GRL_CUR.xc} ${GRL_CUR.yc} ${GRL_CUR.x1} ${GRL_CUR.y1}" stroke="${col}" stroke-width="2.5" fill="none"/>`;
+function grlEach(fn, n = GRL_CUR.N) {
   let out = "";
   for (let i = 0; i < n; i++) { const t = (i + 0.5) / n; const [x, y] = grlPt(t); out += fn(x, y, i); }
   return out;
@@ -2194,7 +2206,11 @@ function holidayDecorSVG(holiday) {
 }
 function renderThemeDecor() {
   const holiday = effectiveHoliday(localStorage.getItem("buhu_holiday") ?? "auto");
+  GRL_CUR = GRL;
   document.getElementById("g-garland").innerHTML = garlandSVG(holiday);
+  GRL_CUR = GRL2;
+  document.getElementById("g-garland2").innerHTML = garlandSVG(holiday);
+  GRL_CUR = GRL;
   document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
   const plant = document.getElementById("deco-plant");
   if (plant) plant.classList.toggle("hidden", ["weihnachten", "halloween", "ostern"].includes(holiday));
