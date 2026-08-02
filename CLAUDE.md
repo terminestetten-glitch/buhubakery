@@ -80,6 +80,16 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
   können also direkt schreiben. Auf der Site nur die E-Mail zeigen.
 - **`bestellung@buhubakery.ch` existiert** (vom User bestätigt) – Bestellungen kommen an.
 
+## Sprache: Züridütsch (wichtig!)
+Der User hat am 02.08.2026 reklamiert, die Texte seien "ein Mix von Schweizer Dialekten oder manchmal gar
+kein Schweizerdeutsch". Alles ist auf **Züridütsch** vereinheitlicht. Beim Schreiben neuer Texte beachten:
+- **nur** (nicht "nume" – das ist Bernisch) · **eme** (nicht "emne") · **usser** (nicht "ussert")
+- **im Vorus** (nicht "Voruus") · **wiiter wäg als** (nicht "wiiter aus als" – "aus" ist Bernisch für "als")
+- **si** statt "sie" · **mer/der** statt "mir/dir" im unbetonten Fall · **Chärn** nicht "Kern"
+- **Wie vill** statt "Wieviel" · **bstätige/Bstätigung** statt "bestätigen/Bestätigung"
+- **Cookie ist maskulin**: "de Cookie", "Dunkle Schoggi-Cookie", "Wettsch eine wieder use?"
+- Der Über-mich-Text stammt wörtlich vom User und bleibt unverändert.
+
 ## Allergene (Stand 02.08.2026)
 - **Alle Sorten**: Gluten, Eier, Milch (vom User bestätigt) → zentral in `ALLERGY_GENERAL`, nicht pro Sorte wiederholen.
 - Privatküche, in der auch Nüsse verarbeitet werden → immer mit erwähnen.
@@ -113,8 +123,9 @@ Reihenfolge: Header → Hero (mit 3 Fakten + 2 CTAs) → Bald-neu-Band → **Sor
   (Sortiment, Cookie-Liste, FAQ) – dort ändern, nicht im Markup.
 - **Über mich**: Foto-Platzhalter zeigt aktuell das Logo. Zum Ersetzen das `<img>` in `.about-photo`
   auf ein echtes Bild zeigen lassen (Kommentar steht im Markup).
-  **Der User hat am 02.08.2026 ein Porträtfoto im Chat geschickt** – Claude kann angehängte Bilder aber nicht
-  als Datei speichern. Das Foto muss vom User selbst als `assets/laura.jpg` ins Repo gelegt werden.
+  **Erledigt (02.08.2026)**: Das Porträtfoto liegt als `assets/laura.jpg` (900×1200, ~190 KB) und ist eingebunden.
+  Der User hatte es als `.heic` abgelegt – das können Browser nicht anzeigen, also mit
+  `sips -s format jpeg -Z 1200 … --out laura.jpg` konvertiert. Bei künftigen Fotos gleich vorgehen.
 - **Hero hat bewusst KEINE Buttons**: "Bau dir dini Box" / "Was gits?" wurden vom User entfernt, weil sie
   das Logo nach unten gedrückt haben. Das Logo ist der Blickfang. Nicht ungefragt wieder einbauen.
 
