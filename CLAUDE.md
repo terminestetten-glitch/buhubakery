@@ -105,8 +105,8 @@ kein Schweizerdeutsch". Alles ist auf **Züridütsch** vereinheitlicht. Beim Sch
   "cha enthalte" und "enthaltet" bei Allergien nicht dasselbe heissen. Wird kursiv dargestellt.
   Aktuell: **Lotus** enthält weisse Schokolade von Lidl, in der jegliche Nüsse sein können (vom User, 02.08.2026).
 - **Haselnuss bei Ovomaltine** steckt in der Schokolade selbst (vom User gemeldet).
-- ⚠️ **Soja und Gerstemalz hat Claude aus den üblichen Rezepturen abgeleitet, NICHT vom User bestätigt.**
-  Muss gegen die echten Verpackungen geprüft werden, bevor die Site öffentlich beworben wird.
+- ✅ **Vom User an den echten Verpackungen geprüft und bestätigt (02.08.2026)** – inkl. Soja und Gerstemalz.
+  Nicht erneut in Frage stellen. Nur anfassen, wenn der User eine Rezeptur oder einen Lieferanten ändert.
 - **Namensänderung**: Die "Oreo"-Sorte heisst neu **"Neo Cookies"** – es sind Neo-Guetzli von Lidl, nicht Oreo.
   Claude hatte zuerst den neutralen Namen "Cookies & Cream" vorgeschlagen (Markenbedenken); der User hat
   "Neo Cookies" ausdrücklich gewünscht. Das ist auch konsistent, da Lotus und Ovomaltine ebenfalls
@@ -145,21 +145,16 @@ Reihenfolge: Header → Hero (mit 3 Fakten + 2 CTAs) → Bald-neu-Band → **Sor
 
 ## Offene Punkte (beim User nachfragen, wenn passend)
 1. Mood-Zuordnung der Sorten bestätigen (in `COOKIES` von Claude geraten).
-2. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!).
+2. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch – **Postfach existiert** (vom User bestätigt).
    **Kein Instagram** (User hat keins, Stand 02.08.2026) → im Footer/Design nicht anbieten. WhatsApp noch offen.
    **Impressum (vom User, 02.08.2026)**: Laura Blessing, Dübendorf, bestellung@buhubakery.ch.
    Anmerkung: Der User will die genaue Adresse bewusst nicht öffentlich zeigen. Für den Schweizer Online-Handel
    verlangt UWG Art. 3 Abs. 1 lit. s aber Name **und** vollständige Adresse inkl. Strasse. Einmal darauf hingewiesen –
    Entscheid liegt beim User; nicht bei jeder Gelegenheit erneut aufbringen.
-   **Domain**: User hat eine Domain bei **GoDaddy** gekauft (vermutlich buhubakery.ch). Plan: GitHub Pages + Custom Domain.
-   Nötige Schritte: (a) Branch nach main mergen → Workflow deployt; (b) Repo-Settings → Pages → Custom Domain eintragen + "Enforce HTTPS";
-   (c) Bei GoDaddy DNS: A-Records für @ auf 185.199.108.153 / 185.199.109.153 / 185.199.110.153 / 185.199.111.153, CNAME für www auf terminestetten-glitch.github.io.
-   Achtung: Bei Workflow-Deploys zählt NUR die Pages-Einstellung, eine CNAME-Datei im Repo reicht nicht.
-4. Fotos für Über-mich (Text ist schon drin, wörtlich vom User).
-5. Impressum & Datenschutz vor echtem Launch (in der Schweiz: zumindest Kontaktangaben empfohlen).
-6. **Go-Live-Status (19.07.2026)**: `main` ist gepusht, Deploy-Workflow lief an, aber `configure-pages` scheiterte
-   ("Resource not accessible by integration") → Pages kann nicht per Workflow-Token aktiviert werden. Zusätzlich ist das
-   Repo **privat** (Pages auf privaten Repos = nur mit bezahltem Plan). User muss einmalig selbst klicken:
-   (a) Repo öffentlich machen (Settings → General → Danger Zone → Change visibility),
-   (b) Settings → Pages → Source: "GitHub Actions", Custom Domain buhubakery.ch eintragen + Enforce HTTPS.
-   Danach Workflow neu starten (workflow_dispatch via `actions_run_trigger` oder neuer Push). DNS-Schritte bei GoDaddy siehe Punkt 3.
+3. **Domain: erledigt.** buhubakery.ch läuft über GitHub Pages, DNS bei GoDaddy zeigt korrekt.
+4. Fotos für Über-mich: **erledigt** – `assets/laura.jpg` ist eingebunden.
+5. Datenschutz-Seite fehlt noch (Impressum steht im Footer). Bestellung läuft per mailto, es werden keine Daten gespeichert.
+6. **Go-Live: ERLEDIGT (02.08.2026).** Die Site läuft live auf https://buhubakery.ch.
+   Repo ist öffentlich, Pages-Source = "GitHub Actions", Custom Domain gesetzt,
+   **Enforce HTTPS aktiv** (`https_enforced: true`, http → https 301). DNS bei GoDaddy zeigt korrekt.
+   Deploy passiert automatisch bei jedem Push auf `main` – nichts mehr manuell nötig.
