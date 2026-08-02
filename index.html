@@ -575,7 +575,30 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   background: var(--raised); border: 1px solid var(--line); border-radius: 1rem;
   box-shadow: var(--shadow); padding: 2rem 1.75rem;
 }
-.admin-login-icon { text-align: center; font-size: 2rem; margin: 0 0 0.2rem; }
+.admin-login h3 { text-align: center; margin: 0; font-size: 1.3rem; }
+.admin-login-sub {
+  margin: -0.5rem 0 0.2rem; text-align: center;
+  color: var(--ink-soft); font-size: 0.86rem; line-height: 1.45;
+}
+.admin-login-badge { position: relative; justify-self: center; width: 4.6rem; height: 4.6rem; }
+.admin-login-badge img { width: 100%; height: 100%; border-radius: 50%; box-shadow: var(--shadow); }
+.admin-login-lock {
+  position: absolute; right: -0.3rem; bottom: -0.3rem;
+  width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  background: var(--accent-bright); border: 2px solid var(--raised);
+  display: grid; place-items: center; font-size: 0.9rem;
+}
+.admin-pass-wrap { position: relative; display: block; }
+.admin-pass-wrap input { width: 100%; padding-right: 2.8rem; }
+.admin-login .admin-pass-wrap button {
+  position: absolute; right: 0.35rem; top: 50%; transform: translateY(-50%);
+  margin: 0; padding: 0.35rem 0.5rem; width: auto;
+  background: transparent; border: none; color: var(--ink-soft);
+  font-size: 1rem; line-height: 1; cursor: pointer;
+}
+.admin-login .admin-pass-wrap button[aria-pressed="true"] { color: var(--accent); }
+.admin-login-note { margin: 0; text-align: center; font-size: 0.82rem; min-height: 1.2em; color: var(--ink-soft); }
+.admin-login-note.is-error { color: #C0392B; font-weight: 600; }
 .admin-field { display: grid; gap: 0.4rem; }
 .admin-field span { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
 .admin-login input {
@@ -1139,7 +1162,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           </g>
 
           <!-- Saison- & Feiertags-Deko (vom Admin gsteuert) -->
-          <g id="g-season-decor"></g>
           <g id="g-holiday-decor"></g>
 
           <!-- Buhu, de Café-Mitarbeiter: füehrt Schritt für Schritt dur d'Bstellig -->
@@ -1392,19 +1414,25 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   <div class="admin-modal-content">
     <div id="admin-login" class="admin-login-wrap" style="display:block;">
       <form class="admin-login" id="admin-login-form" autocomplete="off">
-        <p class="admin-login-icon" aria-hidden="true">🔒</p>
-        <h3 style="margin:0 0 0.2rem;text-align:center;">Admin-Alogge</h3>
-        <p style="margin:0 0 0.5rem;color:var(--ink-soft);font-size:0.88rem;text-align:center;">Nur für d'Bakery-Verwaltig.</p>
+        <div class="admin-login-badge" aria-hidden="true">
+          <img src="assets/logo.png" onerror="this.onerror=null;this.src=BUHU_LOGO_FALLBACK" alt="">
+          <span class="admin-login-lock">🔒</span>
+        </div>
+        <h3>Bakery-Verwaltig</h3>
+        <p class="admin-login-sub">Da chasch d'Kafi-Täg, d'Deko und «Bald neu» iistelle.</p>
         <label class="admin-field">
           <span>Benutzername</span>
-          <input type="text" id="admin-user" placeholder="Benutzername" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+          <input type="text" id="admin-user" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
         </label>
         <label class="admin-field">
           <span>Passwort</span>
-          <input type="password" id="admin-pass" placeholder="Passwort" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false">
+          <span class="admin-pass-wrap">
+            <input type="password" id="admin-pass" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+            <button type="button" id="admin-pass-toggle" aria-label="Passwort zeige" aria-pressed="false">👁</button>
+          </span>
         </label>
-        <button id="admin-login-btn" type="submit">Alogge</button>
-        <p id="admin-hint" style="margin:0.4rem 0 0;color:var(--ink-soft);font-size:0.8rem;text-align:center;">Benutzername <strong>admin</strong> · Passwort <strong>admin</strong></p>
+        <button id="admin-login-btn" type="submit">Aamälde</button>
+        <p id="admin-hint" class="admin-login-note" role="status"></p>
       </form>
     </div>
     <div id="admin-content" style="display:none;">
@@ -1412,11 +1440,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <p style="color:var(--ink-soft);font-size:0.9rem;">Klick uf en Tag zum Kafi iiträge oder usenäh. D'Änderig speicheret automatisch.</p>
       <div class="admin-calendar" id="admin-calendar"></div>
 
-      <h3 style="margin-top:2.5rem;">Saison</h3>
-      <p style="color:var(--ink-soft);font-size:0.9rem;">Stüürt d'Deko im Café (Blüete, Sunne, Blätter, Schnee).</p>
-      <div class="mood-row" id="admin-season-chips" role="group" aria-label="Saison wähle"></div>
-
-      <h3 style="margin-top:1.8rem;">Feiertag</h3>
+      <h3 style="margin-top:2.5rem;">Feiertag</h3>
       <p style="color:var(--ink-soft);font-size:0.9rem;">Zuesätzlichi Deko für spezielli Anläss.</p>
       <div class="mood-row" id="admin-holiday-chips" role="group" aria-label="Feiertag wähle"></div>
 
@@ -1425,7 +1449,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <textarea id="admin-comingsoon" rows="4" placeholder="z.B. Cinnamon Cookie Dreams&#10;Toblerone Brownie" style="width:100%;max-width:26rem;padding:0.7rem;border:1.5px solid var(--line);border-radius:0.6rem;background:var(--ground);color:var(--ink);font:inherit;resize:vertical;"></textarea>
       <div><button id="admin-comingsoon-save" style="margin-top:0.6rem;background:var(--accent);color:var(--raised);padding:0.55rem 1.1rem;border:none;border-radius:0.5rem;font-weight:700;cursor:pointer;">Speichere</button> <span id="admin-comingsoon-msg" style="color:var(--ink-soft);font-size:0.85rem;"></span></div>
 
-      <button id="admin-logout-btn" style="margin-top:2rem;background:var(--line);color:var(--ink);padding:0.6rem 1.2rem;border:none;border-radius:0.5rem;cursor:pointer;">Ablogge</button>
+      <button id="admin-logout-btn" style="margin-top:2rem;background:var(--line);color:var(--ink);padding:0.6rem 1.2rem;border:none;border-radius:0.5rem;cursor:pointer;">Abmälde</button>
     </div>
   </div>
 </div>
@@ -1457,14 +1481,12 @@ function applyRemoteData(d) {
   if (!d) return;
   if (d.coffeeDays !== undefined) localStorage.setItem("buhu_coffeeDays", JSON.stringify(d.coffeeDays));
   if (d.comingSoon !== undefined) localStorage.setItem("buhu_comingSoon", JSON.stringify(d.comingSoon));
-  if (d.season !== undefined) localStorage.setItem("buhu_season", d.season);
   if (d.holiday !== undefined) localStorage.setItem("buhu_holiday", d.holiday);
 }
 function collectAdminState() {
   return {
     coffeeDays: JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}"),
     comingSoon: getComingSoon(),
-    season: localStorage.getItem("buhu_season") || "",
     holiday: localStorage.getItem("buhu_holiday") || "keine",
   };
 }
@@ -1487,9 +1509,20 @@ async function saveRemoteState() {
     });
   } catch (e) { /* egal, lokal isch scho gspeicheret */ }
 }
+/* SHA-256 vom Passwort. Im Code staht nur de Hash, nöd s'Passwort sälber.
+   Zum es neus setze: buhuHash("nöis Passwort") i de Browser-Konsole ufrüefe
+   und de usgäbeni Wärt bi ADMIN_CREDS.passHash iitrage. */
+async function buhuHash(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 async function verifyAdminPw(user, pass) {
-  if (user !== "admin") return false;
-  if (!SB) return pass === ADMIN_CREDS.pass; // lokaler Fallback ohni Supabase
+  if (user.toLowerCase() !== ADMIN_CREDS.user) return false;
+  if (!SB) {
+    // Lokal ohni Supabase: Hash-Vergliich. Bremst s'Uspröbiere es bitzli ab.
+    await new Promise((r) => setTimeout(r, 400));
+    try { return (await buhuHash(pass)) === ADMIN_CREDS.passHash; } catch (e) { return false; }
+  }
   try {
     const res = await fetch(`${SB.url}/rest/v1/rpc/admin_check`, {
       method: "POST", headers: sbHeaders(), body: JSON.stringify({ pw: pass }),
@@ -1551,12 +1584,6 @@ const CUPS = [
   { id: "einweg", label: "Einweg-Becher" },
 ];
 
-const SEASONS = [
-  { id: "fruehling", label: "Frühlig 🌸" },
-  { id: "sommer",    label: "Summer ☀️" },
-  { id: "herbst",    label: "Herbscht 🍂" },
-  { id: "winter",    label: "Winter ❄️" },
-];
 const HOLIDAYS = [
   { id: "keine",         label: "Kei Feiertag" },
   { id: "ostern",        label: "Ostere 🐣" },
@@ -1588,12 +1615,6 @@ function easterDate(year) {
   const day = ((h + l - 7 * m + 114) % 31) + 1;
   return { month, day, doy: Math.round((Date.UTC(year, month - 1, day) - Date.UTC(year, 0, 1)) / 86400000) };
 }
-function autoSeason(t = zurichToday()) {
-  if (t.m >= 3 && t.m <= 5) return "fruehling";
-  if (t.m >= 6 && t.m <= 8) return "sommer";
-  if (t.m >= 9 && t.m <= 11) return "herbst";
-  return "winter";
-}
 function autoHoliday(t = zurichToday()) {
   if (t.m === 12 && t.d >= 1 && t.d <= 26) return "weihnachten";
   if (t.m === 10 && t.d >= 24) return "halloween";
@@ -1603,7 +1624,6 @@ function autoHoliday(t = zurichToday()) {
   return "keine";
 }
 /* Was würklech zeichnet wird: "auto" löst sich uf, alles andere gilt wie gwählt. */
-const effectiveSeason = (v) => (v === "auto" || v === null ? autoSeason() : v);
 const effectiveHoliday = (v) => (v === "auto" || v === null ? autoHoliday() : v);
 
 /* --- Zustand --------------------------------------------------------------- */
@@ -1782,9 +1802,6 @@ function cookieSVG(c, r, melt) {
 
 /* --- Saison- & Feiertags-Deko ----------------------------------------------- */
 /* Freie Zone für Streu-Deko: obere Himmel-Strecke rechts vom Wimpel-Banner */
-const SKY_SPOTS = [[630, 16], [690, 44], [745, 20], [755, 92], [825, 18], [925, 34], [950, 88], [1010, 20], [1075, 44], [1140, 16], [1165, 90], [600, 44]];
-/* Fenster-Sockel für Deko am Bogefänschter */
-const WINDOW_SILLS = [{ x: 790, apex: 865 }, { x: 970, apex: 1045 }];
 /* Geometrie vo de Bogefänschter, dass d'Schnee-Chappe em Boge folgt statt eifach
    e Ellipse z'sii. Werte gliich wie im SVG: M x0 140 Q apex 62 x1 140 */
 const WINDOW_ARCHES = [
@@ -1838,8 +1855,7 @@ function snowflakeIcon(s, col = "#FBF3E4") {
 }
 
 /* --- Girlande je nach Saison/Feiertag (ersetzt d'Standard-Girlande) --------- */
-function garlandSVG(season, holiday) {
-  // Feiertag het Vorrang vor Saison
+function garlandSVG(holiday) {
   if (holiday === "weihnachten") {
     // Tanne-Girlande mit Lichter & Chugle
     const swag = grlEach((x, y, i) => {
@@ -1914,67 +1930,6 @@ function garlandSVG(season, holiday) {
   });
 }
 
-function seasonDecorSVG(season) {
-  if (season === "fruehling") {
-    const blossoms = SKY_SPOTS.map(([x, y], i) => {
-      const s = 9 + (i % 3) * 2.2;
-      return `<g transform="translate(${x} ${y}) rotate(${(i * 47) % 60})">${flowerIcon(s, ["#F9C7D9", "#FBF3E4", "#F5A11C"][i % 3])}</g>`;
-    }).join("");
-    // Blueme-Chischtli uf de Fänschter-Simse (obe im Fänschter, nöd vor de Box)
-    const WINDOWS = [{ x0: 790, x1: 940 }, { x0: 970, x1: 1120 }];
-    const boxes = WINDOWS.map(({ x0, x1 }) => {
-      const cx = (x0 + x1) / 2, bw = 108, sill = 254;
-      const flowers = [0, 1, 2, 3].map((i) => {
-        const fx = cx - 36 + i * 24, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
-        return `<path d="M${fx} ${sill} L${fx} ${sill - 16}" stroke="#6B8F7B" stroke-width="2"/>` +
-          `<g transform="translate(${fx} ${sill - 20})">${flowerIcon(7, col)}</g>`;
-      }).join("");
-      return flowers +
-        `<rect x="${cx - bw / 2}" y="${sill}" width="${bw}" height="15" rx="3" fill="#8A5A2B" stroke="#2E2015" stroke-width="1.3"/>` +
-        `<rect x="${cx - bw / 2}" y="${sill}" width="${bw}" height="5" rx="2" fill="#A6774A"/>`;
-    }).join("");
-    return blossoms + boxes;
-  }
-  if (season === "sommer") {
-    // Sunne obe rächts (Strahle in zwei Länge, sauberi Form)
-    const rays = Array.from({ length: 12 }, (_, i) => {
-      const a = (i * 30) * Math.PI / 180;
-      const r1 = 34, r2 = i % 2 ? 50 : 44;
-      return `<line x1="${(Math.cos(a) * r1).toFixed(1)}" y1="${(Math.sin(a) * r1).toFixed(1)}" x2="${(Math.cos(a) * r2).toFixed(1)}" y2="${(Math.sin(a) * r2).toFixed(1)}" stroke="#F5A11C" stroke-width="4.5" stroke-linecap="round"/>`;
-    }).join("");
-    const sun = `<g transform="translate(1120 66)">${rays}` +
-      `<circle r="33" fill="#FBC94C" stroke="#F5A11C" stroke-width="3"/>` +
-      `<circle r="33" fill="none" stroke="#fff" stroke-width="6" opacity="0.15"/></g>`;
-    const butterflies = [[690, 54, -12], [980, 60, 14]].map(([x, y, rot]) =>
-      `<g transform="translate(${x} ${y}) rotate(${rot})">` +
-      `<ellipse cx="-6" cy="-3" rx="8" ry="6.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.9"/>` +
-      `<ellipse cx="6" cy="-3" rx="8" ry="6.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.9"/>` +
-      `<ellipse cx="-5" cy="6" rx="5.5" ry="4.5" fill="#F9C7D9" stroke="#2E2015" stroke-width="0.8"/>` +
-      `<ellipse cx="5" cy="6" rx="5.5" ry="4.5" fill="#F5A11C" stroke="#2E2015" stroke-width="0.8"/>` +
-      `<line x1="0" y1="-7" x2="0" y2="9" stroke="#2E2015" stroke-width="1.6"/>` +
-      `<path d="M0 -7 l-3 -4 M0 -7 l3 -4" stroke="#2E2015" stroke-width="1" stroke-linecap="round"/></g>`
-    ).join("");
-    return sun + butterflies;
-  }
-  if (season === "herbst") {
-    const leaves = SKY_SPOTS.map(([x, y], i) => {
-      const s = 10 + (i % 3) * 2.2;
-      const rot = (i * 41) % 360;
-      const col = ["#C97B3D", "#B5772E", "#8A4F1D", "#D89B52"][i % 4];
-      return `<g transform="translate(${x} ${y}) rotate(${rot})">${leafIcon(s, col)}</g>`;
-    }).join("");
-    return leaves;
-  }
-  if (season === "winter") {
-    const flakes = SKY_SPOTS.map(([x, y], i) =>
-      `<g transform="translate(${x} ${y})" opacity="0.95">${snowflakeIcon(6 + (i % 3) * 1.8)}</g>`).join("");
-    // Schnee-Chappe obe uf de Fänschter + Isszapfe unter em Boge (obe, nöd vor de Box)
-    const windowSnow = WINDOW_ARCHES.map((w) => archSnowSVG(w)).join("");
-    const shelfSnow = `<path d="M590 100 Q655 88 720 100 L720 109 Q655 97 590 109 Z" fill="#FBF3E4" opacity="0.95"/>`;
-    return flakes + windowSnow + shelfSnow;
-  }
-  return "";
-}
 function holidayDecorSVG(holiday) {
   if (holiday === "ostern") {
     // Oschter-Chorb uf em Bode rächts (ersetzt d'Pflanze)
@@ -2073,10 +2028,8 @@ function holidayDecorSVG(holiday) {
   return "";
 }
 function renderThemeDecor() {
-  const season = effectiveSeason(localStorage.getItem("buhu_season") ?? "auto");
   const holiday = effectiveHoliday(localStorage.getItem("buhu_holiday") ?? "auto");
-  document.getElementById("g-garland").innerHTML = garlandSVG(season, holiday);
-  document.getElementById("g-season-decor").innerHTML = seasonDecorSVG(season);
+  document.getElementById("g-garland").innerHTML = garlandSVG(holiday);
   document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
   const plant = document.getElementById("deco-plant");
   if (plant) plant.classList.toggle("hidden", ["weihnachten", "halloween", "ostern"].includes(holiday));
@@ -2884,7 +2837,13 @@ function setStepGlow(step) {
 }
 
 /* --- Admin-Panel Logik ---------------------------------------------------- */
-const ADMIN_CREDS = { user: "admin", pass: "admin" };
+/* Achtung: das isch e reini HTML-Site ohni Server. Dä Hash staht im Quälltext und
+   cha theoretisch knackt werde – es isch en Schutz gäge zuefälligs Ummeklicke, kei
+   echti Sicherheit. Für echte Schutz bruucht's de Supabase-Wäg (siehe CONFIG.sb). */
+const ADMIN_CREDS = {
+  user: "laura",
+  passHash: "9997d61e6fd4deaf02d79c92ffc338e9c56554e43a5cd05bcf14a315f580a7dd",
+};
 const adminStorage = {
   getCoffeeDays() { return JSON.parse(localStorage.getItem("buhu_coffeeDays") || "{}"); },
   setCoffeeDays(days) { localStorage.setItem("buhu_coffeeDays", JSON.stringify(days)); },
@@ -2903,7 +2862,6 @@ const adminPanel = {
   loginForm: document.getElementById("admin-login-form"),
   logoutBtn: document.getElementById("admin-logout-btn"),
   calendarDiv: document.getElementById("admin-calendar"),
-  seasonChipsDiv: document.getElementById("admin-season-chips"),
   holidayChipsDiv: document.getElementById("admin-holiday-chips"),
   csTextarea: document.getElementById("admin-comingsoon"),
   csSaveBtn: document.getElementById("admin-comingsoon-save"),
@@ -2920,7 +2878,14 @@ const adminPanel = {
     this.logoutBtn.addEventListener("click", () => this.logout());
     this.csSaveBtn.addEventListener("click", () => this.saveComingSoon());
 
-    if (SB) { const h = document.getElementById("admin-hint"); if (h) h.textContent = "Nume für Buhu 🐝 – Passwort privat."; }
+    // Passwort-Sichtbarkeit
+    const eye = document.getElementById("admin-pass-toggle");
+    if (eye) eye.addEventListener("click", () => {
+      const show = this.passInput.type === "password";
+      this.passInput.type = show ? "text" : "password";
+      eye.setAttribute("aria-pressed", String(show));
+      eye.setAttribute("aria-label", show ? "Passwort verstecke" : "Passwort zeige");
+    });
 
     if (this.isLoggedIn()) this.showContent();
     else this.showLogin();
@@ -2944,15 +2909,18 @@ const adminPanel = {
     const btn = document.getElementById("admin-login-btn");
     btn.disabled = true; btn.textContent = "Prüefe…";
     const ok = await verifyAdminPw(user, pass);
-    btn.disabled = false; btn.textContent = "Alogge";
+    btn.disabled = false; btn.textContent = "Aamälde";
+    const note = document.getElementById("admin-hint");
     if (ok) {
       adminPw = pass;
       adminStorage.setSession("logged-in-" + Date.now());
+      if (note) { note.textContent = ""; note.classList.remove("is-error"); }
       this.showContent();
     } else {
-      alert(SB
-        ? "Fählerhaft Benutzername oder Passwort."
-        : "Fählerhaft Benutzername oder Passwort.\n\nBenutzername: admin\nPasswort: admin");
+      // Bewusst ohni Hiiwiis, weles Fäld falsch isch
+      if (note) { note.textContent = "Stimmt nöd – probier's nomol."; note.classList.add("is-error"); }
+      this.passInput.value = "";
+      this.passInput.focus();
     }
   },
 
@@ -2972,7 +2940,6 @@ const adminPanel = {
     this.loginDiv.style.display = "none";
     this.contentDiv.style.display = "block";
     this.renderCalendar();
-    this.renderSeasonChips();
     this.renderHolidayChips();
     this.csTextarea.value = getComingSoon().join("\n");
   },
@@ -3007,25 +2974,6 @@ const adminPanel = {
     saveRemoteState();
     this.renderCalendar();
     render(); // Aktualisiere auch die Hauptseite
-  },
-
-  renderSeasonChips() {
-    const current = localStorage.getItem("buhu_season") ?? "auto";
-    const auto = autoSeason();
-    const chips = [{ id: "auto", label: "Automatisch 🗓️" }, ...SEASONS];
-    this.seasonChipsDiv.innerHTML = chips.map((s) =>
-      `<button type="button" class="mood-chip" data-season="${s.id}" aria-pressed="${current === s.id}">${s.label}` +
-      (s.id === "auto" ? ` <small style="opacity:0.7">(${(SEASONS.find((x) => x.id === auto) || {}).label || ""})</small>` : "") +
-      `</button>`
-    ).join("");
-    this.seasonChipsDiv.querySelectorAll("[data-season]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        localStorage.setItem("buhu_season", btn.dataset.season);
-        saveRemoteState();
-        this.renderSeasonChips();
-        renderThemeDecor();
-      });
-    });
   },
 
   renderHolidayChips() {
