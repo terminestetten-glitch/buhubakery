@@ -97,6 +97,19 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 ## Haltbarkeit (vom User, 02.08.2026)
 - **Ca. 5–6 Tage.** Danach noch geniessbar, aber nicht mehr saftig, sondern eher krümelig.
   Diese ehrliche Formulierung übernehmen, nicht zu "5–6 Tage haltbar" verkürzen.
+- **Im Kühlschrank halten sie am längsten und schmecken am besten** – immer mit erwähnen.
+
+## Seitenaufbau (Stand 02.08.2026, gebaut)
+Reihenfolge: Header → Hero (mit 3 Fakten + 2 CTAs) → Bald-neu-Band → **Sortiment** → Café →
+Über mich → Abholig → **Hüfigi Fröge** → Footer.
+- **Sortiment** (`#sortiment`): Karten werden aus `COOKIES` generiert und nutzen dieselbe `cookieSVG()`
+  wie die Vitrine – eine Änderung an `COOKIES` schlägt automatisch überall durch.
+- **Abholig** (`#bestellen`): vier Info-Karten (Wo / Vorlauf / Kafi-Täg / Zahle).
+- **Fröge** (`#froege`): Haltbarkeit, Allergene, Verpackung, Grossbestellungen.
+- Der Allergen-Text steht **einmal** in `ALLERGY_GENERAL` und wird an drei Stellen eingesetzt
+  (Sortiment, Cookie-Liste, FAQ) – dort ändern, nicht im Markup.
+- **Über mich**: Foto-Platzhalter zeigt aktuell das Logo. Zum Ersetzen das `<img>` in `.about-photo`
+  auf ein echtes Bild zeigen lassen (Kommentar steht im Markup).
 
 ## Abholung (vom User, 02.08.2026)
 - **Ort**: Dübendorf. Genaue Adresse gibt's erst nach der Bestellung (bewusst so).

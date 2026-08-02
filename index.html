@@ -212,6 +212,78 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .btn:hover { filter: brightness(1.07); }
 .btn[disabled] { opacity: 0.45; cursor: not-allowed; filter: none; }
 
+/* --- Fakte im Hero -------------------------------------------------------- */
+.hero-facts {
+  list-style: none; margin: 1.6rem 0 0; padding: 1.2rem 0 0;
+  border-top: 1px dashed var(--line);
+  display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem;
+  font-size: 0.88rem; color: var(--ink-soft);
+}
+.hero-facts li { display: flex; align-items: center; gap: 0.4rem; }
+.hero-facts strong { color: var(--ink); font-weight: 700; }
+
+/* --- Sortiment ------------------------------------------------------------ */
+.sorten-grid {
+  list-style: none; margin: 1.6rem 0 0; padding: 0;
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+.sorte-card {
+  background: var(--raised); border: 1px solid var(--line);
+  border-radius: 1rem; padding: 1.1rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  box-shadow: var(--shadow);
+}
+.sorte-card svg { width: 4.2rem; height: 4.2rem; }
+.sorte-card strong { font-size: 1rem; }
+.sorte-card .desc { color: var(--ink-soft); font-size: 0.85rem; line-height: 1.5; }
+.sorte-card .allerg { color: var(--accent); font-size: 0.76rem; font-weight: 600; }
+.sorte-tag {
+  align-self: flex-start; margin-top: auto;
+  font-size: 0.7rem; font-weight: 800; border-radius: 2rem; padding: 0.15rem 0.65rem;
+  background: var(--accent-bright); color: #2E2015;
+}
+.sorte-tag.plain-only { background: transparent; border: 1px solid var(--line); color: var(--ink-soft); }
+
+/* --- Info-Chärtli bi de Abholig ------------------------------------------- */
+.info-cards {
+  list-style: none; margin: 1.6rem 0 1.4rem; padding: 0;
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+.info-cards li {
+  background: var(--raised); border: 1px solid var(--line);
+  border-radius: 1rem; padding: 1.2rem;
+  display: flex; flex-direction: column; gap: 0.3rem;
+  box-shadow: var(--shadow);
+}
+.info-cards .ico { font-size: 1.7rem; line-height: 1; }
+.info-cards strong { font-size: 0.98rem; }
+.info-cards li > span:last-child { color: var(--ink-soft); font-size: 0.87rem; }
+
+/* --- Über mich: Foti und useghobne Satz ------------------------------------ */
+.about-photo { margin: 1.2rem 0 0; }
+.about-photo img {
+  width: 100%; max-width: 15rem; height: auto;
+  border-radius: 1rem; box-shadow: var(--shadow);
+}
+.about-photo figcaption { margin-top: 0.5rem; font-size: 0.82rem; color: var(--ink-soft); }
+.pull-quote {
+  margin: 1.4rem 0; padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 4px solid var(--accent-bright);
+  font-family: Georgia, "Iowan Old Style", serif;
+  font-style: italic; font-size: 1.15rem; color: var(--ink);
+}
+
+/* --- Hüfigi Fröge --------------------------------------------------------- */
+.faq-list { margin: 1.6rem 0 0; display: grid; gap: 0.7rem; max-width: 46rem; }
+.faq-item {
+  background: var(--raised); border: 1px solid var(--line);
+  border-radius: 0.9rem; padding: 1rem 1.2rem;
+}
+.faq-item dt { font-weight: 700; font-size: 0.98rem; }
+.faq-item dd { margin: 0.3rem 0 0; color: var(--ink-soft); font-size: 0.88rem; }
+
 /* --- Bald-neu-Band -------------------------------------------------------- */
 .coming-soon-band { background: linear-gradient(90deg, var(--accent-bright), #F7C048); border-block: 1px solid var(--accent); }
 .coming-soon-band .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1.1rem; padding-block: 0.9rem; }
@@ -454,7 +526,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   color: var(--ink-soft);
   font-size: 0.9rem;
 }
-.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+.site-footer .footer-cols {
+  display: grid; gap: 1.4rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+.site-footer .footer-cols > div { display: flex; flex-direction: column; gap: 0.25rem; }
+.site-footer strong { color: var(--ink); font-size: 0.92rem; margin-bottom: 0.2rem; }
+.site-footer a { color: var(--accent); }
+.site-footer .footer-copy {
+  margin-top: 1.6rem; padding-top: 1.1rem;
+  border-top: 1px solid var(--line); font-size: 0.82rem;
+}
 
 /* --- Admin-Panel ---------------------------------------------------------- */
 #admin-toggle {
@@ -596,9 +678,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       BuhuBakery
     </a>
     <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="#sortiment">Sortiment</a>
       <a href="#cafe">Cookie-Box baue</a>
       <a href="#ueber-mich">Über mich</a>
       <a href="#bestellen">Abholig</a>
+      <a href="#froege">Fröge</a>
     </nav>
   </div>
 </header>
@@ -613,7 +697,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
         <p class="lead">…drum bstell en jetzt, bevor de Kolleg de letscht wett. Bi de BuhuBakery packsch dir dini Cookie-Box grad sälber – diräkt da im virtuelle Café.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#cafe">Bau dir dini Box</a>
+          <a class="btn" href="#sortiment">Was gits?</a>
         </div>
+        <ul class="hero-facts">
+          <li><span aria-hidden="true">🏠</span> <strong>Us minere eigene Chuchi</strong></li>
+          <li><span aria-hidden="true">🍪</span> <strong>Frisch bache uf Bstellig</strong></li>
+          <li><span aria-hidden="true">📍</span> <strong>Abhole z'Dübendorf</strong></li>
+        </ul>
       </div>
       <div class="hero-mascot">
         <img src="assets/logo.png" onerror="this.onerror=null;this.src=BUHU_LOGO_FALLBACK" alt="Buhu, die Biene im Geisterkostüm mit Kochmütze und Honiglöffel">
@@ -625,6 +715,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     <div class="wrap">
       <span class="cs-badge">🔜 Bald neu</span>
       <ul class="cs-list" id="coming-soon-list"></ul>
+    </div>
+  </section>
+
+  <section class="section" id="sortiment">
+    <div class="wrap">
+      <span class="eyebrow">S'Sortiment</span>
+      <h2>Das gits bi de BuhuBakery</h2>
+      <p class="section-intro">Jedi Sorte gits «eifach so» oder mit «Soft Melt Chärn» – emne flüssige Kern i de Mitti.
+        Ussert em Cinnamon Dream, dä gits nume als Cookie.</p>
+      <ul class="sorten-grid" id="sorten-grid"></ul>
+      <p class="allergy-note" id="sortiment-allergy"></p>
     </div>
   </section>
 
@@ -1164,12 +1265,18 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <div>
         <span class="eyebrow">Wer da bachet</span>
         <h2>Über mich</h2>
+        <!-- Zum es echts Foti iiseze: s'<img> unte dur <img src="assets/laura.jpg" alt="Laura i de Chuchi"> ersetze. -->
+        <figure class="about-photo">
+          <img src="assets/logo.png" onerror="this.onerror=null;this.src=BUHU_LOGO_FALLBACK" alt="BuhuBakery-Logo">
+          <figcaption>Laura · BuhuBakery</figcaption>
+        </figure>
       </div>
       <div>
         <p>Mini Liebi fürs Backe het scho ganz früeh agfange – nämlich i de Chuchi vo minere Oma. Was damals mit zäme Teig rüehre, probiere und natürlich nasche agfange het, isch bis hüt e grossi Leidäschaft vo mir bliebe.</p>
         <p>Hüt wird i minere eigene Chuchi experimentiert, kreiert und vor allem ganz viel bache. Ich lieb's, neui Rezept uszprobiere und us eifache Zutate öppis z'mache, wo Mensche zum Strahle bringt. Denn genau das isch für mich s'Schönste am Backe: De Moment, wenn öpper de erscht Biss nimmt und mer sofort gseht – das schmeckt. 🍪</p>
+        <blockquote class="pull-quote">«Mängisch bruchts eifach öppis richtig Feins.»</blockquote>
         <p>Buhu Bakery isch kei grossi Backstube und kei Fabrik. Es isch mini chlini Bakery vo dihei. Jede Kreation entstaht i minere Chuchi, mit viel Herzbluet, Liebi zum Detail und em Wunsch, dir en chline Glücksmoment mitzgeh.</p>
-        <p>Denn mängisch bruchts gar nöd viel zum glücklich sii. Mängisch bruchts eifach öppis richtig Feins. 🐝🤎</p>
+        <p>Denn mängisch bruchts gar nöd viel zum glücklich sii. 🐝🤎</p>
       </div>
     </div>
   </section>
@@ -1178,17 +1285,85 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     <div class="wrap">
       <span class="eyebrow">Abholig</span>
       <h2>Abhole &amp; gnüsse</h2>
-      <p class="section-intro">Du schickst dini Aafrag per E-Mail ab, ich bestätige dir Priis und Abholtermin – und denn: frisch us em Ofe i dini Händ. An bestimmte Täg gits zusätzlich <strong>Pick up &amp; Coffee to go</strong> – denn erschiint im Café obe au d'Kaffimaschine.</p>
+      <p class="section-intro">Du schickst dini Aafrag per E-Mail ab, ich bestätige dir Priis und Abholtermin – und denn: frisch us em Ofe i dini Händ.</p>
+      <ul class="info-cards">
+        <li>
+          <span class="ico" aria-hidden="true">📍</span>
+          <strong>Wo abhole</strong>
+          <span>Bi mir z'Dübendorf. Di genau Adress chunt mit de Bestätigung.</span>
+        </li>
+        <li>
+          <span class="ico" aria-hidden="true">🕐</span>
+          <strong>Wie lang vorher</strong>
+          <span>Bstell mindeschtens 2 Täg im Voruus – so isch alles frisch bache.</span>
+        </li>
+        <li>
+          <span class="ico" aria-hidden="true">☕</span>
+          <strong>Kafi-Täg</strong>
+          <span>Am Sunntig gits <strong>Pick up &amp; Coffee to go</strong> drzue – denn staht im Café obe au d'Kaffimaschine.</span>
+        </li>
+        <li>
+          <span class="ico" aria-hidden="true">💳</span>
+          <strong>Zahle</strong>
+          <span>Per TWINT vor de Abholig. D'Nummere chunt mit de Bestätigung.</span>
+        </li>
+      </ul>
       <p class="hint">D'Aafrag gaht per E-Mail a <a href="mailto:bestellung@buhubakery.ch">bestellung@buhubakery.ch</a>.</p>
+    </div>
+  </section>
+
+  <section class="section" id="froege">
+    <div class="wrap">
+      <span class="eyebrow">Guet zum wüsse</span>
+      <h2>Hüfigi Fröge</h2>
+      <dl class="faq-list">
+        <div class="faq-item">
+          <dt>Wie lang halted d'Cookies?</dt>
+          <dd>Öppe 5–6 Täg. Nachhär sind si no guet, aber nüm so saftig – eher chrümelig.
+            <strong>Am beschte im Chüelschrank ufbewahre</strong>, so halted si am längschte und schmecked am beschte.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Het's Allergene drin?</dt>
+          <dd id="faq-allergy"></dd>
+        </div>
+        <div class="faq-item">
+          <dt>Wie isch das mit de Verpackig?</dt>
+          <dd>Jede Cookie chunt einzeln iipackt. Ab 4 Cookies chunt d'ganzi Bstellig zuesätzlich i e Papiertüte – uf Wunsch e schöni Verpackig (+50 Rp.) oder e Gschänk-Box (+2.50).</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Chan ich meh als 30 Cookies bstelle?</dt>
+          <dd>Klar – schriib mer eifach, denn mach ich der es Aagebot.</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <span>© 2026 BuhuBakery 🐝👻 – «de Schreck isch nur, wenn's kei meh het»</span>
-    <span>Impressum &amp; Datenschutz folge vor em echte Start.</span>
+  <div class="wrap footer-cols">
+    <div>
+      <strong>🐝👻 BuhuBakery</strong>
+      <span>«De Schreck isch nur, wenn's kei meh het.»</span>
+    </div>
+    <div>
+      <strong>Kontakt</strong>
+      <a href="mailto:bestellung@buhubakery.ch">bestellung@buhubakery.ch</a>
+    </div>
+    <div>
+      <strong>Abholig</strong>
+      <span>Dübendorf</span>
+      <span>mindeschtens 2 Täg im Voruus</span>
+    </div>
+    <div>
+      <strong>Impressum</strong>
+      <span>Laura Blessing</span>
+      <span>Dübendorf</span>
+      <a href="mailto:bestellung@buhubakery.ch">bestellung@buhubakery.ch</a>
+    </div>
+  </div>
+  <div class="wrap footer-copy">
+    <span>© 2026 BuhuBakery – mit 🤎 bache z'Dübendorf</span>
   </div>
 </footer>
 
@@ -2070,8 +2245,27 @@ COOKIES.forEach((c) => {
   cookieList.appendChild(li);
 });
 
-document.getElementById("allergy-note").textContent =
-  ALLERGY_GENERAL + " Bi ere schwere Allergie schriib mer bitte churz vorher.";
+const ALLERGY_FULL = ALLERGY_GENERAL + " Bi ere schwere Allergie schriib mer bitte churz vorher.";
+document.getElementById("allergy-note").textContent = ALLERGY_FULL;
+document.getElementById("sortiment-allergy").textContent = ALLERGY_FULL;
+document.getElementById("faq-allergy").textContent =
+  ALLERGY_FULL + " Was e einzelni Sorte zuesätzlich enthaltet, staht bi de Sorte sälber.";
+
+/* Sortiment-Chärtli: gliichi Cookie-Zeichnig wie i de Vitrine, dass es eis Bild git. */
+const sortenGrid = document.getElementById("sorten-grid");
+COOKIES.forEach((c) => {
+  const li = document.createElement("li");
+  li.className = "sorte-card";
+  li.innerHTML =
+    `<svg viewBox="-24 -24 48 48" aria-hidden="true">${cookieSVG(c, 20, false)}</svg>` +
+    `<strong>${c.name}</strong>` +
+    `<span class="desc">${c.note}</span>` +
+    (c.allergens && c.allergens.length ? `<span class="allerg">Enthaltet zuesätzlich: ${c.allergens.join(", ")}</span>` : "") +
+    (c.plainOnly
+      ? `<span class="sorte-tag plain-only">nume als Cookie</span>`
+      : `<span class="sorte-tag">au als Soft Melt 🫠</span>`);
+  sortenGrid.appendChild(li);
+});
 
 const pickupCalendarEl = document.getElementById("pickup-calendar");
 const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
