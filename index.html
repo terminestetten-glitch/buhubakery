@@ -172,6 +172,20 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .buhu-wing.wing-l { transform-origin: 100% 65%; animation-name: buhuFlapL; }
 .buhu-wing.wing-r { transform-origin: 0% 65%; animation-name: buhuFlapR; }
 #buhu-figure.is-flying .buhu-wing { animation-duration: 0.1s; }
+/* Schritt-Uflüchte: s'Element, wo grad dra isch, pulsiert warm uf. */
+.step-glow { animation: stepGlow 1.9s ease-in-out infinite; }
+@keyframes stepGlow {
+  0%, 100% { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)); }
+  50%      { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)) drop-shadow(0 0 10px #F5A11C) drop-shadow(0 0 4px #F5A11C); }
+}
+.panel.step-glow-panel { animation: stepGlowPanel 1.9s ease-in-out infinite; }
+@keyframes stepGlowPanel {
+  0%, 100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 0 2px var(--accent-bright), 0 0 16px rgba(245, 161, 28, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-glow, .panel.step-glow-panel { animation: none; }
+}
 #buhu-sparkles { opacity: 0; transition: opacity 0.3s; }
 #buhu-figure.is-flying #buhu-sparkles { opacity: 0.9; }
 @keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
@@ -1549,6 +1563,47 @@ const HOLIDAYS = [
   { id: "weihnachten",   label: "Weihnachte 🎄" },
 ];
 
+/* --- Automatischi Deko nach Datum ------------------------------------------
+   "auto" isch de Standard: d'Saison und de Feiertag wähled sich sälber nach em
+   Zürcher Datum. Im Admin-Panel cha me das jederziit vo Hand überschriibe. */
+function zurichToday() {
+  // Datum i de Zitzone Europe/Zurich, unabhängig vo de Ziitzone vom Bsuecher
+  const f = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Zurich", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+  const [y, m, d] = f.split("-").map(Number);
+  return { y, m, d, doy: Math.round((Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 1)) / 86400000) };
+}
+/* Oschtersunntig nach em gregorianische Computus (anonymi Gauss-Formle) */
+function easterDate(year) {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  const dd = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - dd - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return { month, day, doy: Math.round((Date.UTC(year, month - 1, day) - Date.UTC(year, 0, 1)) / 86400000) };
+}
+function autoSeason(t = zurichToday()) {
+  if (t.m >= 3 && t.m <= 5) return "fruehling";
+  if (t.m >= 6 && t.m <= 8) return "sommer";
+  if (t.m >= 9 && t.m <= 11) return "herbst";
+  return "winter";
+}
+function autoHoliday(t = zurichToday()) {
+  if (t.m === 12 && t.d >= 1 && t.d <= 26) return "weihnachten";
+  if (t.m === 10 && t.d >= 24) return "halloween";
+  if ((t.m === 7 && t.d >= 25) || (t.m === 8 && t.d <= 3)) return "bundesfeier";
+  const e = easterDate(t.y);            // Ostere: e Wuche vorher bis e Wuche nachher
+  if (Math.abs(t.doy - e.doy) <= 7) return "ostern";
+  return "keine";
+}
+/* Was würklech zeichnet wird: "auto" löst sich uf, alles andere gilt wie gwählt. */
+const effectiveSeason = (v) => (v === "auto" || v === null ? autoSeason() : v);
+const effectiveHoliday = (v) => (v === "auto" || v === null ? autoHoliday() : v);
+
 /* --- Zustand --------------------------------------------------------------- */
 const state = {
   size: null,        // aktuelli Box
@@ -1595,7 +1650,14 @@ const packagingChoice = () => PACKAGING.find((p) => p.id === state.packaging) ||
 const packagingPrice = (p) => (p || packagingChoice()).surcharge(orderCookieCount());
 const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols;
 const chf = (n) => CONFIG.currency + " " + n.toFixed(2);
-const boxTitle = (size, qty) => size === "SONDER" ? `Sonderbstellig (${qty} Cookies)` : `Box ${size} (${SIZES[size].capacity} Cookies)`;
+/* Bezeichnig i de Zämefassig und i de Bstell-Mail. Ab 4 Cookies gits e Tüte,
+   drunter chömed d'Cookies eifach einzeln iipackt – drum kei Behälter-Wort. */
+const boxTitle = (size, qty) => {
+  if (size === "SONDER") return `Sonderbstellig (${qty} Cookies)`;
+  const cap = SIZES[size].capacity;
+  if (cap < PACKAGING_MIN_COOKIES) return `${size} (${cap} Cookie${cap > 1 ? "s" : ""})`;
+  return `Tüte ${size} (${cap} Cookies)`;
+};
 function boxContentLines(items) {
   const out = [];
   COOKIES.forEach((c) => VARIANTS.forEach((v) => {
@@ -1718,9 +1780,31 @@ function cookieSVG(c, r, melt) {
 
 /* --- Saison- & Feiertags-Deko ----------------------------------------------- */
 /* Freie Zone für Streu-Deko: obere Himmel-Strecke rechts vom Wimpel-Banner */
-const SKY_SPOTS = [[630, 22], [700, 60], [770, 16], [960, 32], [1030, 65], [1100, 20], [1160, 55], [660, 78], [940, 80], [1170, 90], [720, 95], [1050, 95]];
+const SKY_SPOTS = [[630, 16], [690, 44], [745, 20], [755, 92], [825, 18], [925, 34], [950, 88], [1010, 20], [1075, 44], [1140, 16], [1165, 90], [600, 44]];
 /* Fenster-Sockel für Deko am Bogefänschter */
-const WINDOW_SILLS = [{ x: 740, apex: 815 }, { x: 920, apex: 995 }];
+const WINDOW_SILLS = [{ x: 790, apex: 865 }, { x: 970, apex: 1045 }];
+/* Geometrie vo de Bogefänschter, dass d'Schnee-Chappe em Boge folgt statt eifach
+   e Ellipse z'sii. Werte gliich wie im SVG: M x0 140 Q apex 62 x1 140 */
+const WINDOW_ARCHES = [
+  { x0: 790, x1: 940, apex: 865, yBase: 140, ctrlY: 62 },
+  { x0: 970, x1: 1120, apex: 1045, yBase: 140, ctrlY: 62 },
+];
+/* y uf de Bogekurve für e bestimmti x-Position */
+function archY(w, x) {
+  const t = (x - w.x0) / (w.x1 - w.x0), u = 1 - t;
+  return u * u * w.yBase + 2 * u * t * w.ctrlY + t * t * w.yBase;
+}
+/* Schnee-Chappe wo em Boge folgt, mit Zapfe wo a de Kurve abehanged */
+function archSnowSVG(w, thick = 26) {
+  const cap = `<path d="M${w.x0 - 6} ${w.yBase + 4} Q${w.apex} ${w.ctrlY - thick} ${w.x1 + 6} ${w.yBase + 4}` +
+    ` L${w.x1} ${w.yBase} Q${w.apex} ${w.ctrlY + 8} ${w.x0} ${w.yBase} Z"` +
+    ` fill="#FBF3E4" stroke="#DCE6E0" stroke-width="1"/>`;
+  const drips = [0.16, 0.34, 0.5, 0.66, 0.84].map((f, i) => {
+    const x = w.x0 + f * (w.x1 - w.x0), y = archY(w, x) + 4, len = 11 + (i % 2) * 9;
+    return `<path d="M${x - 4} ${y} L${x} ${y + len} L${x + 4} ${y} Z" fill="#EAF2EF" stroke="#DCE6E0" stroke-width="0.6"/>`;
+  }).join("");
+  return cap + drips;
+}
 
 /* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
 const GRL = { x0: 40, y0: 24, xc: 300, yc: 64, x1: 560, y1: 24, N: 10 };
@@ -1835,9 +1919,9 @@ function seasonDecorSVG(season) {
       return `<g transform="translate(${x} ${y}) rotate(${(i * 47) % 60})">${flowerIcon(s, ["#F9C7D9", "#FBF3E4", "#F5A11C"][i % 3])}</g>`;
     }).join("");
     // Blueme-Chischtli uf de Fänschter-Simse (obe im Fänschter, nöd vor de Box)
-    const WINDOWS = [{ x0: 745, x1: 885 }, { x0: 925, x1: 1065 }];
+    const WINDOWS = [{ x0: 790, x1: 940 }, { x0: 970, x1: 1120 }];
     const boxes = WINDOWS.map(({ x0, x1 }) => {
-      const cx = (x0 + x1) / 2, bw = 108, sill = 300;
+      const cx = (x0 + x1) / 2, bw = 108, sill = 254;
       const flowers = [0, 1, 2, 3].map((i) => {
         const fx = cx - 36 + i * 24, col = ["#F9C7D9", "#F5A11C", "#FBF3E4"][i % 3];
         return `<path d="M${fx} ${sill} L${fx} ${sill - 16}" stroke="#6B8F7B" stroke-width="2"/>` +
@@ -1883,14 +1967,8 @@ function seasonDecorSVG(season) {
     const flakes = SKY_SPOTS.map(([x, y], i) =>
       `<g transform="translate(${x} ${y})" opacity="0.95">${snowflakeIcon(6 + (i % 3) * 1.8)}</g>`).join("");
     // Schnee-Chappe obe uf de Fänschter + Isszapfe unter em Boge (obe, nöd vor de Box)
-    const windowSnow = WINDOW_SILLS.map(({ apex }) =>
-      `<ellipse cx="${apex}" cy="114" rx="62" ry="15" fill="#FBF3E4" stroke="#DCE6E0" stroke-width="1" opacity="0.95"/>` +
-      [0, 1, 2, 3, 4].map((i) => {
-        const ix = apex - 40 + i * 20, len = 12 + (i % 2) * 8;
-        return `<path d="M${ix} 126 L${ix - 4} ${126 + len} L${ix} ${126 + len + 5} L${ix + 4} ${126 + len} Z" fill="#EAF2EF" stroke="#DCE6E0" stroke-width="0.6"/>`;
-      }).join("")
-    ).join("");
-    const shelfSnow = `<path d="M572 188 Q640 178 708 188 L708 196 Q640 188 572 196 Z" fill="#FBF3E4" opacity="0.95"/>`;
+    const windowSnow = WINDOW_ARCHES.map((w) => archSnowSVG(w)).join("");
+    const shelfSnow = `<path d="M590 100 Q655 88 720 100 L720 109 Q655 97 590 109 Z" fill="#FBF3E4" opacity="0.95"/>`;
     return flakes + windowSnow + shelfSnow;
   }
   return "";
@@ -1901,7 +1979,7 @@ function holidayDecorSVG(holiday) {
     const eggsInBasket = [[-14, -24, "#F5A11C"], [0, -28, "#F9C7D9"], [14, -24, "#8FBF9F"], [-4, -22, "#FBF3E4"]]
       .map(([x, y, c]) => `<ellipse cx="${x}" cy="${y}" rx="8" ry="10.5" fill="${c}" stroke="#2E2015" stroke-width="1.3"/>` +
         `<path d="M${x - 6} ${y - 1} q6 -4 12 0" stroke="#2E2015" stroke-width="0.9" fill="none" opacity="0.5"/>`).join("");
-    const basket = `<g transform="translate(1150 548)">` +
+    const basket = `<g transform="translate(1148 606)">` +
       `<path d="M-30 -14 L30 -14 L24 18 L-24 18 Z" fill="#B5772E" stroke="#2E2015" stroke-width="1.6"/>` +
       `<path d="M-28 -6 L28 -6 M-26 2 L26 2 M-25 10 L25 10 M-15 -14 L-13 18 M0 -14 L0 18 M15 -14 L13 18" stroke="#8A4F1D" stroke-width="1" opacity="0.5" fill="none"/>` +
       eggsInBasket +
@@ -1909,7 +1987,7 @@ function holidayDecorSVG(holiday) {
       `<path d="M-24 -16 Q0 -56 24 -16" stroke="#8A5A2B" stroke-width="5" fill="none"/>` +
       `<path d="M-24 -16 Q0 -56 24 -16" stroke="#2E2015" stroke-width="1" fill="none" opacity="0.35"/></g>`;
     // Ganze Hase, sitzt uf em linke Höckerli
-    const bunny = `<g transform="translate(736 500)">` +
+    const bunny = `<g transform="translate(730 446)">` +
       `<ellipse cx="-11" cy="-2" rx="8" ry="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2"/>` +
       `<ellipse cx="11" cy="-2" rx="8" ry="4.5" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.2"/>` +
       `<ellipse cx="0" cy="-22" rx="16" ry="20" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.5"/>` +
@@ -1935,18 +2013,19 @@ function holidayDecorSVG(holiday) {
       `<rect x="${-s * 0.13}" y="${-s * 0.9}" width="${s * 0.26}" height="9" fill="#5C7F6B"/>` +
       `<path d="M${-s * 0.42} ${-s * 0.18} L${-s * 0.12} ${s * 0.08} L${-s * 0.42} ${s * 0.32} Z M${s * 0.42} ${-s * 0.18} L${s * 0.12} ${s * 0.08} L${s * 0.42} ${s * 0.32} Z M${-s * 0.34} ${s * 0.48} L${-s * 0.14} ${s * 0.44} L${-s * 0.06} ${s * 0.62} L${s * 0.06} ${s * 0.44} L${s * 0.16} ${s * 0.62} L${s * 0.34} ${s * 0.5} L${s * 0.18} ${s * 0.72} L${-s * 0.18} ${s * 0.72} Z" fill="#2E2015"/></g>`;
     // Grossi Chürbis uf em Bode rächts (ersetzt d'Pflanze)
-    const floorPumpkins = pumpkin(1140, 538, 30) + pumpkin(1180, 548, 20, "#D9741F") + pumpkin(1112, 552, 16, "#E8641C");
+    const floorPumpkins = pumpkin(1140, 606, 30) + pumpkin(1184, 620, 20, "#D9741F") + pumpkin(1104, 622, 16, "#E8641C");
     // Chli Chürbis uf de Kasse
-    const deskPumpkins = pumpkin(432, 300, 18) + pumpkin(466, 306, 12, "#D9741F");
-    const web = `<g transform="translate(748 128)" stroke="#EFE6D2" stroke-width="1" fill="none" opacity="0.85">` +
+    // Uf de Bode vor de Theke – uf de Ablagi wär si d'Sprächblase vom Buhu verdeckt
+    const deskPumpkins = pumpkin(120, 612, 20) + pumpkin(162, 624, 13, "#D9741F");
+    const web = `<g transform="translate(742 118)" stroke="#EFE6D2" stroke-width="1" fill="none" opacity="0.85">` +
       `<path d="M0 0 L40 0 M0 0 L28 28 M0 0 L0 40 M0 0 L-28 28"/>` +
       `<path d="M9 3 Q20 9 36 6 M6 9 Q14 21 24 32 M3 9 Q9 20 6 36"/></g>`;
     // Hängendi Spinne obe rächts (dört wo früener d'Herzli gsi sind)
-    const spider = `<g transform="translate(1088 0)"><line x1="0" y1="0" x2="0" y2="86" stroke="#5A4832" stroke-width="1"/>` +
+    const spider = `<g transform="translate(1158 0)"><line x1="0" y1="0" x2="0" y2="86" stroke="#5A4832" stroke-width="1"/>` +
       `<g transform="translate(0 98)"><path d="M-8 -3 q-11 -4 -15 5 M-8 2 q-12 1 -15 10 M8 -3 q11 -4 15 5 M8 2 q12 1 15 10" stroke="#2E2015" stroke-width="1.6" fill="none"/>` +
       `<ellipse rx="9" ry="11" fill="#2E2015"/><circle cy="-10" r="5.5" fill="#2E2015"/>` +
       `<circle cx="-2" cy="-11" r="1.5" fill="#F5A11C"/><circle cx="2" cy="-11" r="1.5" fill="#F5A11C"/></g></g>`;
-    const ghost = `<g transform="translate(1000 96)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
+    const ghost = `<g transform="translate(955 150)"><path d="M0 -20 C13 -20 15 -8 15 4 L15 20 L10 15 L5 21 L0 15 L-5 21 L-10 15 L-15 20 L-15 4 C-15 -8 -13 -20 0 -20 Z" fill="#FBF3E4" stroke="#2E2015" stroke-width="1.4" opacity="0.95"/>` +
       `<circle cx="-5" cy="-3" r="2" fill="#2E2015"/><circle cx="5" cy="-3" r="2" fill="#2E2015"/><ellipse cx="0" cy="4" rx="2.4" ry="3" fill="#2E2015"/></g>`;
     return floorPumpkins + deskPumpkins + web + spider + ghost;
   }
@@ -1959,16 +2038,17 @@ function holidayDecorSVG(holiday) {
         `<rect x="${x + fw * 0.42}" y="${y + fh * 0.16}" width="${fw * 0.16}" height="${fh * 0.68}" fill="#FBF3E4"/>` +
         `<path d="M${x + 4} ${y + 6} q${fw * 0.2} ${fh * 0.14} ${fw * 0.42} 0" stroke="#fff" stroke-width="2" fill="none" opacity="0.18"/></g>`;
     };
-    return flagInWindow(815, 268) + flagInWindow(995, 268);
+    return flagInWindow(865, 196) + flagInWindow(1045, 196);
   }
   if (holiday === "weihnachten") {
     // Lichterkette a de Theke
     const bulbColors = ["#F5A11C", "#B0524A", "#6B8F7B", "#FBF3E4"];
     let lights = "";
-    for (let x = 60; x <= 540; x += 22) {
-      const dip = Math.sin((x / 480) * Math.PI) * 7;
-      lights += `<line x1="${x}" y1="308" x2="${x}" y2="${312 + dip - 3}" stroke="#4A6B58" stroke-width="1.4"/>` +
-        `<circle cx="${x}" cy="${312 + dip}" r="4.5" fill="${bulbColors[Math.floor(x / 22) % 4]}" stroke="#2E2015" stroke-width="0.7"/>`;
+    // A de Vorderchante vo de Ablagi (y=269) – uf de Theke wär s'Cookie-Schild verdeckt
+    for (let x = 66; x <= 566; x += 22) {
+      const dip = Math.sin(((x - 66) / 500) * Math.PI) * 8;
+      lights += `<line x1="${x}" y1="270" x2="${x}" y2="${275 + dip - 3}" stroke="#4A6B58" stroke-width="1.4"/>` +
+        `<circle cx="${x}" cy="${275 + dip}" r="4.5" fill="${bulbColors[Math.floor(x / 22) % 4]}" stroke="#2E2015" stroke-width="0.7"/>`;
     }
     // Grosse Tannebaum rächts, bis am Bode (ersetzt Pflanze + Herzli)
     const tier = (yb, hw, yt, i) =>
@@ -1980,19 +2060,19 @@ function holidayDecorSVG(holiday) {
       .map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="5" fill="${c}" stroke="#2E2015" stroke-width="0.8"/>` +
         `<circle cx="${x - 1.5}" cy="${y - 1.5}" r="1.6" fill="#fff" opacity="0.7"/>`).join("");
     const star = `<path d="M0 -270 l6.5 11 l12.5 2 l-9 9 l2 12.5 l-12 -6 l-12 6 l2 -12.5 l-9 -9 l12.5 -2 Z" fill="#FBC94C" stroke="#C77E10" stroke-width="1.4"/>`;
-    const tree = `<g transform="translate(1132 560)">` +
+    const tree = `<g transform="translate(1134 646) scale(0.9)">` +
       `<rect x="-14" y="-18" width="28" height="22" rx="2" fill="#6B573D" stroke="#2E2015" stroke-width="1.6"/>` +
       `<ellipse cx="0" cy="4" rx="34" ry="7" fill="#FBF3E4" opacity="0.7"/>` +
       tier(-16, 66, -80) + tier(-70, 54, -140) + tier(-124, 42, -196) + tier(-176, 30, -250) +
       baubles + star + `</g>`;
-    const snowCap = `<path d="M40 190 Q640 168 1200 190 L1200 198 Q640 178 40 198 Z" fill="#FBF3E4" opacity="0.5"/>`;
+    const snowCap = WINDOW_ARCHES.map((w) => archSnowSVG(w, 22)).join("");
     return lights + snowCap + tree;
   }
   return "";
 }
 function renderThemeDecor() {
-  const season = localStorage.getItem("buhu_season") || "";
-  const holiday = localStorage.getItem("buhu_holiday") || "keine";
+  const season = effectiveSeason(localStorage.getItem("buhu_season") ?? "auto");
+  const holiday = effectiveHoliday(localStorage.getItem("buhu_holiday") ?? "auto");
   document.getElementById("g-garland").innerHTML = garlandSVG(season, holiday);
   document.getElementById("g-season-decor").innerHTML = seasonDecorSVG(season);
   document.getElementById("g-holiday-decor").innerHTML = holidayDecorSVG(holiday);
@@ -2774,6 +2854,31 @@ function updateBuhu(ready) {
   else if (isCoffeeDay() && totalCoffees() === 0 && coffeeChoice !== "no") step = "coffee";
   else step = "pack";
   setBuhu(step, ready);
+  setStepGlow(step);
+}
+
+/* Lat s'Element uflüchte, wo bim aktuelle Schritt dra isch. Es isch immer nur
+   eis am Lüchte – susch weiss me nüm, wo me häre luege söll. */
+function setStepGlow(step) {
+  const target =
+    step === "greet" || (step === "select" && !state.size) ? "#g-shelf" :
+    step === "select" ? "#g-vitrine" :
+    step === "coffee" ? "#g-menu-board" :
+    step === "cup" ? "#g-coffee-machine" :
+    step === "pack" ? "#scene-box" : null;
+  document.querySelectorAll(".step-glow").forEach((el) => el.classList.remove("step-glow"));
+  const el = target && document.querySelector(target);
+  if (el && !el.classList.contains("hidden")) el.classList.add("step-glow");
+
+  // S'zueghörige Panel unte lüchtet mit, dass au dört klar isch wo's wiitergaht
+  const panel =
+    step === "greet" || (step === "select" && !state.size) ? "size-panel" :
+    step === "select" ? "cookies-panel" :
+    step === "coffee" || step === "cup" ? "coffee-panel" :
+    step === "pack" ? "pickup-panel" : null;
+  document.querySelectorAll(".step-glow-panel").forEach((el) => el.classList.remove("step-glow-panel"));
+  const p = panel && document.getElementById(panel);
+  if (p) p.classList.add("step-glow-panel");
 }
 
 /* --- Admin-Panel Logik ---------------------------------------------------- */
@@ -2903,14 +3008,17 @@ const adminPanel = {
   },
 
   renderSeasonChips() {
-    const current = localStorage.getItem("buhu_season") || "";
-    this.seasonChipsDiv.innerHTML = SEASONS.map((s) =>
-      `<button type="button" class="mood-chip" data-season="${s.id}" aria-pressed="${current === s.id}">${s.label}</button>`
+    const current = localStorage.getItem("buhu_season") ?? "auto";
+    const auto = autoSeason();
+    const chips = [{ id: "auto", label: "Automatisch 🗓️" }, ...SEASONS];
+    this.seasonChipsDiv.innerHTML = chips.map((s) =>
+      `<button type="button" class="mood-chip" data-season="${s.id}" aria-pressed="${current === s.id}">${s.label}` +
+      (s.id === "auto" ? ` <small style="opacity:0.7">(${(SEASONS.find((x) => x.id === auto) || {}).label || ""})</small>` : "") +
+      `</button>`
     ).join("");
     this.seasonChipsDiv.querySelectorAll("[data-season]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const now = localStorage.getItem("buhu_season") || "";
-        localStorage.setItem("buhu_season", now === btn.dataset.season ? "" : btn.dataset.season);
+        localStorage.setItem("buhu_season", btn.dataset.season);
         saveRemoteState();
         this.renderSeasonChips();
         renderThemeDecor();
@@ -2919,9 +3027,13 @@ const adminPanel = {
   },
 
   renderHolidayChips() {
-    const current = localStorage.getItem("buhu_holiday") || "keine";
-    this.holidayChipsDiv.innerHTML = HOLIDAYS.map((h) =>
-      `<button type="button" class="mood-chip" data-holiday="${h.id}" aria-pressed="${current === h.id}">${h.label}</button>`
+    const current = localStorage.getItem("buhu_holiday") ?? "auto";
+    const auto = autoHoliday();
+    const chips = [{ id: "auto", label: "Automatisch 🗓️" }, ...HOLIDAYS];
+    this.holidayChipsDiv.innerHTML = chips.map((h) =>
+      `<button type="button" class="mood-chip" data-holiday="${h.id}" aria-pressed="${current === h.id}">${h.label}` +
+      (h.id === "auto" ? ` <small style="opacity:0.7">(${(HOLIDAYS.find((x) => x.id === auto) || {}).label || ""})</small>` : "") +
+      `</button>`
     ).join("");
     this.holidayChipsDiv.querySelectorAll("[data-holiday]").forEach((btn) => {
       btn.addEventListener("click", () => {
