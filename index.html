@@ -938,7 +938,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <!-- Deko: Girlande (JS füllt sie – wechselt mit em Feiertag) + Pflanze -->
           <g>
             <g id="g-garland"></g>
-            <g id="g-garland2"></g>
             <g id="deco-plant">
               <!-- Bambus im dunkle Keramiktopf – schlicht und uufrächt statt buschig -->
               <ellipse cx="1148" cy="648" rx="40" ry="9" fill="#2E2015" opacity="0.2"/>
@@ -1290,6 +1289,9 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             <rect x="975" y="79" width="140" height="182" fill="none" stroke="#7C6242" stroke-width="2.5"/>
             <rect x="958" y="266" width="174" height="11" rx="3" fill="#7C6242" stroke="#2E2015" stroke-width="2"/>
           </g>
+          <!-- Zwöiti Girlande: hanget VOR de Fänschter, drum erscht da zeichnet -->
+          <g id="g-garland2"></g>
+
 
           <!-- Tisch & Höckerli: 3D mit schräger Tischplatte, Bodeschatte und runde Sitzflächene -->
           <!-- Teppich under de Sitzegge: gitt em Bode Wärmi und zeigt d'Fluchtrichtig -->
@@ -1305,11 +1307,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <g id="g-tatami-corner" opacity="0.68">
             <ellipse cx="1084" cy="392" rx="112" ry="10" fill="#2E2015" opacity="0.16"/>
             <!-- Plattform -->
-            <path d="M1016 320 L1158 328 L1184 372 L968 362 Z" fill="#BE9E70" stroke="#2E2015" stroke-width="1.8"/>
+            <path d="M1002 322 L1160 322 L1188 376 L974 376 Z" fill="#BE9E70" stroke="#2E2015" stroke-width="1.8"/>
             <g stroke="#9E7F55" stroke-width="1.4" opacity="0.8">
-              <path d="M1052 322 L1028 366M1088 324 L1082 369M1124 326 L1136 371"/>
+              <path d="M1042 322 L1026 376M1082 322 L1082 376M1122 322 L1140 376"/>
             </g>
-            <path d="M968 362 L1184 372 L1186 382 L966 372 Z" fill="#8A6D46" stroke="#2E2015" stroke-width="1.6"/>
+            <path d="M974 376 L1188 376 L1191 386 L971 386 Z" fill="#8A6D46" stroke="#2E2015" stroke-width="1.6"/>
             <!-- Zabuton-Chüssi -->
             <g stroke="#2E2015" stroke-width="1.5">
               <g><ellipse cx="1028" cy="348" rx="23" ry="9" fill="#8A5A55"/><ellipse cx="1028" cy="344" rx="23" ry="9" fill="#A06B65"/>
@@ -1320,8 +1322,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
                  <path d="M1064 360 q20 -5 40 0" fill="none" stroke="#E0BE83" stroke-width="1.4"/></g>
             </g>
             <!-- Flache Tisch i de Mitti -->
-            <path d="M1050 318 L1130 322 L1140 338 L1042 334 Z" fill="#A9895D" stroke="#2E2015" stroke-width="1.7"/>
-            <path d="M1050 318 L1130 322" stroke="#D8BD8F" stroke-width="1.5" opacity="0.7"/>
+            <path d="M1046 322 L1128 322 L1138 338 L1038 338 Z" fill="#A9895D" stroke="#2E2015" stroke-width="1.7"/>
+            <path d="M1046 322 L1128 322" stroke="#D8BD8F" stroke-width="1.5" opacity="0.7"/>
             <rect x="1044" y="338" width="7" height="16" fill="#6B573D"/>
             <rect x="1124" y="338" width="7" height="16" fill="#6B573D"/>
             <!-- es Tässli und es Chännli druf -->
@@ -1338,43 +1340,34 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
           <g id="g-table" filter="url(#soft-shadow)">
             <!-- Bodeschatte -->
             <ellipse cx="890" cy="516" rx="146" ry="12" fill="#2E2015" opacity="0.2"/>
-            <ellipse cx="730" cy="522" rx="31" ry="8" fill="#2E2015" opacity="0.18"/>
-            <ellipse cx="1050" cy="522" rx="31" ry="8" fill="#2E2015" opacity="0.18"/>
+            <ellipse cx="730" cy="516" rx="31" ry="8" fill="#2E2015" opacity="0.18"/>
+            <ellipse cx="1054" cy="532" rx="31" ry="8" fill="#2E2015" opacity="0.18"/>
             <!-- Tischplatte: uf de gliiche Höchi wie de Gang zwüsche Theke und Ablagi -->
-            <path d="M782 400 L1000 400 L1020 424 L762 424 Z" fill="url(#counter-top-grad)" stroke="#2E2015" stroke-width="2"/>
-            <path d="M782 400 L1000 400" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
-            <rect x="762" y="424" width="258" height="11" rx="3" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>
-            <!-- Tischbei -->
-            <rect x="784" y="435" width="13" height="83" fill="url(#wood-grad)"/>
-            <rect x="985" y="435" width="13" height="83" fill="url(#wood-grad)"/>
-            <rect x="994" y="435" width="4" height="83" fill="url(#side-shade)" opacity="0.6"/>
+            <path d="M788 396 L1004 404 L1026 434 L766 422 Z" fill="url(#counter-top-grad)" stroke="#2E2015" stroke-width="2"/>
+            <path d="M788 396 L1004 404" fill="none" stroke="#D8BD8F" stroke-width="2" opacity="0.7"/>
+            <path d="M766 422 L1026 434 L1026 445 L766 433 Z" fill="#6B573D" stroke="#2E2015" stroke-width="1.5"/>
+            <!-- Tischbei: s'rächte isch länger, wil de Tisch schräg im Ruum staht -->
+            <rect x="786" y="432" width="13" height="80" fill="url(#wood-grad)"/>
+            <rect x="990" y="442" width="13" height="86" fill="url(#wood-grad)"/>
+            <rect x="999" y="442" width="4" height="86" fill="url(#side-shade)" opacity="0.6"/>
             <!-- Höckerli links -->
             <g>
-              <ellipse cx="730" cy="452" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="730" cy="446" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
               <!-- Zabuton: weichs Sitzchüssi druf -->
-              <ellipse cx="730" cy="443" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
-              <ellipse cx="730" cy="440" rx="28" ry="11" fill="#A06B65"/>
-              <path d="M706 440 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
-              <circle cx="730" cy="440" r="2.2" fill="#6E4744"/>
-              <rect x="709" y="454" width="8" height="66" fill="#5A4832"/><rect x="743" y="454" width="8" height="66" fill="#5A4832"/><rect x="726" y="456" width="8" height="64" fill="#6B573D"/>
-            </g>
-            <!-- Chlises Windliecht mit Cherzli uf em Tisch -->
-            <g transform="translate(798 424)">
-              <ellipse cy="0" rx="14" ry="4" fill="#2E2015" opacity="0.22"/>
-              <ellipse cy="-8" rx="34" ry="24" fill="url(#lantern-halo)"/>
-              <path d="M-11 0 q11 -2.5 22 0 l-1.5 -26 q-9.5 -2 -19 0 z" fill="#F6D9A0" opacity="0.7" stroke="#A8763E" stroke-width="1.6"/>
-              <ellipse cy="-27" rx="10.5" ry="3" fill="#E8C98F" stroke="#A8763E" stroke-width="1.4"/>
-              <path d="M0 -14 q4 -4 0 -8 q-4 4 0 8 z" fill="#F5A11C"/>
-              <ellipse cy="-11" rx="3.4" ry="4.4" fill="#FFF0C4" opacity="0.85"/>
+              <ellipse cx="730" cy="437" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="730" cy="434" rx="28" ry="11" fill="#A06B65"/>
+              <path d="M706 434 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
+              <circle cx="730" cy="434" r="2.2" fill="#6E4744"/>
+              <rect x="709" y="448" width="8" height="66" fill="#5A4832"/><rect x="743" y="448" width="8" height="66" fill="#5A4832"/><rect x="726" y="450" width="8" height="64" fill="#6B573D"/>
             </g>
             <!-- Höckerli rächts -->
             <g>
-              <ellipse cx="1050" cy="452" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
-              <ellipse cx="1050" cy="443" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
-              <ellipse cx="1050" cy="440" rx="28" ry="11" fill="#A06B65"/>
-              <path d="M1026 440 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
-              <circle cx="1050" cy="440" r="2.2" fill="#6E4744"/>
-              <rect x="1029" y="454" width="8" height="66" fill="#5A4832"/><rect x="1063" y="454" width="8" height="66" fill="#5A4832"/><rect x="1046" y="456" width="8" height="64" fill="#6B573D"/>
+              <ellipse cx="1054" cy="462" rx="29" ry="10.5" fill="url(#stool-grad)" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="1054" cy="453" rx="28" ry="11" fill="#8A5A55" stroke="#2E2015" stroke-width="1.8"/>
+              <ellipse cx="1054" cy="450" rx="28" ry="11" fill="#A06B65"/>
+              <path d="M1030 450 q24 -7 48 0" fill="none" stroke="#C48D86" stroke-width="1.6" opacity="0.8"/>
+              <circle cx="1054" cy="450" r="2.2" fill="#6E4744"/>
+              <rect x="1033" y="464" width="8" height="66" fill="#5A4832"/><rect x="1067" y="464" width="8" height="66" fill="#5A4832"/><rect x="1050" y="466" width="8" height="64" fill="#6B573D"/>
             </g>
             <g id="scene-box"></g>
           </g>
@@ -2039,7 +2032,7 @@ function windowSnowSVG(w, thick = 16) {
 /* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
 const GRL = { x0: 40, y0: 24, xc: 300, yc: 64, x1: 560, y1: 24, N: 10 };
 /* Zwöiti Schnuer: vom Kafi-Menü bis i d'rächt Egge, dass es obe nöd läär wirkt */
-const GRL2 = { x0: 500, y0: 34, xc: 850, yc: 76, x1: 1190, y1: 30, N: 10 };
+const GRL2 = { x0: 596, y0: 12, xc: 900, yc: 40, x1: 1196, y1: 8, N: 9 };
 let GRL_CUR = GRL;
 function grlPt(t) {
   const G = GRL_CUR, u = 1 - t;
