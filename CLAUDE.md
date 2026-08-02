@@ -54,12 +54,28 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 
 ## Sortiment & Preise
 - **Echte Sorten (vom User)**: Oreo, Lotus (Biscoff), Ovomaltine Classic, Ovomaltine Noir – je "eifach so" oder "Soft Melt Chärn". Cinnamon Dream (Zimt-Cookie mit Pekannuss) isch **nume als "eifach so"** verfügbar, kei Soft-Melt-Variante (`plainOnly: true` in `COOKIES`). Mood-Zuordnung in `COOKIES` in index.html ist von Claude geraten → bei Gelegenheit bestätigen lassen.
-- **Preise noch Platzhalter**: XXS 4 / XS 7.50 / S 14 / M 20 / L 28 / XL 36 CHF; Sonderbstellig 3 CHF/Cookie; Kaffee 3.50–4.80 CHF. Soft Melt kostet aktuell gleich viel wie normal → fragen, ob Aufpreis.
+- **Preise sind ECHT (vom User bestätigt, 02.08.2026)** – nicht mehr als Platzhalter behandeln:
+  XXS 4.00 / XS 7.50 / S 15.50 / M 23.00 / L 35.50 / XL 44.00 CHF; Sonderbstellig 4.00 CHF/Cookie **minus 0.50 pauschal**
+  (`boxPrice()` in index.html); Soft Melt **+0.50 CHF pro Cookie** (gilt für alle Boxgrössen);
+  Kaffee: Espresso 3.50 / Kaffee Crème 4.00 / Americano 4.20 / Schale 4.50 / Cappuccino 4.80.
+  Hinweis: `SONDER.meltSurcharge` ist definiert, wird aber nicht benutzt – `boxPrice()` hat 0.50 zweimal hardcodiert.
+- **Pro Cookie (vom User, 02.08.2026)**: 4.00 CHF ohne Soft Melt, 4.50 CHF mit. Deckt sich mit dem +0.50-Aufpreis.
+  Die Fixgrössen liegen leicht darunter (z.B. S = 4 Cookies für 15.50 statt 16.00) → enthält einen kleinen Mengenrabatt.
+- **NOCH NICHT GEBAUT – Verpackungswahl**: User will zwei Verpackungen anbieten – einfache **weisse Papiertüte**
+  (günstiger) vs. **fancy Verpackung** (die aktuellen Boxen). Offen: gilt die Tüte als Ersatz für die Box oder als
+  Option zu jeder Grösse, und wie gross ist der Preisunterschied? → beim User nachfragen, bevor gebaut wird.
+
+## Abholung (vom User, 02.08.2026)
+- **Ort**: Dübendorf. Genaue Adresse gibt's erst nach der Bestellung (bewusst so).
+- **Vorlaufzeit**: mindestens 2 Tage.
+- **Kaffee-Tage**: Sonntag ist fix (`CONFIG.coffeeDays: [0]`). Weitere Tage hängen vom Job des Users ab
+  und werden bei Bedarf pro Datum im Admin-Panel gesetzt.
+- **Offen**: an welchen Tagen kann man *ohne* Kaffee abholen?
 
 ## Offene Punkte (beim User nachfragen, wenn passend)
-1. Echte Preise (Boxen, Sonderbstellig, Kaffee, evtl. Soft-Melt-Aufpreis); Mood-Zuordnung der Sorten bestätigen.
-2. Echte Abhol-Tage/-Ort + Kaffeetage konfigurieren.
-3. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!) – zusätzlich WhatsApp/Instagram gewünscht?
+1. Mood-Zuordnung der Sorten bestätigen (in `COOKIES` von Claude geraten).
+2. Kontakt: Bestell-Mail ist bestellung@buhubakery.ch (prüfen, ob Postfach existiert!).
+   **Kein Instagram** (User hat keins, Stand 02.08.2026) → im Footer/Design nicht anbieten. WhatsApp noch offen.
    **Domain**: User hat eine Domain bei **GoDaddy** gekauft (vermutlich buhubakery.ch). Plan: GitHub Pages + Custom Domain.
    Nötige Schritte: (a) Branch nach main mergen → Workflow deployt; (b) Repo-Settings → Pages → Custom Domain eintragen + "Enforce HTTPS";
    (c) Bei GoDaddy DNS: A-Records für @ auf 185.199.108.153 / 185.199.109.153 / 185.199.110.153 / 185.199.111.153, CNAME für www auf terminestetten-glitch.github.io.
