@@ -61,13 +61,18 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
   Hinweis: `SONDER.meltSurcharge` ist definiert, wird aber nicht benutzt – `boxPrice()` hat 0.50 zweimal hardcodiert.
 - **Pro Cookie (vom User, 02.08.2026)**: 4.00 CHF ohne Soft Melt, 4.50 CHF mit. Deckt sich mit dem +0.50-Aufpreis.
   Die Fixgrössen liegen leicht darunter (z.B. S = 4 Cookies für 15.50 statt 16.00) → enthält einen kleinen Mengenrabatt.
-- **NOCH NICHT GEBAUT – Verpackungswahl** (User, 02.08.2026): So läuft's real ab:
-  - **Jeder Cookie einzeln verpackt** (kleines Tütchen) – das ist immer so, keine Wahl.
-  - **Die ganze Bestellung** kommt dann in **eine** Aussenverpackung: entweder eine **grosse Box** (fancy, teurer)
-    oder eine **weisse Papiertüte** (einfacher, günstiger).
-  - Die Wahl gilt also **pro Bestellung**, nicht pro Cookie und nicht pro Grösse – die Boxgrösse bestimmt weiterhin
-    nur, wie viele Cookies reinpassen.
-  - **Offen**: wie gross der Preisunterschied zwischen Tüte und Box ist. Ohne diese Zahl nicht bauen.
+- **Verpackung (gebaut, Preise vom User bestätigt 02.08.2026)** – `PACKAGING` in index.html:
+  - **Jeder Cookie einzeln verpackt** – immer, keine Wahl. In der Szene als durchsichtiges Säckli um jeden Cookie.
+  - **Die ganze Bestellung** kommt in **eine** Aussenverpackung, Wahl gilt **pro Bestellung** (nicht pro Box):
+    | Papiertüte | +0.00 | braunes Kraftpapier, schlicht |
+    | Schöni Verpackig | +0.50 | gleiche Tüte, mit Bändeli & Bienen-Sticker |
+    | Gschänk-Box 🎁 | +2.50 | Box mit Deckel und Schleife |
+  - Die Boxgrösse bestimmt weiterhin nur, wie viele Cookies reinpassen.
+  - Achtung: die Tüten sind **braun** (Kraftpapier), nicht weiss – vom User korrigiert.
+
+## Zahlung (vom User, 02.08.2026)
+- **TWINT, vor der Abholung**. Die Handynummer für TWINT kommt in der Bestätigungsmail (nicht öffentlich auf der Site).
+- Kein Bargeld erwähnt → nur TWINT anbieten.
 
 ## Abholung (vom User, 02.08.2026)
 - **Ort**: Dübendorf. Genaue Adresse gibt's erst nach der Bestellung (bewusst so).
