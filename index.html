@@ -173,12 +173,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .buhu-wing.wing-r { transform-origin: 0% 65%; animation-name: buhuFlapR; }
 #buhu-figure.is-flying .buhu-wing { animation-duration: 0.1s; }
 /* Schritt-Uflüchte: es blinkt en Rahme um s'Element, wo grad dra isch. */
-.step-glow { animation: stepGlow 1.3s ease-in-out infinite; }
+.step-glow { animation: stepGlow 1.4s ease-in-out infinite; }
 @keyframes stepGlow {
   0%, 100% { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)); }
   50%      { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30))
-                     drop-shadow(0 0 18px #F5A11C) drop-shadow(0 0 9px #F5A11C)
-                     drop-shadow(0 0 3px #F5A11C) brightness(1.14); }
+                     drop-shadow(0 0 24px #F5A11C) drop-shadow(0 0 12px #F5A11C)
+                     drop-shadow(0 0 6px #F5A11C) drop-shadow(0 0 2px #FFD98A)
+                     brightness(1.22); }
 }
 .panel.step-glow-panel { animation: stepGlowPanel 1.9s ease-in-out infinite; }
 @keyframes stepGlowPanel {
@@ -199,20 +200,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 /* --- Schritt-Uflüchte: s'grad aktuelle Bedienelement pulsiert sanft --------- */
-.step-glow { animation: stepGlowPulse 1.7s ease-in-out infinite; }
-@keyframes stepGlowPulse {
-  0%, 100% { filter: drop-shadow(0 0 0px rgba(245,161,28,0)); }
-  50%      { filter: drop-shadow(0 0 11px rgba(245,161,28,0.85)) drop-shadow(0 0 22px rgba(245,161,28,0.35)); }
-}
-.panel.step-glow-html {
-  animation: panelGlowPulse 1.7s ease-in-out infinite;
-  border-radius: 0.9rem;
-}
-@keyframes panelGlowPulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(245,161,28,0); }
-  50%      { box-shadow: 0 0 0 3px rgba(245,161,28,0.55), 0 0 18px rgba(245,161,28,0.4); }
-}
-@media (prefers-reduced-motion: reduce) { .step-glow, .step-glow-html { animation: none; } }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.25rem; }
 .btn {
   display: inline-block;
@@ -657,7 +644,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <stop offset="0%" stop-color="#E3B36E"/><stop offset="55%" stop-color="#C4863F"/><stop offset="100%" stop-color="#8F5A26"/>
     </radialGradient>
     <radialGradient id="melt-core" cx="42%" cy="38%" r="66%">
-      <stop offset="0%" stop-color="#FFD27A"/><stop offset="55%" stop-color="#F5A11C"/><stop offset="100%" stop-color="#D9791A"/>
+      <stop offset="0%" stop-color="#FFE7B8"/><stop offset="48%" stop-color="#E8A552"/><stop offset="100%" stop-color="#C47B2E"/>
     </radialGradient>
     <!-- Tüefi-Verläuf fürs Café: Wand/Bodä/Holz chöme so plastischer düre -->
     <!-- Kissaten-Stimmig: warmi Holzwand statt hälle Putz -->
@@ -801,7 +788,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
       <p><strong>Und wie wettsch dini Cookies?</strong> (gilt fürs Atippe i de Vitrine)</p>
       <div class="mood-row" role="group" aria-label="Cookie-Variante wählen">
         <button class="mood-chip variant-chip" data-variant="plain" aria-pressed="true">eifach als Cookie</button>
-        <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🫠</button>
+        <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🤤</button>
       </div>
 
       <div class="scene-card">
@@ -1164,7 +1151,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
               </g>
               <g class="scene-hot" data-variant="melt" tabindex="0" role="button" aria-label="Cookies mit Soft Melt Chärn">
                 <rect x="374" y="436" width="122" height="14" rx="7" stroke="#2E2015" stroke-width="1.2"/>
-                <text x="435" y="446.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E2015">mit Soft Melt Chärn 🫠</text>
+                <text x="435" y="446.5" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E2015">mit Soft Melt Chärn 🤤</text>
               </g>
             </g>
             <g id="g-vitrine">
@@ -1794,7 +1781,7 @@ const COOKIES = [
 ];
 const VARIANTS = [
   { id: "plain", label: "eifach so" },
-  { id: "melt",  label: "Soft Melt 🫠" },
+  { id: "melt",  label: "Soft Melt 🤤" },
 ];
 
 const COFFEES = [
@@ -2007,18 +1994,26 @@ function cookieSVG(c, r, melt) {
     : "";
   const gloss = `<ellipse cx="${(-r * 0.34).toFixed(1)}" cy="${(-r * 0.4).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.22).toFixed(1)}" fill="#fff" opacity="0.12"/>`;
   if (melt) {
-    // Soft Melt Chärn: molten Kern wo us de Mitti usequellt, mit em Sorte-Stück drin
-    const MW = [1.07, 0.9, 1.08, 0.92, 1.05, 0.88, 1.1, 0.93, 1.04, 0.9, 1.06, 0.91];
-    const pr = r * 0.6;
+    // Soft Melt Chärn: d'Füllig quellt weich us de Mitti use und lauft über de Rand.
+    // Bewusst KEI dunkle Ring drumume - dä het wie es Loch usgseh statt wie Karamell.
+    // Unregelmässigi Form: d'Füllig isch usenandergloffe statt rund z'sii
+    const MW = [1.16, 0.86, 1.1, 0.94, 1.2, 0.84, 1.06, 0.96, 1.18, 0.88, 1.02, 0.92];
+    const pr = r * 0.68;
     const drz = drizzleSVG(r, c.drizzle, c.id.length);
-    const riv = [[-0.52, 0.42], [0.6, 0.18], [0.12, -0.62], [-0.34, -0.38], [0.46, 0.56]]
-      .map(([x, y]) => `<path d="M0 0 Q${(x * r * 0.4).toFixed(1)} ${(y * r * 0.4).toFixed(1)} ${(x * r * 0.86).toFixed(1)} ${(y * r * 0.86).toFixed(1)}" stroke="url(#melt-core)" stroke-width="${Math.max(1, r * 0.1).toFixed(2)}" fill="none" stroke-linecap="round" opacity="0.9"/>`).join("");
-    const crater = `<path d="${blobPath(pr * 1.14, MW)}" fill="#6E3A12" opacity="0.5"/>`;
-    const pool = `<path d="${blobPath(pr, MW)}" fill="url(#melt-core)" stroke="#C77E10" stroke-width="${Math.max(0.6, r * 0.03).toFixed(2)}"/>`;
-    const sheen = `<ellipse cx="${(-pr * 0.28).toFixed(1)}" cy="${(-pr * 0.34).toFixed(1)}" rx="${(pr * 0.5).toFixed(1)}" ry="${(pr * 0.28).toFixed(1)}" fill="#FFF6E0" opacity="0.75"/>` +
-      `<circle cx="${(pr * 0.3).toFixed(1)}" cy="${(pr * 0.22).toFixed(1)}" r="${(pr * 0.1).toFixed(1)}" fill="#FFF6E0" opacity="0.5"/>`;
-    const gsmall = garnishSVG(c, r * 0.8);
-    return base + rim + wrinkles + chunks + drz + riv + crater + pool + sheen + gsmall + gloss;
+    // Nur es paar churzi Näsli nach unde - wie wenn's abelauft
+    const riv = [[-0.42, 0.72], [0.16, 0.86], [0.58, 0.6]]
+      .map(([x, y], i) => {
+        const w = r * (0.2 - i * 0.03);
+        return `<path d="M${(x * r * 0.4).toFixed(1)} ${(y * r * 0.4).toFixed(1)} Q${(x * r * 0.66).toFixed(1)} ${(y * r * 0.68).toFixed(1)} ${(x * r * 0.78).toFixed(1)} ${(y * r * 0.86).toFixed(1)}" stroke="url(#melt-core)" stroke-width="${w.toFixed(2)}" fill="none" stroke-linecap="round"/>` +
+          `<circle cx="${(x * r * 0.78).toFixed(1)}" cy="${(y * r * 0.86).toFixed(1)}" r="${(w * 0.56).toFixed(2)}" fill="url(#melt-core)"/>`;
+      }).join("");
+    // Weiche Schatte statt harter Chrate
+    const halo = `<path d="${blobPath(pr * 1.1, MW)}" fill="#8A5A24" opacity="0.18"/>`;
+    const pool = `<path d="${blobPath(pr, MW)}" fill="url(#melt-core)"/>`;
+    const sheen = `<ellipse cx="${(-pr * 0.3).toFixed(1)}" cy="${(-pr * 0.36).toFixed(1)}" rx="${(pr * 0.46).toFixed(1)}" ry="${(pr * 0.26).toFixed(1)}" fill="#FFF6E0" opacity="0.6"/>` +
+      `<circle cx="${(pr * 0.34).toFixed(1)}" cy="${(pr * 0.26).toFixed(1)}" r="${(pr * 0.11).toFixed(1)}" fill="#FFF6E0" opacity="0.45"/>`;
+    const gsmall = garnishSVG(c, r * 0.78);
+    return base + rim + wrinkles + chunks + drz + riv + halo + pool + sheen + gsmall + gloss;
   }
   const drizzle = drizzleSVG(r, c.drizzle, c.id.length);
   const garnish = garnishSVG(c, r);
@@ -2496,7 +2491,7 @@ COOKIES.forEach((c) => {
     (c.mayContain ? `<span class="allerg may">Cha ${c.mayContain} enthalte</span>` : "") +
     (c.plainOnly
       ? `<span class="sorte-tag plain-only">nur als Cookie</span>`
-      : `<span class="sorte-tag">au als Soft Melt 🫠</span>`);
+      : `<span class="sorte-tag">au als Soft Melt 🤤</span>`);
   sortenGrid.appendChild(li);
 });
 
@@ -2938,32 +2933,11 @@ function setBuhuBubble(text, cx, cy, tx, ty, choices, onChoice) {
 }
 
 /* Wo im Café + i de Liste uflüchtet, je nach Schritt wo grad dra isch */
-const STEP_GLOW_SVG = {
-  greet:  ["g-shelf"],
-  select: ["g-vitrine"],
-  coffee: ["g-menu-board", "g-coffee-machine"],
-  cup:    ["g-coffee-machine"],
-  pack:   ["g-table"],
-};
-const STEP_GLOW_HTML = {
-  greet:  ["size-panel"],
-  select: ["cookies-panel"],
-  coffee: ["coffee-panel"],
-  cup:    ["coffee-panel"],
-  pack:   ["pickup-panel"],
-};
-function updateStepGlow(step) {
-  document.querySelectorAll(".step-glow").forEach((el) => el.classList.remove("step-glow"));
-  document.querySelectorAll(".step-glow-html").forEach((el) => el.classList.remove("step-glow-html"));
-  (STEP_GLOW_SVG[step] || []).forEach((id) => { const el = document.getElementById(id); if (el) el.classList.add("step-glow"); });
-  (STEP_GLOW_HTML[step] || []).forEach((id) => { const el = document.getElementById(id); if (el) el.classList.add("step-glow-html"); });
-}
-
 function setBuhu(step, ready) {
   const s = BUHU_STEPS[step];
   if (!s) return;
   flyBuhuTo(s);
-  updateStepGlow(step);
+  setStepGlow(step);
   let line, choices = null, onChoice = null;
   if (step === "coffee") {
     if (coffeeChoice === "yes") {
