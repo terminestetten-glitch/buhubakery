@@ -177,9 +177,9 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 @keyframes stepGlow {
   0%, 100% { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30)); }
   50%      { filter: drop-shadow(0 6px 8px rgba(46, 32, 21, 0.30))
-                     drop-shadow(0 0 24px #F5A11C) drop-shadow(0 0 12px #F5A11C)
-                     drop-shadow(0 0 6px #F5A11C) drop-shadow(0 0 2px #FFD98A)
-                     brightness(1.22); }
+                     drop-shadow(0 0 12px rgba(245, 161, 28, 0.75))
+                     drop-shadow(0 0 5px rgba(245, 161, 28, 0.6))
+                     brightness(1.06); }
 }
 .panel.step-glow-panel { animation: stepGlowPanel 1.9s ease-in-out infinite; }
 @keyframes stepGlowPanel {
@@ -189,6 +189,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .step-glow, .panel.step-glow-panel { animation: none; }
 }
+/* Rüehre: de Drähpunkt isch bi de Pfote, drum bliibt d'Hand ruhig und
+   de Bäse-Chopf zieht unde dur de Teig. */
+#buhu-whisk { transform-box: fill-box; transform-origin: 11% 10%; animation: buhuStir 0.9s ease-in-out infinite; }
+@keyframes buhuStir {
+  0%, 100% { transform: rotate(-9deg); }
+  50%      { transform: rotate(7deg); }
+}
 #buhu-sparkles { opacity: 0; transition: opacity 0.3s; }
 #buhu-figure.is-flying #buhu-sparkles { opacity: 0.9; }
 @keyframes buhuFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
@@ -196,7 +203,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 @keyframes buhuFlapL { from { transform: rotate(20deg); } to { transform: rotate(-12deg); } }
 @media (prefers-reduced-motion: reduce) {
   #buhu-figure, #buhu-tilt { transition: none; }
-  #buhu-body, .buhu-wing { animation: none; }
+  #buhu-body, .buhu-wing, #buhu-whisk { animation: none; }
 }
 
 /* --- Schritt-Uflüchte: s'grad aktuelle Bedienelement pulsiert sanft --------- */
@@ -1450,9 +1457,41 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
                 <rect x="-20" y="-57" width="40" height="13" rx="5" fill="#F3EBDA" stroke="#2E2015" stroke-width="2.4"/>
               </g>
               <!-- Honiglöffel wo s'linke Ärmli haltet (wie im Logo) -->
-              <line x1="-50" y1="-13" x2="-60" y2="-36" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
-              <circle cx="-62" cy="-40" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
-              <path d="M-67 -42 h11 M-67 -39 h11 M-66 -45 h10" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
+              <g id="buhu-dipper">
+                <line x1="-50" y1="-13" x2="-60" y2="-36" stroke="#9A6A34" stroke-width="4.5" stroke-linecap="round"/>
+                <circle cx="-62" cy="-40" r="7" fill="#E8951E" stroke="#8A5A24" stroke-width="1.6"/>
+                <path d="M-67 -42 h11 M-67 -39 h11 M-66 -45 h10" stroke="#8A5A24" stroke-width="1" opacity="0.7"/>
+              </g>
+              <!-- Beim Iipacke rüehrt de Buhu Teig aa: d'Schüssle vorne, de Schneebäse
+                   staht DRIN und wird i de Teig gwirblet. -->
+              <g id="buhu-mixing" class="hidden">
+                <ellipse cx="0" cy="52" rx="44" ry="10" fill="#2E2015" opacity="0.22"/>
+                <!-- Schüssle -->
+                <path d="M-42 26 C-40 46 -24 54 0 54 C24 54 40 46 42 26 Z" fill="#EDE3CE" stroke="#3B2C1E" stroke-width="2.6"/>
+                <path d="M-40.5 33 C-38 49 -22 52 0 52 C22 52 38 49 40.5 33 C26 39 -26 39 -40.5 33 Z" fill="#7E97A6" stroke="none"/>
+                <ellipse cx="0" cy="26" rx="42" ry="10" fill="#3B2C1E"/>
+                <ellipse cx="0" cy="26" rx="39" ry="8" fill="#C9A97A"/>
+                <!-- Teig -->
+                <ellipse cx="0" cy="27" rx="35" ry="7" fill="#D9BC8B"/>
+                <path d="M-24 26 q9 -5 17 0 q8 5 17 0" fill="none" stroke="#C4A472" stroke-width="2.2" stroke-linecap="round"/>
+                <g fill="#8A5A2B" opacity="0.7">
+                  <circle cx="-14" cy="26" r="2.4"/><circle cx="8" cy="29" r="2.2"/><circle cx="22" cy="25" r="2"/>
+                </g>
+                <!-- Schneebäse: Stiil vo de linke Pfote abe i d'Schüssle, Chopf im Teig -->
+                <g id="buhu-whisk">
+                  <line x1="-42" y1="-6" x2="-16" y2="20" stroke="#8A9BA0" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="-43" cy="-7" r="4.5" fill="#7A8B90" stroke="#3B4A50" stroke-width="1.4"/>
+                  <path d="M-16 20 C-24 26 -26 32 -23 37 M-16 20 C-20 28 -19 34 -15 38 M-16 20 C-13 28 -10 33 -6 36 M-16 20 C-10 25 -5 28 0 30"
+                        fill="none" stroke="#B7C7CE" stroke-width="2.2" stroke-linecap="round"/>
+                  <path d="M-24 33 q9 8 20 2" fill="none" stroke="#B7C7CE" stroke-width="1.8"/>
+                </g>
+                <!-- Teig wo am Bäse chläbt -->
+                <path d="M-19 30 q5 4 11 2" fill="none" stroke="#D9BC8B" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+                <!-- Vorderi Schüsslewand deckt de Bäse unde ab -->
+                <path d="M-39 32 C-36 48 -22 52 0 52 C22 52 36 48 39 32 C26 40 -26 40 -39 32 Z" fill="#EDE3CE" stroke="#3B2C1E" stroke-width="2.4"/>
+                <path d="M-37.5 36 C-35 48 -21 51 0 51 C21 51 35 48 37.5 36 C25 42 -25 42 -37.5 36 Z" fill="#7E97A6" stroke="none"/>
+                <g fill="#5A4632" opacity="0.3"><circle cx="-24" cy="44" r="1.2"/><circle cx="14" cy="46" r="1"/></g>
+              </g>
             </g>
             </g>
           </g>
@@ -2872,12 +2911,22 @@ const BUHU_STEPS = {
   select: { x: 250,  y: 334, bcx: 410, bcy: 250 },
   coffee: { x: 470,  y: 334, bcx: 310, bcy: 250 },
   cup:    { x: 470,  y: 334, bcx: 310, bcy: 250 },
-  pack:   { x: 1096, y: 356, bcx: 950, bcy: 262 },
+  pack:   { x: 400,  y: 356, bcx: 700, bcy: 120 },   // hinder de Theke, wo er de Teig aarüehrt
   bye:    { x: 330,  y: 334, bcx: 470, bcy: 250 },
 };
 let buhuBye = false;
 let coffeeChoice = null; // null = no gfragt, "yes" oder "no"
 let buhuPos = null, buhuFlyTimer = null;
+/* Wenn d'Tüte voll isch, rüehrt de Buhu Teig aa und säit öppis Cutes drzue.
+   D'Sprüch wächsled, dass es nöd jedes Mal s'gliiche isch. */
+const PACK_LINES = [
+  "Dini Tüte isch voll! 🎉 Ich rüehr scho de Teig aa – schick mer d'Aafrag.",
+  "Mmh, dä Teig … 🤤 Alles parat, schick mer d'Aafrag!",
+  "Rüehre, rüehre, rüehre … 🥣 Dini Tüte wartet scho!",
+  "Frisch aagrüehrt, extra für dich 🐝 Schick mer d'Aafrag!",
+  "S'Beschte am Bache isch de Teig 😋 Alles parat für dich!",
+];
+let packLine = Math.floor(Math.random() * 5);
 
 /* De Buhu flügt zum nöie Punkt: er leit sich i d'Flugrichtig, flüglet schnäller,
    funklet – und d'Sprächblase blendet während em Flug us. */
@@ -2938,6 +2987,12 @@ function setBuhu(step, ready) {
   if (!s) return;
   flyBuhuTo(s);
   setStepGlow(step);
+  // Wenn d'Tüte voll isch, rüehrt de Buhu hinter de Theke Teig aa
+  const mixing = step === "pack";
+  const mix = document.getElementById("buhu-mixing");
+  const dip = document.getElementById("buhu-dipper");
+  if (mix) mix.classList.toggle("hidden", !mixing);
+  if (dip) dip.classList.toggle("hidden", mixing);
   let line, choices = null, onChoice = null;
   if (step === "coffee") {
     if (coffeeChoice === "yes") {
@@ -2955,7 +3010,7 @@ function setBuhu(step, ready) {
     line = ({
       greet:  "Hoi, ich bi de Buhu! 🐝👻 Wähl rächts e Grössi – ich hilf der.",
       select: "Tipp d'Cookies i de Vitrine aa – ich leg si der i d'Tüte. 🍪",
-      pack:   ready ? "Alles parat! Schick mer d'Aafrag – ich richt der s. ✅" : "So, ich pack dini Tüte zäme… 📦",
+      pack:   ready ? PACK_LINES[packLine % PACK_LINES.length] : "So, ich pack dini Tüte zäme… 📦",
       bye:    "Merci vielmal! Bis bald i de BuhuBakery 🐝🤎",
     })[step];
   }
