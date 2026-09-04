@@ -81,6 +81,10 @@ untereinander – beide hiessen «Grössi», meinten aber Verschiedenes (ein Coo
 Jetzt **eine Leiter mit fünf Schritten**, jeder Entscheid hat genau einen Platz:
 1 Wie gross sölled d'Cookies sii? · 2 Wie vill Cookies? · 3 Cookies uswähle (mit den
 Varianten-Chips) · 4 Kafi drzue? · 5 Wunsch-Abholtag.
+**Beim Aufrufen der Seite muss Schritt 1 offen sein.** Weil die Cookie-Grösse eine
+Vorauswahl hat, liess `naturalStep()` zuerst gleich Schritt 2 aufgehen – der Kunde landete
+mitten in der Leiter. `cookieSizePicked` merkt sich jetzt, ob der Kunde selbst gewählt hat;
+erst dann wird weitergeschaltet.
 Die nummerierte Anleitung wurde zu einem kurzen Hinweis (`.steps-hint`), der erklärt, dass
 Szene und Formular **dasselbe** tun – auch das war vorher unklar.
 **Wichtig:** Kommt ein Schritt dazu oder weg, die Verweise im Text mitziehen

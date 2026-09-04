@@ -2615,7 +2615,7 @@ COOKIE_SIZES.forEach((g) => {
   b.setAttribute("aria-pressed", String(state.cookieSize === g.id));
   b.innerHTML = `<strong>${g.name}</strong> <small>${g.gram} g · ${chf(g.price)}</small>`;
   b.title = g.note;
-  b.addEventListener("click", () => { state.cookieSize = g.id; trimOverflow(); render(); });
+  b.addEventListener("click", () => { state.cookieSize = g.id; cookieSizePicked = true; trimOverflow(); render(); });
   cookieSizeChips.appendChild(b);
 });
 
@@ -3429,12 +3429,16 @@ document.getElementById("order-btn").addEventListener("click", () => {
    gsi sind. Jetzt isch nur de aktuell offe; die andere schrumpfed uf ei Zile
    mit dem, wo scho gwählt isch. De User cha jede Schritt vo Hand ufmache. */
 const STEP_PANELS = ["cookiesize-panel", "size-panel", "cookies-panel", "coffee-panel", "pickup-panel"];
-let openStep = 1;      // wele Schritt grad offe isch
+let openStep = 0;      // wele Schritt grad offe isch
+let cookieSizePicked = false;  // het de Kund d'Cookie-Grössi scho bestätigt?
 let lastAutoStep = -1; // dass mer nur bi ere echte Änderig automatisch witerschaltet
 
 /* Wo staht de User grad? */
 function naturalStep() {
-  if (!state.size) return 1;                        // Cookie-Grössi het scho e Vorwahl
+  // Schritt 1 het zwar e Vorwahl, blibt aber offe, bis de Kund öppis gwählt het -
+  // susch landet me bim Aachoo mitten i de Leitere statt am Aafang.
+  if (!cookieSizePicked && !state.size) return 0;
+  if (!state.size) return 1;
   if (totalCookies() < capacity()) return 2;
   return 4;
 }
