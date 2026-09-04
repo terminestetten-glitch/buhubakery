@@ -71,6 +71,22 @@ ausdrücklich gewünscht und nach Rückfrage bestätigt. «Handteller», «Zwöi
 Ich hatte `zwee Biss` / `ei Biss` vorgeschlagen (im Zürichdeutschen ist «Biss» männlich).
 Der User will die hochdeutsche Zählform – **nicht nochmal ändern oder ansprechen.**
 
+## Eine einzige Nummerierung im Café (User, 04.09.2026)
+Der User spürte, dass etwas «am Layout oder am Handling als Kunde» stört, konnte es aber
+nicht benennen. Ursache: der Kunde traf **zwei konkurrierende Zählungen 1–4**.
+Oben eine Anleitung «1. Wähl im Regal … 4. Wähl dis Abholdatum», darunter zwei Entscheide
+**ganz ohne Nummer** (Variante, Cookie-Grösse), und dann das Formular, das **wieder bei 1
+anfing**. Dazu standen «Wie gross sölled d'Cookies sii?» und «Grössi wähle» direkt
+untereinander – beide hiessen «Grössi», meinten aber Verschiedenes (ein Cookie ↔ Tütenfüllung).
+Jetzt **eine Leiter mit fünf Schritten**, jeder Entscheid hat genau einen Platz:
+1 Wie gross sölled d'Cookies sii? · 2 Wie vill Cookies? · 3 Cookies uswähle (mit den
+Varianten-Chips) · 4 Kafi drzue? · 5 Wunsch-Abholtag.
+Die nummerierte Anleitung wurde zu einem kurzen Hinweis (`.steps-hint`), der erklärt, dass
+Szene und Formular **dasselbe** tun – auch das war vorher unklar.
+**Wichtig:** Kommt ein Schritt dazu oder weg, die Verweise im Text mitziehen
+(«bi Schritt 5» im Kafi-Text, «bi Schritt 2» im Füllstand, «Schritt 3 · Cookies uswähle»
+in der fixen Leiste) und `naturalStep()` / `stepSummary()` neu indexieren.
+
 ## Café als Schritt-für-Schritt (User, 04.09.2026)
 Der User fand die Café-Sektion zu lang – sie war **3351 px** (3.3 Bildschirme), weil alle
 Schritte gleichzeitig offen standen. Jetzt ein Akkordeon: **nur ein Schritt ist offen**,

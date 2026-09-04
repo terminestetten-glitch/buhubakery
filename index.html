@@ -370,8 +370,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .section { padding-block: 3rem; }
 .section + .section { border-top: 1px solid var(--line); }
 .section-intro { max-width: 42rem; color: var(--ink-soft); }
-.steps-intro { list-style: none; margin: 0 0 1.25rem; padding: 0; max-width: 42rem; display: grid; gap: 0.4rem; color: var(--ink-soft); }
-.steps-intro li strong { color: var(--accent); margin-right: 0.35rem; }
+.steps-hint { margin: 0 0 1.25rem; max-width: 42rem; color: var(--ink-soft); }
+.steps-hint strong { color: var(--accent); }
 
 .mood-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0; }
 .mood-chip {
@@ -1551,29 +1551,23 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
       <!-- Bedienelement stönd bewusst UNDER de Szene: so isch s'Café ohni
            scrolle sichtbar und me stellt ii, wenn me's würklech bruucht. -->
       <div class="scene-controls">
-      <ol class="steps-intro">
-        <li><strong>1.</strong> Wähl im Regal rächts dini Grössi.</li>
-        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – si lande diräkt i dini Tüte uf em Tisch. Wettsch eine wieder use? Eifach de Cookie i de Tüte atippe.</li>
-        <li><strong>3.</strong> Nöd a jedem Tag gits Kafi – nur a de Täg mit ☕-Symbol chasch en drzue näh.</li>
-        <li><strong>4.</strong> Wähl dis Wunsch-Abholdatum im Kalender.</li>
-      </ol>
-
-      <p><strong>Und wie wettsch dini Cookies?</strong> (gilt fürs Atippe i de Vitrine)</p>
-      <div class="mood-row" role="group" aria-label="Cookie-Variante wählen">
-        <button class="mood-chip variant-chip" data-variant="plain" aria-pressed="true">eifach als Cookie</button>
-        <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🤤</button>
-      </div>
-
-      <p><strong>Und wie gross sölled d'Cookies sii?</strong></p>
-      <div class="mood-row size-row-cookie" role="group" aria-label="Cookie-Grössi wähle" id="cookie-size-chips"></div>
-
+      <p class="steps-hint">Tipp im Café eifach dra ume: <strong>s'Regal</strong> für d'Tüte-Grössi,
+        <strong>d'Vitrine</strong> für d'Cookies, und en Cookie i de <strong>Tüte</strong> atippe nimmt en wieder use.
+        Wenn's der lieber isch, machsch genau s'gliiche unte i de Schritt.</p>
       </div>
 
       <!-- Barrierefreier Spiegel der Szene + Zusammenfassung -->
       <div class="builder">
         <div>
+          <div class="panel" id="cookiesize-panel">
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">1</span> Wie gross sölled d'Cookies sii?<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <div class="step-body">
+            <p class="coffee-note">Das gilt für <strong>jede einzeln Cookie</strong> – wie vill i d'Tüte gönd, wählsch grad drunter.</p>
+            <div class="mood-row size-row-cookie" role="group" aria-label="Cookie-Grössi wähle" id="cookie-size-chips"></div>
+            </div>
+          </div>
           <div class="panel" id="size-panel">
-            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">1</span> Grössi wähle<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">2</span> Wie vill Cookies?<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
             <div class="step-body">
             <div class="size-row" role="group" aria-label="Grössi" id="size-buttons"></div>
             <div class="sonder-row hidden" id="sonder-row">
@@ -1587,22 +1581,27 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
             </div>
           </div>
           <div class="panel" id="cookies-panel">
-            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">2</span> Cookies iipacke<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">3</span> Cookies uswähle<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
             <div class="step-body">
+            <p class="coffee-note" style="margin-top:0;"><strong>Und wie wettsch si?</strong> Das gilt für alles, wo du ab jetzt drzue nimmsch.</p>
+            <div class="mood-row" role="group" aria-label="Cookie-Variante wählen">
+              <button class="mood-chip variant-chip" data-variant="plain" aria-pressed="true">eifach als Cookie</button>
+              <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🤤</button>
+            </div>
             <ul class="item-list" id="cookie-list"></ul>
             <p class="coffee-note allergy-note" id="allergy-note"></p>
             </div>
           </div>
           <div class="panel" id="coffee-panel">
-            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">3</span> Kafi drzue? <span id="coffee-day-label"></span><span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">4</span> Kafi drzue? <span id="coffee-day-label"></span><span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
             <div class="step-body">
-            <p class="coffee-note">Kafi gits nöd a jedem Tag – nur a de Täg mit ☕-Symbol im Kalender bi Schritt 4.</p>
+            <p class="coffee-note">Kafi gits nöd a jedem Tag – nur a de Täg mit ☕-Symbol im Kalender bi Schritt 5.</p>
             <div id="coffee-content"></div>
             <button class="demo-toggle" id="coffee-demo" aria-pressed="false">Vorschau: Kafi-Tag simuliere ☕</button>
             </div>
           </div>
           <div class="panel" id="pickup-panel">
-            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">4</span> Wunsch-Abholtag<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">5</span> Wunsch-Abholtag<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
             <div class="step-body">
             <p class="coffee-note">Abhole chasch jede Tag – wähl eifach en Tag i de nächschte 4 Wuche (mindeschtens 2 Täg im Vorus). Täg mit ☕ sind Kafi-Täg, de gits au Pick up &amp; Coffee to go.</p>
             <div class="pickup-calendar" id="pickup-calendar"></div>
@@ -2721,7 +2720,7 @@ function renderCoffeePanel() {
   const dayRef = state.pickupDate ? `Dini Wahl (${formatPickupDate(state.pickupDate)})` : "Hüt";
   if (!isCoffeeDay()) {
     label.textContent = "";
-    coffeeContent.innerHTML = `<p class="coffee-note">${dayRef} isch kei Abhol-Tag mit Kafi. 😴 Wähl bi Schritt 4 en Kafi-Tag (☕), de erschiint da d'Kafi-Charte – und im Café obe d'Maschine.</p>`;
+    coffeeContent.innerHTML = `<p class="coffee-note">${dayRef} isch kei Abhol-Tag mit Kafi. 😴 Wähl bi Schritt 5 en Kafi-Tag (☕), de erschiint da d'Kafi-Charte – und im Café obe d'Maschine.</p>`;
     return;
   }
   label.textContent = `– ${dayRef} isch Kafi-Tag! ☕`;
@@ -2988,10 +2987,10 @@ function render() {
   if (!state.size) {
     fill.innerHTML = state.savedBoxes.length > 0
       ? "Wettsch <strong>no eini</strong>? Wähl eifach wieder e Grössi im Regal – susch schick d'Aafrag ab!"
-      : "Wähl zerscht e <strong>Grössi</strong> im Regal (oder unte bi Schritt 1).";
+      : "Wähl zerscht e <strong>Grössi</strong> im Regal (oder unte bi Schritt 2).";
   } else {
     let f = `Aktuelli Tüte: <strong>${totalCookies()} vo ${capacity()}</strong> Plätzli belegt ${full ? "– voll! 🎉" : ""}`;
-    if (totalCoffees() > 0 && !state.cup) f += "<br>→ Wähl bi Schritt 3 no, öb du en eigene Becher mitbringsch.";
+    if (totalCoffees() > 0 && !state.cup) f += "<br>→ Wähl bi Schritt 4 no, öb du en eigene Becher mitbringsch.";
     fill.innerHTML = f;
     if (curValid) {
       total += boxPrice();
@@ -3087,7 +3086,7 @@ function updateStepBar(total, ready) {
     stepEl.textContent = `${gspeicheret} Tüte${gspeicheret > 1 ? "" : ""} parat`;
     detailEl.textContent = "Wähl e Grössi für no eini – oder schick d'Aafrag ab";
   } else if (n < cap) {
-    stepEl.textContent = `Schritt 2 · Cookies iipacke`;
+    stepEl.textContent = `Schritt 3 · Cookies uswähle`;
     detailEl.textContent = `${n} vo ${cap} · ${g.name} (${g.gram} g)`;
   } else if (!ready) {
     stepEl.textContent = "Fascht parat";
@@ -3198,7 +3197,7 @@ function setBuhu(step, ready) {
   let line, choices = null, onChoice = null;
   if (step === "coffee") {
     if (coffeeChoice === "yes") {
-      line = "Super – tipp uf d'COFFEEMENU-Tafel ☕ oder unte i de Liste.";
+      line = "Super – tipp uf d'Kafi-Charte ☕ oder unte i de Lischte.";
     } else {
       line = "Hüt isch Kafi-Tag! ☕ Söll ich der en Kafi drzue mache?";
       choices = [{ value: "yes", label: "Ja gern ☕", primary: true }, { value: "no", label: "Nei, merci" }];
@@ -3429,34 +3428,37 @@ document.getElementById("order-btn").addEventListener("click", () => {
    S'Café isch 3.3 Bildschirm lang gsi, wil alli fünf Schritt uf eimal offe
    gsi sind. Jetzt isch nur de aktuell offe; die andere schrumpfed uf ei Zile
    mit dem, wo scho gwählt isch. De User cha jede Schritt vo Hand ufmache. */
-const STEP_PANELS = ["size-panel", "cookies-panel", "coffee-panel", "pickup-panel"];
-let openStep = 0;      // wele Schritt grad offe isch
+const STEP_PANELS = ["cookiesize-panel", "size-panel", "cookies-panel", "coffee-panel", "pickup-panel"];
+let openStep = 1;      // wele Schritt grad offe isch
 let lastAutoStep = -1; // dass mer nur bi ere echte Änderig automatisch witerschaltet
 
 /* Wo staht de User grad? */
 function naturalStep() {
-  if (!state.size) return 0;
-  if (totalCookies() < capacity()) return 1;
-  if (!state.pickupDate) return 3;
-  return 3;
+  if (!state.size) return 1;                        // Cookie-Grössi het scho e Vorwahl
+  if (totalCookies() < capacity()) return 2;
+  return 4;
 }
 /* Ei Zile, wo zeigt was i dem zuegklappte Schritt gwählt isch */
 function stepSummary(i) {
   if (i === 0) {
+    const g = cookieSizeOf(state.cookieSize);
+    return `${g.name} · ${g.gram} g`;
+  }
+  if (i === 1) {
     if (!state.size) return "nonig gwählt";
     const nm = state.size === "SONDER" ? `Sonderbstellig · ${state.sonderQty}` : `${state.size} · ${capacity()}`;
     return `${nm} Cookies · ${packagingChoice().short}`;
   }
-  if (i === 1) {
+  if (i === 2) {
     if (!state.size) return "";
     const n = totalCookies();
     return n === 0 ? "no läär" : `${n} vo ${capacity()} iipackt`;
   }
-  if (i === 2) {
+  if (i === 3) {
     const n = totalCoffees();
     return n === 0 ? "kei Kafi" : `${n} Kafi`;
   }
-  if (i === 3) return state.pickupDate ? formatPickupDate(state.pickupDate) : "kei Datum gwählt";
+  if (i === 4) return state.pickupDate ? formatPickupDate(state.pickupDate) : "kei Datum gwählt";
   return "";
 }
 function renderSteps() {
