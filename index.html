@@ -1846,9 +1846,9 @@ async function verifyAdminPw(user, pass) {
    Aazahl Cookies × Priis vo de gwählte Grössi - drum het d'Tüte-Grössi
    sälber kei feste Priis meh, si seit nur no wieviel ine gönd. */
 const COOKIE_SIZES = [
-  { id: "buhu",   name: "Handteller", gram: 64, price: 5,    note: "de Chlassiker, füllt d'ganzi Hand" },
-  { id: "halb",   name: "Zwöi Bissli", gram: 25, price: 2,    note: "grad rächt für zwüschedure" },
-  { id: "bienli", name: "Eis Bissli",  gram: 15, price: 1.50, note: "s'chlinste, i eim Biss verschwunde" },
+  { id: "buhu",   name: "Mocke",     gram: 64, price: 5,    note: "de Chlassiker, en rächte Brocke i de Hand" },
+  { id: "halb",   name: "Zwei Biss",   gram: 25, price: 2,    note: "grad rächt für zwüschedure" },
+  { id: "bienli", name: "Ein Biss",  gram: 15, price: 1.50, note: "verschwindet i eim Biss – und es hät überall eis meh i de Tüte" },
 ];
 const cookieSizeOf = (id) => COOKIE_SIZES.find((g) => g.id === id) || COOKIE_SIZES[0];
 /* Zeichnigs-Faktor: nöd linear nach Gwicht, susch wär de 15g-Cookie winzig.
@@ -1982,7 +1982,7 @@ function isCoffeeDay(date) {
 }
 const totalCookies = () => Object.values(state.items).reduce((a, b) => a + b, 0);
 const totalCoffees = () => Object.values(state.coffees).reduce((a, b) => a + b, 0);
-/* Bi de chlinste Cookies ("Eis Bissli", 15 g) passt überall eine meh i d'Tüte. */
+/* Bi de chlinste Cookies ("Ein Biss", 15 g) passt überall eine meh i d'Tüte. */
 const MINI_SIZE = "bienli";
 const capBonus = () => (state.cookieSize === MINI_SIZE ? 1 : 0);
 const capOf = (key) => key === "SONDER" ? state.sonderQty : SIZES[key].capacity + capBonus();

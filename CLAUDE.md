@@ -48,7 +48,7 @@ Der alte Rabatt war in Franken hinterlegt (0/0.50/0.50/1.00/0.50/4.00) und passt
 XXS 0 % · XS 0 % · S 5 % · M 8 % · L 10 % · XL 12 % · Sonderbestellung 15 %.
 Auf 5 Rappen gerundet (`round05`). Der Soft-Melt-Zuschlag (0.50) wird **nicht** rabattiert.
 
-## «Eis Bissli»-Bonus (User, 04.09.2026)
+## «Ein Biss»-Bonus (User, 04.09.2026)
 Bei der kleinsten Cookie-Grösse (`bienli`, 15 g) passt in **jede** Tüte ein Cookie mehr:
 XXS 2 · XS 3 · S 5 · M 7 · L 10 · XL 13. Umgesetzt über `capBonus()` / `capOf(key)`;
 `boxCols()` bekommt ebenfalls +1, weil die Minis kleiner sind. Wechselt man von 15 g auf
@@ -63,6 +63,13 @@ Café landen. Café liegt dadurch bei **587 px**.
 **Wichtig:** Die Navigation war auf dem Handy `display:none`. Da sie jetzt der einzige Weg
 zu diesen Sektionen ist, wird sie dort als schmale, seitlich scrollbare Zeile unter der
 Marke angezeigt – nicht wieder ausblenden.
+
+## Züridütsch bei den Grössen-Namen (User, 04.09.2026)
+Die Namen heissen **Mocke (64 g) / Zwei Biss (25 g) / Ein Biss (15 g)** – so vom User
+ausdrücklich gewünscht und nach Rückfrage bestätigt. «Handteller», «Zwöi Bissli» und
+«Eis Bissli» waren die Vorgänger und sind abgelehnt.
+Ich hatte `zwee Biss` / `ei Biss` vorgeschlagen (im Zürichdeutschen ist «Biss» männlich).
+Der User will die hochdeutsche Zählform – **nicht nochmal ändern oder ansprechen.**
 
 ## Branding
 - Logo: **Biene im Geisterkostüm** (Buhu = Geist) mit Kochmütze und Honiglöffel. **Original eingebaut**:
@@ -93,7 +100,7 @@ Marke angezeigt – nicht wieder ausblenden.
   gerechnet wird `Anzahl Cookies × Preis der gewählten Cookie-Grösse`.
 - **Drei Cookie-Grössen** (`COOKIE_SIZES` in index.html), Namen vom User gewählt:
   | Name | Gewicht | Preis |
-  | Handteller | 64 g | 5.00 |
+  | Mocke | 64 g | 5.00 |
   | Zwöi-Biss | 25 g | 2.00 |
   | Ei-Biss | 15 g | 1.50 |
   Die Chips dafür stehen über der Szene bei den Varianten-Chips. In der Szene werden die
