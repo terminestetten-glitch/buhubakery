@@ -140,8 +140,38 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 .site-nav a:hover { color: var(--accent); }
 @media (max-width: 40rem) {
-  .site-nav { display: none; }
+  /* D'Navigation isch uf em Handy s'einzige Törli zu Sortiment und Über mich,
+     drum nöd verstecke - lieber als schmali Rolle under de Marke. */
+  .site-header .wrap { flex-wrap: wrap; }
+  .site-nav {
+    width: 100%;
+    gap: 1rem;
+    font-size: 0.86rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav a { white-space: nowrap; }
 }
+
+/* --- Uszogeni Sektione (Sortiment / Über mich) ----------------------------- */
+.section[hidden] { display: none; }
+.foldable { position: relative; }
+.fold-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.fold-close:hover { color: var(--accent); border-color: var(--accent); }
 
 /* --- Hero ----------------------------------------------------------------- */
 .hero .wrap {
@@ -348,8 +378,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .scene-hot:hover .hot-halo, .scene-hot:focus-visible .hot-halo { opacity: 1; }
 .hot-halo { opacity: 0; transition: opacity 0.15s; }
 .is-selected .hot-halo { opacity: 1; }
-.mood-match .mood-halo { opacity: 1; }
-.mood-halo { opacity: 0; transition: opacity 0.2s; }
 .hidden { display: none; }
 .fly-cookie { transition: transform 0.6s cubic-bezier(0.3, 0, 0.6, 1); }
 
@@ -414,27 +442,13 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   padding: 0.55rem 0.75rem;
   background: var(--ground);
 }
-.item-row.mood-match-row { border-color: var(--accent-bright); box-shadow: 0 0 0 1px var(--accent-bright); }
 .item-icon { width: 2.6rem; height: 2.6rem; flex-shrink: 0; }
 .item-info { flex: 1; min-width: 0; }
 .item-info strong { display: block; font-size: 0.98rem; }
 .item-info small { color: var(--ink-soft); font-size: 0.8rem; }
+.v-plus { color: var(--accent); font-weight: 700; }
 .item-info small.allergens { display: block; margin-top: 0.2rem; font-size: 0.75rem; color: var(--accent); font-weight: 600; }
 .allergy-note { margin-top: 1rem; padding: 0.7rem 0.9rem; border-left: 3px solid var(--accent); background: var(--ground); border-radius: 0 0.5rem 0.5rem 0; }
-.match-badge {
-  display: inline-block;
-  background: var(--accent-bright);
-  color: #2E2015;
-  border-radius: 1rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.1rem 0.55rem;
-  margin-left: 0.35rem;
-  vertical-align: 1px;
-}
-.match-badge.hidden {
-  display: none;
-}
 .qty { display: flex; align-items: center; gap: 0.45rem; }
 .qty button {
   width: 2rem;
@@ -548,6 +562,40 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   margin-top: 1.6rem; padding-top: 1.1rem;
   border-top: 1px solid var(--line); font-size: 0.82rem;
 }
+
+/* --- Fixi Schritt-Leiste unde --------------------------------------------- */
+#step-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+  background: var(--raised); border-top: 2px solid var(--accent-bright);
+  box-shadow: 0 -6px 20px rgba(46, 32, 21, 0.16);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+#step-bar.hidden { display: none; }
+.sb-wrap {
+  width: min(100% - 1.6rem, 64rem); margin-inline: auto;
+  display: flex; align-items: center; gap: 0.9rem; padding-block: 0.6rem;
+}
+.sb-info { display: grid; min-width: 0; flex: 1; }
+#sb-step { font-size: 0.9rem; line-height: 1.25; }
+#sb-detail { font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#sb-total { font-weight: 800; font-size: 1rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sb-btn {
+  background: var(--accent-bright); color: #2E2015; text-decoration: none;
+  font-weight: 800; font-size: 0.88rem; border-radius: 2rem;
+  padding: 0.55rem 1.1rem; white-space: nowrap;
+}
+.sb-btn[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+/* D'Leiste würd susch de Fuessberiich verdecke */
+body.has-step-bar { padding-bottom: 4.6rem; }
+body.has-step-bar #admin-toggle { bottom: 5.2rem; }
+@media (max-width: 30rem) {
+  #sb-total { font-size: 0.92rem; }
+  .sb-btn { padding: 0.5rem 0.85rem; font-size: 0.82rem; }
+}
+
+/* --- Bedienelement under de Szene ------------------------------------------ */
+.scene-controls { margin-top: 1.5rem; }
+.scene-controls > p:first-of-type { margin-top: 0; }
 
 /* --- Admin-Panel ---------------------------------------------------------- */
 #admin-toggle {
@@ -760,44 +808,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     </div>
   </section>
 
-  <section class="section" id="sortiment">
-    <div class="wrap">
-      <span class="eyebrow">S'Sortiment</span>
-      <h2>Das gits bi de BuhuBakery</h2>
-      <p class="section-intro">Jedi Sorte gits «eifach so» oder mit «Soft Melt Chärn» – eme flüssige Chärn i de Mitti.
-        Usser em Cinnamon Dream, dä gits nur als Cookie.</p>
-      <ul class="sorten-grid" id="sorten-grid"></ul>
-      <p class="allergy-note" id="sortiment-allergy"></p>
-    </div>
-  </section>
-
   <section class="section" id="cafe">
     <div class="wrap">
       <span class="eyebrow">Willkomme im Café</span>
       <h2>Build your own box</h2>
-      <p class="section-intro">So gaht's:</p>
-      <ol class="steps-intro">
-        <li><strong>1.</strong> Wähl im Regal rächts dini Grössi.</li>
-        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – si lande diräkt i dini Tüte uf em Tisch. Wettsch eine wieder use? Eifach de Cookie i de Tüte atippe.</li>
-        <li><strong>3.</strong> Nöd a jedem Tag gits Kafi – nur a de Täg mit ☕-Symbol chasch en drzue näh.</li>
-        <li><strong>4.</strong> Wähl dis Wunsch-Abholdatum im Kalender.</li>
-      </ol>
-
-      <p><strong>Cookie Mood – wie bisch hüt drufe?</strong></p>
-      <div class="mood-row" role="group" aria-label="Cookie Mood wählen">
-        <button class="mood-chip" data-mood="comfort" aria-pressed="false">Need comfort</button>
-        <button class="mood-chip" data-mood="celebrating" aria-pressed="false">Celebrating</button>
-        <button class="mood-chip" data-mood="hangry" aria-pressed="false">Hangry</button>
-        <button class="mood-chip" data-mood="study" aria-pressed="false">Study session</button>
-        <button class="mood-chip" data-mood="date" aria-pressed="false">Date night</button>
-      </div>
-
-      <p><strong>Und wie wettsch dini Cookies?</strong> (gilt fürs Atippe i de Vitrine)</p>
-      <div class="mood-row" role="group" aria-label="Cookie-Variante wählen">
-        <button class="mood-chip variant-chip" data-variant="plain" aria-pressed="true">eifach als Cookie</button>
-        <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🤤</button>
-      </div>
-
       <div class="scene-card">
         <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Packaging-Regal mit de Grössine, Tisch mit dinere Tüte">
           <!-- RUUM: Rückwand obe (bis y=300), denn en tüüfe Bodä wo nach hinde flüchtet.
@@ -1499,6 +1513,28 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
         </svg>
       </div>
 
+
+      <!-- Bedienelement stönd bewusst UNDER de Szene: so isch s'Café ohni
+           scrolle sichtbar und me stellt ii, wenn me's würklech bruucht. -->
+      <div class="scene-controls">
+      <ol class="steps-intro">
+        <li><strong>1.</strong> Wähl im Regal rächts dini Grössi.</li>
+        <li><strong>2.</strong> Tipp uf d'Cookies i de Vitrine – si lande diräkt i dini Tüte uf em Tisch. Wettsch eine wieder use? Eifach de Cookie i de Tüte atippe.</li>
+        <li><strong>3.</strong> Nöd a jedem Tag gits Kafi – nur a de Täg mit ☕-Symbol chasch en drzue näh.</li>
+        <li><strong>4.</strong> Wähl dis Wunsch-Abholdatum im Kalender.</li>
+      </ol>
+
+      <p><strong>Und wie wettsch dini Cookies?</strong> (gilt fürs Atippe i de Vitrine)</p>
+      <div class="mood-row" role="group" aria-label="Cookie-Variante wählen">
+        <button class="mood-chip variant-chip" data-variant="plain" aria-pressed="true">eifach als Cookie</button>
+        <button class="mood-chip variant-chip" data-variant="melt" aria-pressed="false">mit Soft Melt Chärn 🤤</button>
+      </div>
+
+      <p><strong>Und wie gross sölled d'Cookies sii?</strong></p>
+      <div class="mood-row size-row-cookie" role="group" aria-label="Cookie-Grössi wähle" id="cookie-size-chips"></div>
+
+      </div>
+
       <!-- Barrierefreier Spiegel der Szene + Zusammenfassung -->
       <div class="builder">
         <div>
@@ -1535,7 +1571,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
             </label>
           </div>
         </div>
-        <div class="panel summary" aria-live="polite">
+        <div class="panel summary" id="bstellig" aria-live="polite">
           <h3>Dini Bstellig</h3>
           <p class="fill-state" id="fill-state">Wähl zerscht e Grössi im Regal.</p>
           <ul id="summary-list"></ul>
@@ -1546,7 +1582,18 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     </div>
   </section>
 
-  <section class="section about" id="ueber-mich">
+  <section class="section foldable" id="sortiment" hidden>
+    <div class="wrap">
+      <span class="eyebrow">S'Sortiment</span>
+      <h2>Das gits bi de BuhuBakery</h2>
+      <p class="section-intro">Jedi Sorte gits «eifach so» oder mit «Soft Melt Chärn» – eme flüssige Chärn i de Mitti.
+        Usser em Cinnamon Dream, dä gits nur als Cookie.</p>
+      <ul class="sorten-grid" id="sorten-grid"></ul>
+      <p class="allergy-note" id="sortiment-allergy"></p>
+    </div>
+  </section>
+
+  <section class="section about foldable" id="ueber-mich" hidden>
     <div class="wrap">
       <div>
         <span class="eyebrow">Wer da bachet</span>
@@ -1654,6 +1701,19 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     <span>© 2026 BuhuBakery – mit 🤎 bache z'Dübendorf</span>
   </div>
 </footer>
+
+<!-- Fixi Leiste unde: zeigt de aktuell Schritt, de Füllstand und de Priis.
+     Si isch immer erreichbar, egal wo me uf de Sitte staht. -->
+<div id="step-bar" class="hidden" role="status">
+  <div class="sb-wrap">
+    <div class="sb-info">
+      <strong id="sb-step"></strong>
+      <span id="sb-detail"></span>
+    </div>
+    <span id="sb-total"></span>
+    <a id="sb-action" class="sb-btn" href="#bestellig">Wiiter</a>
+  </div>
+</div>
 
 <button id="admin-toggle" aria-label="Admin-Panel öffne"><span aria-hidden="true">⚙️</span> Admin</button>
 
@@ -1782,15 +1842,36 @@ async function verifyAdminPw(user, pass) {
   } catch (e) { return false; }
 }
 
-const SIZES = {
-  XXS: { capacity: 1,  price: 4,    cols: 1 },
-  XS:  { capacity: 2,  price: 7.50, cols: 2 },
-  S:   { capacity: 4,  price: 15.50, cols: 2 },
-  M:   { capacity: 6,  price: 23,   cols: 3 },
-  L:   { capacity: 9,  price: 35.50, cols: 3 },
-  XL:  { capacity: 12, price: 44,   cols: 4 },
+/* Cookie-Grössine (User, 07.08.2026). De Priis vo re Tüte rechnet sich us
+   Aazahl Cookies × Priis vo de gwählte Grössi - drum het d'Tüte-Grössi
+   sälber kei feste Priis meh, si seit nur no wieviel ine gönd. */
+const COOKIE_SIZES = [
+  { id: "buhu",   name: "Handteller", gram: 64, price: 5,    note: "de Chlassiker, füllt d'ganzi Hand" },
+  { id: "halb",   name: "Zwöi Bissli", gram: 25, price: 2,    note: "grad rächt für zwüschedure" },
+  { id: "bienli", name: "Eis Bissli",  gram: 15, price: 1.50, note: "s'chlinste, i eim Biss verschwunde" },
+];
+const cookieSizeOf = (id) => COOKIE_SIZES.find((g) => g.id === id) || COOKIE_SIZES[0];
+/* Zeichnigs-Faktor: nöd linear nach Gwicht, susch wär de 15g-Cookie winzig.
+   D'Wurzle vom Verhältnis gitt e Grössi, wo me no guet cha atippe. */
+const cookieScale = () => {
+  const g = cookieSizeOf(state.cookieSize);
+  return Math.sqrt(g.gram / COOKIE_SIZES[0].gram) * 0.55 + 0.45;
 };
-const SONDER = { min: 13, max: 30, pricePerCookie: 4, meltSurcharge: 0.5 };
+
+/* Mängerabatt: je grösser d'Tüte, deschto günstiger pro Cookie. I Prozänt statt
+   i Franke, susch stimmt er nur bi eire Cookie-Grössi. */
+const SIZES = {
+  XXS: { capacity: 1,  cols: 1, discount: 0 },
+  XS:  { capacity: 2,  cols: 2, discount: 0 },
+  S:   { capacity: 4,  cols: 2, discount: 0.05 },
+  M:   { capacity: 6,  cols: 3, discount: 0.08 },
+  L:   { capacity: 9,  cols: 3, discount: 0.10 },
+  XL:  { capacity: 12, cols: 4, discount: 0.12 },
+};
+const SONDER = { min: 13, max: 30, meltSurcharge: 0.5, discount: 0.15 };
+/* Uf 5 Rappe runde, wie's i de Schwiiz üblich isch */
+const round05 = (v) => Math.round(v * 20) / 20;
+const sizeDiscount = () => (state.size === "SONDER" ? SONDER.discount : (SIZES[state.size] || {}).discount || 0);
 /* Verpackig (Prise vom User bestätigt, 02.08.2026): jede Cookie isch immer einzeln
    iipackt. D'ganzi Bstellig chunt denn i EI Ussevrpackig – drü Stuefe zur Uuswahl.
    De Uufpriis für d'schöni Verpackig isch gstaffelt nach Bstellgrössi (vom User,
@@ -1813,14 +1894,14 @@ const COOKIES = [
   // Achtung: d'interni id heisst us historische Gründ no "oreo" (Zeichnig, Wobble-Tabälle).
   // S'Produkt sind aber Neo-Guetzli vo de Lidl – drum de Name "Neo Cookies".
   { id: "oreo",       name: "Neo Cookies",        note: "Dunkle Schoggi-Cookie mit wiisser Schoggi-Drizzle & halbem Neo-Guetzli.", allergens: ["Soja"], allergenFrom: "us de Neo-Guetzli", drizzle: "#F1EBDB", garnish: "oreo",    moods: ["comfort", "celebrating"] },
-  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit wiisse Schoggi-Stückli, Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", allergens: ["Soja"], allergenFrom: "us de Guetzli und de Schoggi", mayContain: "Nüss (i de wiisse Schoggi)", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true, moods: ["study", "date"] },
-  { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                allergens: ["Haselnuss", "Gerstemalz", "Soja"], allergenFrom: "us de Ovomaltine-Schoggi", drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true, moods: ["hangry", "comfort"] },
-  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkle Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           allergens: ["Haselnuss", "Gerstemalz", "Soja"], allergenFrom: "us de Ovomaltine-Schoggi", drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28", moods: ["date", "hangry"] },
-  { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nur als Cookie, ohni Soft Melt Chärn.", allergens: ["Pekannuss"], drizzle: "#C9973F", garnish: "pecan", plainOnly: true, moods: ["comfort", "study"] },
+  { id: "lotus",      name: "Lotus (Biscoff)",    note: "Goldige Cookie mit wiisse Schoggi-Stückli, Milchschoggi-Drizzle & ganzem Biscoff-Guetzli.", allergens: ["Soja"], allergenFrom: "us de Guetzli und de Schoggi", mayContain: "Nüss (i de wiisse Schoggi)", drizzle: "#B07A45", garnish: "biscoff", whiteChunks: true },
+  { id: "ovoclassic", name: "Ovomaltine Classic", note: "Milchschoggi-Cookie mit Ovi-Stück & Fleur de Sel.",                allergens: ["Haselnuss", "Gerstemalz", "Soja"], allergenFrom: "us de Ovomaltine-Schoggi", drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#8A5A34", salt: true },
+  { id: "ovonoir",    name: "Ovomaltine Noir",    note: "Dunkle Schoggi-Cookie mit Ovi-Stück & wiisser Drizzle.",           allergens: ["Haselnuss", "Gerstemalz", "Soja"], allergenFrom: "us de Ovomaltine-Schoggi", drizzle: "#F1EBDB", garnish: "choc", garnishCol: "#7A4A28" },
+  { id: "cinnamon",   name: "Cinnamon Dream",     note: "Zimt-Cookie mit Zimt-Swirl & Pekannuss – nur als Cookie, ohni Soft Melt Chärn.", allergens: ["Pekannuss"], drizzle: "#C9973F", garnish: "pecan", plainOnly: true },
 ];
 const VARIANTS = [
-  { id: "plain", label: "eifach so" },
-  { id: "melt",  label: "Soft Melt 🤤" },
+  { id: "plain", label: "eifach so",    surcharge: 0 },
+  { id: "melt",  label: "Soft Melt 🤤", surcharge: 0.5 },
 ];
 
 const COFFEES = [
@@ -1882,11 +1963,11 @@ const state = {
   size: null,        // aktuelli Box
   sonderQty: 13,
   items: {},         // "cookieId:variant" -> Aazahl (aktuelli Box)
+  cookieSize: "buhu",  // Grössi vo de einzelne Cookies (64g / 25g / 15g)
   packaging: "tuete", // Ussevrpackig vo dere Bstellig: "tuete" oder "geschenk"
   savedBoxes: [],    // fertigi Boxe: { size, sonderQty, items, price }
   coffees: {},       // coffeeId -> Aazahl
   cup: null,
-  mood: null,
   variant: "plain",
   demoCoffee: false,
   pickupDate: null, // "YYYY-MM-DD"
@@ -1901,33 +1982,46 @@ function isCoffeeDay(date) {
 }
 const totalCookies = () => Object.values(state.items).reduce((a, b) => a + b, 0);
 const totalCoffees = () => Object.values(state.coffees).reduce((a, b) => a + b, 0);
-const capacity = () => !state.size ? 0 : (state.size === "SONDER" ? state.sonderQty : SIZES[state.size].capacity);
+/* Bi de chlinste Cookies ("Eis Bissli", 15 g) passt überall eine meh i d'Tüte. */
+const MINI_SIZE = "bienli";
+const capBonus = () => (state.cookieSize === MINI_SIZE ? 1 : 0);
+const capOf = (key) => key === "SONDER" ? state.sonderQty : SIZES[key].capacity + capBonus();
+const capacity = () => !state.size ? 0 : capOf(state.size);
+/* Priis vo de aktuelle Tüte: jede Cookie zellt mit em Priis vo de gwählte
+   Grössi, Soft Melt chostet pro Stück 50 Rappe meh. */
 function boxPrice() {
   if (!state.size) return 0;
-  const basePrice = state.size === "SONDER" ? state.sonderQty * SONDER.pricePerCookie - 0.50 : SIZES[state.size].price;
-  const meltCount = Object.entries(state.items).reduce((sum, [k, n]) => k.includes("melt") ? sum + n : sum, 0);
-  return basePrice + (meltCount * 0.50);
+  const g = cookieSizeOf(state.cookieSize);
+  const n = totalCookies();
+  const meltCount = Object.entries(state.items).reduce((sum, [k, c]) => k.includes("melt") ? sum + c : sum, 0);
+  // Rabatt gilt uf d'Cookies, nöd uf de Soft-Melt-Uufpriis
+  return round05(n * g.price * (1 - sizeDiscount())) + meltCount * SONDER.meltSurcharge;
 }
+/* Was e volli Tüte vo dere Grössi choschtet - für d'Schildli im Regal */
+const fullBoxPrice = (key) => {
+  const d = key === "SONDER" ? SONDER.discount : (SIZES[key] || {}).discount || 0;
+  return round05(capOf(key) * cookieSizeOf(state.cookieSize).price * (1 - d));
+};
 /* D'Verpackig gilt für d'ganzi Bstellig, drum eimal uf s'Total statt pro Box.
    Ab 4 Cookies gits e Ussevrpackig – drunter (XXS, XS) chunt me d'einzeln
    iipackte Cookies eifach so über, ohni Tüte. */
 const PACKAGING_MIN_COOKIES = 4;
 /* Zellt wird d'Boxgrössi, nöd was scho drin liit: wär e S-Box wählt, chriegt e Tüte –
    au wenn si na läär isch. Susch würd d'Tüte erscht bim viertä Cookie erschiine. */
-const boxCapacityOf = (b) => (b.size === "SONDER" ? b.sonderQty : SIZES[b.size].capacity);
+const boxCapacityOf = (b) => (b.size === "SONDER" ? b.sonderQty : SIZES[b.size].capacity + (b.cookieSize === MINI_SIZE ? 1 : 0));
 const orderCookieCount = () =>
   state.savedBoxes.reduce((sum, b) => sum + boxCapacityOf(b), 0) + capacity();
 const needsOuterPackaging = () => orderCookieCount() >= PACKAGING_MIN_COOKIES;
 const packagingChoice = () => PACKAGING.find((p) => p.id === state.packaging) || PACKAGING[0];
 /* Uufpriis vo de gwählte Verpackig – hängt vo de Gsamt-Aazahl Cookies ab. */
 const packagingPrice = (p) => (p || packagingChoice()).surcharge(orderCookieCount());
-const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols;
+const boxCols = () => state.size === "SONDER" ? 6 : SIZES[state.size].cols + capBonus();
 const chf = (n) => CONFIG.currency + " " + n.toFixed(2);
 /* Bezeichnig i de Zämefassig und i de Bstell-Mail. Ab 4 Cookies gits e Tüte,
    drunter chömed d'Cookies eifach einzeln iipackt – drum kei Behälter-Wort. */
-const boxTitle = (size, qty) => {
+const boxTitle = (size, qty, cSize) => {
   if (size === "SONDER") return `Sonderbstellig (${qty} Cookies)`;
-  const cap = SIZES[size].capacity;
+  const cap = SIZES[size].capacity + ((cSize || state.cookieSize) === MINI_SIZE ? 1 : 0);
   if (cap < PACKAGING_MIN_COOKIES) return `${size} (${cap} Cookie${cap > 1 ? "s" : ""})`;
   return `Tüte ${size} (${cap} Cookies)`;
 };
@@ -2285,7 +2379,6 @@ COOKIES.forEach((c, i) => {
   g.dataset.cookie = c.id;
   g.innerHTML =
     `<ellipse cx="0" cy="15" rx="19" ry="5" fill="#2E2015" opacity="0.22"/>` +
-    `<circle class="mood-halo" r="26" fill="none" stroke="#F5A11C" stroke-width="3" stroke-dasharray="5 4"/>` +
     `<circle class="hot-halo" r="24" fill="none" stroke="#FBF3E4" stroke-width="3"/>` +
     `<g class="c-body">${cookieSVG(c, 20, false)}</g>` +
     // Sorte ohni Soft-Melt-Variante: Hiiwiis, wenn grad Soft Melt gwählt isch
@@ -2418,7 +2511,7 @@ function renderSceneBox() {
         `<rect x="${-bw / 2}" y="${-bh / 2 - 1}" width="${bw}" height="${bh}" rx="2.5" fill="#FFFFFF" fill-opacity="0.5" stroke="#9E9276" stroke-width="0.9"/>` +
         `<path d="M${-bw / 2} ${-bh / 2 + 2} h${bw}" stroke="#9E9276" stroke-width="0.8" opacity="0.7"/>` +
         `<circle class="hot-halo" r="${rC + 5}" fill="none" stroke="#F5A11C" stroke-width="2.5"/>` +
-        cookieSVG(c, rC, v.id === "melt") + `</g>`;
+        cookieSVG(c, rC * cookieScale(), v.id === "melt") + `</g>`;
     } else {
       inner += `<circle cx="${cx}" cy="${cy}" r="${rC - 1}" fill="none" stroke="#CDC1AC" stroke-width="1.5" stroke-dasharray="3 3"/>`;
     }
@@ -2446,7 +2539,7 @@ Object.entries(SIZES).forEach(([key, s]) => {
   b.className = "size-btn";
   b.dataset.size = key;
   b.setAttribute("aria-pressed", "false");
-  b.innerHTML = `<strong>${key} · ${s.capacity} Cookie${s.capacity > 1 ? "s" : ""}</strong><span>${chf(s.price)}</span>`;
+  b.innerHTML = `<strong class="size-label"></strong><span class="size-price"></span>`;
   b.addEventListener("click", () => selectSize(key));
   sizeButtons.appendChild(b);
 });
@@ -2454,7 +2547,8 @@ const sonderBtn = document.createElement("button");
 sonderBtn.className = "size-btn";
 sonderBtn.dataset.size = "SONDER";
 sonderBtn.setAttribute("aria-pressed", "false");
-sonderBtn.innerHTML = `<strong>Sonderbstellig · 13+</strong><span>${chf(SONDER.pricePerCookie)} pro Cookie</span>`;
+sonderBtn.innerHTML = `<strong>Sonderbstellig · 13+</strong><span class="size-price"></span>`;
+sonderBtn.dataset.cap = 0;   // 0 = pro Cookie statt Gsamtpriis
 sonderBtn.addEventListener("click", () => selectSize("SONDER"));
 sizeButtons.appendChild(sonderBtn);
 
@@ -2469,6 +2563,19 @@ PACKAGING.forEach((p) => {
   b.title = p.note;
   b.addEventListener("click", () => { state.packaging = p.id; render(); });
   packagingButtons.appendChild(b);
+});
+
+/* Chips für d'Cookie-Grössi */
+const cookieSizeChips = document.getElementById("cookie-size-chips");
+COOKIE_SIZES.forEach((g) => {
+  const b = document.createElement("button");
+  b.className = "mood-chip cookie-size-chip";
+  b.dataset.cookieSize = g.id;
+  b.setAttribute("aria-pressed", String(state.cookieSize === g.id));
+  b.innerHTML = `<strong>${g.name}</strong> <small>${g.gram} g · ${chf(g.price)}</small>`;
+  b.title = g.note;
+  b.addEventListener("click", () => { state.cookieSize = g.id; trimOverflow(); render(); });
+  cookieSizeChips.appendChild(b);
 });
 
 const sonderInput = document.getElementById("sonder-qty");
@@ -2488,14 +2595,14 @@ COOKIES.forEach((c) => {
   li.dataset.cookie = c.id;
   const variantsForC = c.plainOnly ? VARIANTS.filter((v) => v.id === "plain") : VARIANTS;
   const vhtml = variantsForC.map((v) =>
-    `<div class="qty-line"><small>${v.label}</small><div class="qty">` +
+    `<div class="qty-line"><small>${v.label}${v.surcharge ? ` <span class="v-plus">+${chf(v.surcharge).replace("CHF ", "")}</span>` : ""}</small><div class="qty">` +
     `<button data-op="-" data-v="${v.id}" aria-label="Ein ${c.name} (${v.label}) weniger">−</button>` +
     `<output data-v="${v.id}">0</output>` +
     `<button data-op="+" data-v="${v.id}" aria-label="Ein ${c.name} (${v.label}) meh">+</button>` +
     `</div></div>`).join("");
   li.innerHTML =
     `<svg class="item-icon" viewBox="-24 -24 48 48" aria-hidden="true">${cookieSVG(c, 19, false)}</svg>` +
-    `<div class="item-info"><strong>${c.name}<span class="match-badge hidden">passt zu dinere Mood</span></strong><small>${c.note}</small>` +
+    `<div class="item-info"><strong>${c.name}</strong><small>${c.note}</small>` +
     (c.allergens && c.allergens.length ? `<small class="allergens">Au drin: ${c.allergens.join(", ")}${c.allergenFrom ? " – " + c.allergenFrom : ""}</small>` : "") +
     (c.mayContain ? `<small class="allergens may">Cha ${c.mayContain} enthalte</small>` : "") +
     `</div>` +
@@ -2530,7 +2637,7 @@ COOKIES.forEach((c) => {
     (c.mayContain ? `<span class="allerg may">Cha ${c.mayContain} enthalte</span>` : "") +
     (c.plainOnly
       ? `<span class="sorte-tag plain-only">nur als Cookie</span>`
-      : `<span class="sorte-tag">au als Soft Melt 🤤</span>`);
+      : `<span class="sorte-tag">au als Soft Melt 🤤 +0.50</span>`);
   sortenGrid.appendChild(li);
 });
 
@@ -2650,6 +2757,7 @@ function addBoxToOrder() {
     sonderQty: state.sonderQty,
     items: { ...state.items },
     price: boxPrice(),
+    cookieSize: state.cookieSize,
   });
   state.size = null;
   state.items = {};
@@ -2668,6 +2776,7 @@ function editSavedBox(i) {
   state.size = b.size;
   state.sonderQty = b.sonderQty;
   state.items = { ...b.items };
+  if (b.cookieSize) state.cookieSize = b.cookieSize;
   boxPeek = false;
   document.getElementById("sonder-row").classList.toggle("hidden", b.size !== "SONDER");
   render();
@@ -2702,13 +2811,7 @@ document.querySelectorAll("#g-menu-board .scene-hot").forEach((el) => {
   el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
 
-/* Mood- und Varianten-Chips */
-document.querySelectorAll(".mood-chip[data-mood]").forEach((chip) => {
-  chip.addEventListener("click", () => {
-    state.mood = state.mood === chip.dataset.mood ? null : chip.dataset.mood;
-    render();
-  });
-});
+/* Varianten-Chips */
 document.querySelectorAll("#g-variant-scene .scene-hot").forEach((el) => {
   const go = () => { state.variant = el.dataset.variant; render(); };
   el.addEventListener("click", go);
@@ -2752,6 +2855,22 @@ function render() {
   document.getElementById("packaging-note").textContent = outerPk
     ? "Jede Cookie chunt einzeln iipackt. Und wie söll d'ganzi Bstellig verpackt sii?"
     : `Jede Cookie chunt einzeln iipackt. E Tüte oder Gschänk-Box gits ab ${PACKAGING_MIN_COOKIES} Cookies.`;
+  // Cookie-Grössi: Chips markiere und d'Prise uf de Tüte-Chnöpf nachefüehre
+  document.querySelectorAll("[data-cookie-size]").forEach((b) =>
+    b.setAttribute("aria-pressed", String(b.dataset.cookieSize === state.cookieSize)));
+  document.querySelectorAll(".size-btn").forEach((b) => {
+    const el = b.querySelector(".size-price");
+    if (!el) return;
+    const key = b.dataset.size;
+    const lbl = b.querySelector(".size-label");
+    if (key === "SONDER") {
+      el.textContent = chf(round05(cookieSizeOf(state.cookieSize).price * (1 - SONDER.discount))) + " pro Cookie";
+    } else {
+      const cap = capOf(key);
+      if (lbl) lbl.textContent = `${key} · ${cap} Cookie${cap > 1 ? "s" : ""}`;
+      el.textContent = chf(fullBoxPrice(key));
+    }
+  });
   document.querySelectorAll("[data-packaging]").forEach((b) => {
     b.setAttribute("aria-pressed", String(b.dataset.packaging === state.packaging));
     const p = PACKAGING.find((x) => x.id === b.dataset.packaging);
@@ -2764,19 +2883,14 @@ function render() {
     el.querySelector("rect").setAttribute("fill", on ? "#F5A11C" : "#FBF3E4");
     el.querySelector("rect").setAttribute("opacity", on ? "1" : "0.55");
   });
-  document.querySelectorAll(".mood-chip[data-mood]").forEach((chip) => chip.setAttribute("aria-pressed", String(chip.dataset.mood === state.mood)));
 
   const full = state.size && totalCookies() >= capacity();
   COOKIES.forEach((c) => {
-    const match = !!state.mood && c.moods.includes(state.mood);
     const sceneC = vitrine.querySelector(`[data-cookie="${c.id}"]`);
-    sceneC.classList.toggle("mood-match", match);
-    sceneC.querySelector(".c-body").innerHTML = cookieSVG(c, 20, !c.plainOnly && state.variant === "melt");
+    sceneC.querySelector(".c-body").innerHTML = cookieSVG(c, 20 * cookieScale(), !c.plainOnly && state.variant === "melt");
     const po = sceneC.querySelector(".po-note");
     if (po) po.classList.toggle("hidden", state.variant !== "melt");
     const row = cookieList.querySelector(`[data-cookie="${c.id}"]`);
-    row.classList.toggle("mood-match-row", match);
-    row.querySelector(".match-badge").classList.toggle("hidden", !match);
     (c.plainOnly ? VARIANTS.filter((v) => v.id === "plain") : VARIANTS).forEach((v) => {
       const k = keyOf(c.id, v.id);
       rowRefs[k].out.textContent = state.items[k] || 0;
@@ -2810,7 +2924,7 @@ function render() {
 
   state.savedBoxes.forEach((b, i) => {
     total += b.price;
-    const li = addLine(`📦 ${boxTitle(b.size, b.sonderQty)}`, chf(b.price));
+    const li = addLine(`📦 ${boxTitle(b.size, b.sonderQty, b.cookieSize)}`, chf(b.price));
     const edit = document.createElement("button");
     edit.className = "box-edit";
     edit.dataset.edit = i;
@@ -2823,6 +2937,8 @@ function render() {
     btn.setAttribute("aria-label", `Tüte ${i + 1} us de Bstellig entferne`);
     btn.textContent = "×";
     li.lastElementChild.appendChild(btn);
+    const gb = cookieSizeOf(b.cookieSize);
+    addLine(`· ${gb.name} (${gb.gram} g)`, "", "sub");
     boxContentLines(b.items).forEach((t) => addLine("· " + t, "", "sub"));
   });
 
@@ -2838,6 +2954,8 @@ function render() {
     if (curValid) {
       total += boxPrice();
       addLine(boxTitle(state.size, state.sonderQty), chf(boxPrice()));
+      const g = cookieSizeOf(state.cookieSize);
+      addLine(`· ${g.name} (${g.gram} g) à ${chf(g.price)}`, "", "sub");
       boxContentLines(state.items).forEach((t) => addLine("· " + t, "", "sub"));
     }
   }
@@ -2873,9 +2991,11 @@ function render() {
   if (ready) {
     let body = "Hoi BuhuBakery!\n\nIch hätt gärn:\n";
     const allBoxes = [...state.savedBoxes];
-    if (curValid) allBoxes.push({ size: state.size, sonderQty: state.sonderQty, items: state.items, price: boxPrice() });
+    if (curValid) allBoxes.push({ size: state.size, sonderQty: state.sonderQty, items: state.items, price: boxPrice(), cookieSize: state.cookieSize });
     allBoxes.forEach((b, i) => {
-      body += `\nTüte ${i + 1}: ${boxTitle(b.size, b.sonderQty)} – ${chf(b.price)}\n`;
+      const g = cookieSizeOf(b.cookieSize);
+      body += `\nTüte ${i + 1}: ${boxTitle(b.size, b.sonderQty, b.cookieSize)} – ${chf(b.price)}\n`;
+      body += `   Cookie-Grössi: ${g.name} (${g.gram} g)\n`;
       boxContentLines(b.items).forEach((t) => { body += `   • ${t}\n`; });
     });
     const coffeeLines = COFFEES.filter((k) => (state.coffees[k.id] || 0) > 0);
@@ -2898,7 +3018,46 @@ function render() {
   } else {
     orderBtn.href = "#";
   }
+  updateStepBar(total, ready);
   updateBuhu(ready);
+}
+
+/* Fixi Leiste unde: säit i eim Satz, was jetzt dra isch, wieviel scho i de
+   Tüte isch und was es choschtet. Si erschiint erscht, wenn öppis los isch. */
+function updateStepBar(total, ready) {
+  const bar = document.getElementById("step-bar");
+  if (!bar) return;
+  const stepEl = document.getElementById("sb-step");
+  const detailEl = document.getElementById("sb-detail");
+  const totalEl = document.getElementById("sb-total");
+  const actionEl = document.getElementById("sb-action");
+
+  const cap = capacity(), n = totalCookies();
+  const gspeicheret = state.savedBoxes.length;
+  const öppisLos = gspeicheret > 0 || state.size;
+  bar.classList.toggle("hidden", !öppisLos);
+  document.body.classList.toggle("has-step-bar", öppisLos);
+  if (!öppisLos) return;
+
+  const g = cookieSizeOf(state.cookieSize);
+  if (!state.size) {
+    stepEl.textContent = `${gspeicheret} Tüte${gspeicheret > 1 ? "" : ""} parat`;
+    detailEl.textContent = "Wähl e Grössi für no eini – oder schick d'Aafrag ab";
+  } else if (n < cap) {
+    stepEl.textContent = `Schritt 2 · Cookies iipacke`;
+    detailEl.textContent = `${n} vo ${cap} · ${g.name} (${g.gram} g)`;
+  } else if (!ready) {
+    stepEl.textContent = "Fascht parat";
+    detailEl.textContent = totalCoffees() > 0 && !state.cup
+      ? "Wähl no, öb du en eigene Becher mitbringsch"
+      : "Tüte isch voll 🎉";
+  } else {
+    stepEl.textContent = "Alles parat 🎉";
+    detailEl.textContent = "Schick mer d'Aafrag";
+  }
+  totalEl.textContent = chf(total);
+  actionEl.textContent = ready ? "Aafrag schicke" : "Zur Bstellig";
+  actionEl.setAttribute("href", ready ? document.getElementById("order-btn").href : "#bstellig");
 }
 
 /* --- Buhu, de Café-Mitarbeiter (füehrt dur d'Schritt) --------------------- */
@@ -3222,6 +3381,42 @@ document.getElementById("order-btn").addEventListener("click", () => {
   setBuhu("bye");
   setTimeout(() => { buhuBye = false; render(); }, 6500);
 });
+
+/* --- Sortiment und Über mich: erscht uf Chlick us de Navigation ------------
+   Si stönd standardmässig zue, dass me sofort bim Café isch. De Link obe
+   macht si uf, de Chnopf rächts obe wieder zue. */
+const FOLDABLE = ["sortiment", "ueber-mich"];
+function openFold(id, scroll = true) {
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  sec.hidden = false;
+  if (scroll) requestAnimationFrame(() => sec.scrollIntoView({ behavior: "smooth", block: "start" }));
+}
+function closeFold(id) {
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  sec.hidden = true;
+  document.getElementById("cafe")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+FOLDABLE.forEach((id) => {
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "fold-close";
+  btn.textContent = "Zuemache ✕";
+  btn.addEventListener("click", () => closeFold(id));
+  sec.appendChild(btn);
+  document.querySelectorAll(`a[href="#${id}"]`).forEach((a) =>
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Nomal drufklickt wenn's scho offe isch heisst: wieder zue
+      if (!sec.hidden) { closeFold(id); return; }
+      openFold(id);
+    }));
+});
+// Wär mit eme Link direkt uf d'Sektion chunt, söll si natürli offe sii
+if (FOLDABLE.includes(location.hash.slice(1))) openFold(location.hash.slice(1), false);
 
 render();
 renderThemeDecor();

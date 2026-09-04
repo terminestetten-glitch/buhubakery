@@ -18,7 +18,6 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Kaffee auch über die COFFEEMENU-Tafel in der Szene antippbar** (jede Zeile = 1× bestellen).
 - **Handy geht jetzt au im Hochformat** (Wunsch hat sich geändert): kei Dreh-Overlay meh, d'Szene het kei `min-width` meh und skaliert uf jedi Breiti, ohni dass me was verschiebe muss.
 - **Jede Sorte in 2 Varianten**: "eifach so" oder "mit Soft Melt Chärn" (flüssiger Kern, im Bild als oranger Punkt). Umschalter-Chips über der Szene bestimmen, welche Variante beim Antippen in der Vitrine gilt; in der Liste hat jede Sorte zwei Zähler.
-- **Cookie Mood**: Need comfort / Celebrating / Hangry / Study session / Date night → hebt passende Cookies hervor.
 - **Kaffee nur an Abhol-Tagen**: Kaffeemaschine + COFFEEMENU (Americano, Cappuccino, Schale, Espresso, Kaffee Crème) erscheinen nur an konfigurierten Tagen (`CONFIG.coffeeDays` in index.html, 0=So…6=Sa; aktuell Fr+Sa als Platzhalter). Es gibt einen "Kafi-Tag simulieren"-Vorschau-Button.
 - **Becher-Wahl bei Kaffee**: Wenn Kaffee im Warenkorb ist, muss gewählt werden: eigener Becher mitbringen ♻️ oder Einweg. Ohne Wahl bleibt der Bestell-Knopf gesperrt.
 - Bestellung = mailto-Link mit fertig ausgefüllter Bestellübersicht (kein Backend!).
@@ -29,6 +28,41 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 - **Boxe wieder bearbeite**: jedi zuegleiti Box i de Zämefassig het en ✏️-Knopf (`editSavedBox`) wo si zrugg uf de Tisch holt.
 - **Variante-Wahl au i de Szene**: d'Chips "eifach so" / "mit Soft Melt Chärn" sind zuesätzlich direkt a de Vitrine (`#g-variant-scene`). Bi Sorte mit `plainOnly` (Cinnamon Dream) erschiint es "nur eifach"-Schildli, wenn Soft Melt gwählt isch.
 - **Theke isch als echte 3D-Blockform gezeichnet**: sichtbari Deckfläche (Tischplatte-Trick, gliich wie bi de Box-Deckel) + Front mit iibauter Glasvitrine (Cookies liege dinne i re Reihe, nöd meh als separati Vitrine obe druf). D'Ablagefläche hinter de Theke het de gliiche Trick für iri Platte.
+
+## Seitenaufbau: Café zuerst (User, 07.08.2026)
+Der User fand, es käme zu viel VOR dem Café. Gemessen: **2165 px Scrollen** bis zur Szene.
+Umgestellt auf Vorschlag 1 + 4:
+- **Café direkt nach dem Hero** – jetzt bei **654 px**, also ohne Scrollen sichtbar.
+- **Bedienelemente stehen UNTER der Szene** (`.scene-controls`): «So gaht's», Varianten-Chips,
+  Cookie-Grössen-Chips. Vorher standen sie darüber.
+- **Sortiment-Sektion wanderte unter das Café**, vor «Über mich».
+- **Cookie Mood ist komplett entfernt** (Chips, `state.mood`, `moods` in COOKIES,
+  `.mood-match`-Hervorhebung, Badge). Auf Wunsch des Users.
+- **Fixe Schritt-Leiste unten** (`#step-bar`, `updateStepBar()`): zeigt aktuellen Schritt,
+  Füllstand und Preis, plus Knopf zur Bestellung. Erscheint erst, wenn eine Grösse gewählt
+  ist. `body.has-step-bar` schiebt den Admin-Knopf hoch und gibt unten Platz.
+
+## Preise: Mengenrabatt (User, 04.09.2026)
+Der alte Rabatt war in Franken hinterlegt (0/0.50/0.50/1.00/0.50/4.00) und passte nur zum
+4-Franken-Cookie. Jetzt **prozentual**, damit er bei allen drei Cookie-Grössen stimmt:
+XXS 0 % · XS 0 % · S 5 % · M 8 % · L 10 % · XL 12 % · Sonderbestellung 15 %.
+Auf 5 Rappen gerundet (`round05`). Der Soft-Melt-Zuschlag (0.50) wird **nicht** rabattiert.
+
+## «Eis Bissli»-Bonus (User, 04.09.2026)
+Bei der kleinsten Cookie-Grösse (`bienli`, 15 g) passt in **jede** Tüte ein Cookie mehr:
+XXS 2 · XS 3 · S 5 · M 7 · L 10 · XL 13. Umgesetzt über `capBonus()` / `capOf(key)`;
+`boxCols()` bekommt ebenfalls +1, weil die Minis kleiner sind. Wechselt man von 15 g auf
+eine grössere Cookie-Grösse, schneidet `trimOverflow()` den überzähligen Cookie weg.
+Gespeicherte Tüten merken sich ihre eigene `cookieSize` – `boxCapacityOf` und `boxTitle`
+rechnen darum mit **deren** Grösse, nicht mit der gerade gewählten.
+
+## Sortiment und Über mich sind eingeklappt (User, 04.09.2026)
+Beide Sektionen stehen auf `hidden` und öffnen sich erst über den Link in der Navigation
+(nochmal klicken = wieder zu, dazu ein «Zuemache ✕»-Knopf oben rechts). Ziel: sofort beim
+Café landen. Café liegt dadurch bei **587 px**.
+**Wichtig:** Die Navigation war auf dem Handy `display:none`. Da sie jetzt der einzige Weg
+zu diesen Sektionen ist, wird sie dort als schmale, seitlich scrollbare Zeile unter der
+Marke angezeigt – nicht wieder ausblenden.
 
 ## Branding
 - Logo: **Biene im Geisterkostüm** (Buhu = Geist) mit Kochmütze und Honiglöffel. **Original eingebaut**:
@@ -54,13 +88,23 @@ Website für das Cookie-Business "BuhuBakery" (Schweiz). Konzept laut Skizze des
 
 ## Sortiment & Preise
 - **Echte Sorten (vom User)**: Oreo, Lotus (Biscoff), Ovomaltine Classic, Ovomaltine Noir – je "eifach so" oder "Soft Melt Chärn". Cinnamon Dream (Zimt-Cookie mit Pekannuss) isch **nume als "eifach so"** verfügbar, kei Soft-Melt-Variante (`plainOnly: true` in `COOKIES`). Mood-Zuordnung in `COOKIES` in index.html ist von Claude geraten → bei Gelegenheit bestätigen lassen.
-- **Preise sind ECHT (vom User bestätigt, 02.08.2026)** – nicht mehr als Platzhalter behandeln:
-  XXS 4.00 / XS 7.50 / S 15.50 / M 23.00 / L 35.50 / XL 44.00 CHF; Sonderbstellig 4.00 CHF/Cookie **minus 0.50 pauschal**
-  (`boxPrice()` in index.html); Soft Melt **+0.50 CHF pro Cookie** (gilt für alle Boxgrössen);
-  Kaffee: Espresso 3.50 / Kaffee Crème 4.00 / Americano 4.20 / Schale 4.50 / Cappuccino 4.80.
-  Hinweis: `SONDER.meltSurcharge` ist definiert, wird aber nicht benutzt – `boxPrice()` hat 0.50 zweimal hardcodiert.
-- **Pro Cookie (vom User, 02.08.2026)**: 4.00 CHF ohne Soft Melt, 4.50 CHF mit. Deckt sich mit dem +0.50-Aufpreis.
-  Die Fixgrössen liegen leicht darunter (z.B. S = 4 Cookies für 15.50 statt 16.00) → enthält einen kleinen Mengenrabatt.
+- **Preise (User, 07.08.2026) – Cookies wurden um 1 CHF teurer:**
+  Das Preismodell hat sich geändert. Die Tütengrössen haben **keinen festen Preis mehr** –
+  gerechnet wird `Anzahl Cookies × Preis der gewählten Cookie-Grösse`.
+- **Drei Cookie-Grössen** (`COOKIE_SIZES` in index.html), Namen vom User gewählt:
+  | Name | Gewicht | Preis |
+  | Handteller | 64 g | 5.00 |
+  | Zwöi-Biss | 25 g | 2.00 |
+  | Ei-Biss | 15 g | 1.50 |
+  Die Chips dafür stehen über der Szene bei den Varianten-Chips. In der Szene werden die
+  Cookies mit `cookieScale()` kleiner gezeichnet (Wurzel des Gewichtsverhältnisses, damit
+  der 15g-Cookie antippbar bleibt).
+- **Soft Melt: +0.50 pro Cookie**, unabhängig von der Grösse. Steht seit 07.08. sichtbar an
+  der Zeile («Soft Melt 🤤 +0.50») – vorher war der Aufpreis nirgends erkennbar und der User
+  dachte, er würde fehlen.
+- `state.cookieSize` wird in gespeicherten Tüten mitgeführt (`savedBoxes[].cookieSize`),
+  sonst stimmt der Preis nach dem Zurückholen nicht mehr.
+- Kaffee unverändert: Espresso 3.50 / Kaffee Crème 4.00 / Americano 4.20 / Schale 4.50 / Cappuccino 4.80.
 - **Verpackung (gebaut, Preise vom User bestätigt 02.08.2026)** – `PACKAGING` in index.html:
   - **Jeder Cookie einzeln verpackt** – immer, keine Wahl. In der Szene als durchsichtiges Säckli um jeden Cookie.
   - **Die ganze Bestellung** kommt in **eine** Aussenverpackung, Wahl gilt **pro Bestellung** (nicht pro Box):
