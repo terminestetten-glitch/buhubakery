@@ -71,6 +71,28 @@ ausdrücklich gewünscht und nach Rückfrage bestätigt. «Handteller», «Zwöi
 Ich hatte `zwee Biss` / `ei Biss` vorgeschlagen (im Zürichdeutschen ist «Biss» männlich).
 Der User will die hochdeutsche Zählform – **nicht nochmal ändern oder ansprechen.**
 
+## Café als Schritt-für-Schritt (User, 04.09.2026)
+Der User fand die Café-Sektion zu lang – sie war **3351 px** (3.3 Bildschirme), weil alle
+Schritte gleichzeitig offen standen. Jetzt ein Akkordeon: **nur ein Schritt ist offen**,
+die anderen schrumpfen auf eine Zeile mit dem, was gewählt ist
+(«S · 4 Cookies · Papiertüte», «4 vo 4 iipackt», «kei Kafi», Datum).
+Höhe jetzt **2060 px** am Anfang, ~2400 px mitten im Bestellen.
+- `naturalStep()` bestimmt den Schritt aus dem Zustand; wechselt der, springt das
+  Akkordeon automatisch mit (`lastAutoStep` verhindert, dass es bei jedem `render()`
+  wieder zuschnappt, wenn der User selbst etwas aufgeklappt hat).
+- Klick auf einen Kopf öffnet ihn, nochmal Klick schliesst alles (`openStep = -1`).
+- `renderSteps()` läuft in `render()` direkt vor `updateStepBar()`.
+- Markup: `<h3><button class="step-head">…<span class="step-sum"><span class="step-chev">`,
+  Inhalt in `<div class="step-body">`, Zustand über `.panel[data-open]`.
+
+## Englische Texte sind Fehler (04.09.2026)
+Die Seite ist durchgehend Züridütsch. Es standen aber noch englische Texte drin, u.a. der
+grösste Titel der Seite («Build your own box»), «PACKAGING» am Regal und «COFFEE MENU».
+Ersetzt durch «Bau dir dini Cookie-Tüte», «GRÖSSINE» und «KAFI-CHARTE».
+**Beim Hinzufügen von Text immer Züridütsch verwenden – auch in der SVG-Szene.**
+Noch offen und bewusst stehengelassen: «Pick up & Coffee to go» (3 Stellen) – der User
+hat sich dazu nicht geäussert, in der Schweiz aber gängig.
+
 ## Branding
 - Logo: **Biene im Geisterkostüm** (Buhu = Geist) mit Kochmütze und Honiglöffel. **Original eingebaut**:
   `assets/logo.png` (720px, extrahiert aus dem Vektor-PDF des Users, Original liegt in `docs/logo.pdf` –

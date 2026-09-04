@@ -155,6 +155,40 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .site-nav a { white-space: nowrap; }
 }
 
+/* --- Schritt für Schritt: nur de aktuell Schritt isch offe ----------------- */
+.step-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.step-sum {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: right;
+}
+.step-chev {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.8em;
+  transition: transform 0.18s ease;
+}
+.panel[data-open="false"] .step-body { display: none; }
+.panel[data-open="false"] h3 { margin-bottom: 0; }
+.panel[data-open="false"] .step-chev { transform: rotate(-90deg); }
+.panel[data-open="false"] .step-head:hover .step-sum { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .step-chev { transition: none; } }
+
 /* --- Uszogeni Sektione (Sortiment / Über mich) ----------------------------- */
 .section[hidden] { display: none; }
 .foldable { position: relative; }
@@ -1539,7 +1573,8 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
       <div class="builder">
         <div>
           <div class="panel" id="size-panel">
-            <h3><span class="step-num">1</span> Grössi wähle</h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">1</span> Grössi wähle<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <div class="step-body">
             <div class="size-row" role="group" aria-label="Grössi" id="size-buttons"></div>
             <div class="sonder-row hidden" id="sonder-row">
               <label>Wie vill Cookies? (13–30)
@@ -1549,26 +1584,33 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
             </div>
             <p class="coffee-note" style="margin-top:1rem;" id="packaging-note"></p>
             <div class="cup-row" role="group" aria-label="Verpackig" id="packaging-buttons"></div>
+            </div>
           </div>
           <div class="panel" id="cookies-panel">
-            <h3><span class="step-num">2</span> Cookies iipacke</h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">2</span> Cookies iipacke<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <div class="step-body">
             <ul class="item-list" id="cookie-list"></ul>
             <p class="coffee-note allergy-note" id="allergy-note"></p>
+            </div>
           </div>
           <div class="panel" id="coffee-panel">
-            <h3><span class="step-num">3</span> Kafi drzue? <span id="coffee-day-label"></span></h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">3</span> Kafi drzue? <span id="coffee-day-label"></span><span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <div class="step-body">
             <p class="coffee-note">Kafi gits nöd a jedem Tag – nur a de Täg mit ☕-Symbol im Kalender bi Schritt 4.</p>
             <div id="coffee-content"></div>
             <button class="demo-toggle" id="coffee-demo" aria-pressed="false">Vorschau: Kafi-Tag simuliere ☕</button>
+            </div>
           </div>
           <div class="panel" id="pickup-panel">
-            <h3><span class="step-num">4</span> Wunsch-Abholtag</h3>
+            <h3><button class="step-head" type="button" aria-expanded="true"><span class="step-num">4</span> Wunsch-Abholtag<span class="step-sum"></span><span class="step-chev" aria-hidden="true">▾</span></button></h3>
+            <div class="step-body">
             <p class="coffee-note">Abhole chasch jede Tag – wähl eifach en Tag i de nächschte 4 Wuche (mindeschtens 2 Täg im Vorus). Täg mit ☕ sind Kafi-Täg, de gits au Pick up &amp; Coffee to go.</p>
             <div class="pickup-calendar" id="pickup-calendar"></div>
             <label style="display:block;margin-top:1rem;">
               <span style="font-size:0.9rem;font-weight:600;">Es anders Datum (wiiter wäg als 4 Wuche) oder en Sonderwunsch?</span>
               <textarea id="order-note" rows="2" placeholder="z.B. gwünschte Termin i 2 Mönet, Sonderbstellig über 30 Cookies, Allergie-Frag …" style="width:100%;margin-top:0.4rem;padding:0.6rem;border:1.5px solid var(--line);border-radius:0.6rem;background:var(--ground);color:var(--ink);font:inherit;resize:vertical;"></textarea>
             </label>
+            </div>
           </div>
         </div>
         <div class="panel summary" id="bstellig" aria-live="polite">
@@ -3018,6 +3060,7 @@ function render() {
   } else {
     orderBtn.href = "#";
   }
+  renderSteps();
   updateStepBar(total, ready);
   updateBuhu(ready);
 }
@@ -3380,6 +3423,63 @@ document.getElementById("order-btn").addEventListener("click", () => {
   buhuBye = true;
   setBuhu("bye");
   setTimeout(() => { buhuBye = false; render(); }, 6500);
+});
+
+/* --- Schritt für Schritt --------------------------------------------------
+   S'Café isch 3.3 Bildschirm lang gsi, wil alli fünf Schritt uf eimal offe
+   gsi sind. Jetzt isch nur de aktuell offe; die andere schrumpfed uf ei Zile
+   mit dem, wo scho gwählt isch. De User cha jede Schritt vo Hand ufmache. */
+const STEP_PANELS = ["size-panel", "cookies-panel", "coffee-panel", "pickup-panel"];
+let openStep = 0;      // wele Schritt grad offe isch
+let lastAutoStep = -1; // dass mer nur bi ere echte Änderig automatisch witerschaltet
+
+/* Wo staht de User grad? */
+function naturalStep() {
+  if (!state.size) return 0;
+  if (totalCookies() < capacity()) return 1;
+  if (!state.pickupDate) return 3;
+  return 3;
+}
+/* Ei Zile, wo zeigt was i dem zuegklappte Schritt gwählt isch */
+function stepSummary(i) {
+  if (i === 0) {
+    if (!state.size) return "nonig gwählt";
+    const nm = state.size === "SONDER" ? `Sonderbstellig · ${state.sonderQty}` : `${state.size} · ${capacity()}`;
+    return `${nm} Cookies · ${packagingChoice().short}`;
+  }
+  if (i === 1) {
+    if (!state.size) return "";
+    const n = totalCookies();
+    return n === 0 ? "no läär" : `${n} vo ${capacity()} iipackt`;
+  }
+  if (i === 2) {
+    const n = totalCoffees();
+    return n === 0 ? "kei Kafi" : `${n} Kafi`;
+  }
+  if (i === 3) return state.pickupDate ? formatPickupDate(state.pickupDate) : "kei Datum gwählt";
+  return "";
+}
+function renderSteps() {
+  const auto = naturalStep();
+  if (auto !== lastAutoStep) { lastAutoStep = auto; openStep = auto; }
+  STEP_PANELS.forEach((id, i) => {
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    const open = i === openStep;
+    panel.dataset.open = String(open);
+    const head = panel.querySelector(".step-head");
+    if (head) head.setAttribute("aria-expanded", String(open));
+    const sum = panel.querySelector(".step-sum");
+    if (sum) sum.textContent = open ? "" : stepSummary(i);
+  });
+}
+STEP_PANELS.forEach((id, i) => {
+  const head = document.getElementById(id)?.querySelector(".step-head");
+  if (!head) return;
+  head.addEventListener("click", () => {
+    openStep = (openStep === i) ? -1 : i;  // nomal drufklicke macht wieder zue
+    renderSteps();
+  });
 });
 
 /* --- Sortiment und Über mich: erscht uf Chlick us de Navigation ------------
