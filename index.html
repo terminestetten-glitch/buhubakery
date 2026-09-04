@@ -811,9 +811,9 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
   <section class="section" id="cafe">
     <div class="wrap">
       <span class="eyebrow">Willkomme im Café</span>
-      <h2>Build your own box</h2>
+      <h2>Bau dir dini Cookie-Tüte</h2>
       <div class="scene-card">
-        <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Packaging-Regal mit de Grössine, Tisch mit dinere Tüte">
+        <svg id="scene" viewBox="0 0 1200 660" role="group" aria-label="Interaktives BuhuBakery-Café: Vitrine mit Cookies, Regal mit de Tüte-Grössine, Tisch mit dinere Tüte">
           <!-- RUUM: Rückwand obe (bis y=300), denn en tüüfe Bodä wo nach hinde flüchtet.
                D'Fluchtlinie liit bi (620, 262) – dört lauft alles zäme. -->
           <rect x="0" y="0" width="1200" height="300" fill="url(#wall-grad)"/>
@@ -1036,7 +1036,7 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
             <line x1="432" y1="0" x2="432" y2="18" stroke="#8A7B63" stroke-width="2"/>
             <line x1="532" y1="0" x2="532" y2="18" stroke="#8A7B63" stroke-width="2"/>
             <rect x="392" y="16" width="180" height="136" rx="6" fill="#FBF3E4" stroke="#2E2015" stroke-width="2.5"/>
-            <text x="482" y="38" text-anchor="middle" font-size="16" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">COFFEE MENU</text>
+            <text x="482" y="38" text-anchor="middle" font-size="16" font-weight="bold" fill="#2E2015" font-family="Georgia, serif">KAFI-CHARTE</text>
             <text x="482" y="51" text-anchor="middle" font-size="8.5" fill="#7A6A52">☕ Pick up &amp; Coffee to go – atippe</text>
             <g font-size="12.5" fill="#5A4832" font-family="Georgia, serif">
               <g class="scene-hot" data-coffee="americano" tabindex="0" role="button" aria-label="En Americano bstelle">
@@ -1195,9 +1195,9 @@ body.has-step-bar #admin-toggle { bottom: 5.2rem; }
             <text x="316" y="547" text-anchor="middle" font-size="15" fill="#FBF3E4" font-family="Georgia, serif" font-style="italic">Buhu Bakery</text>
           </g>
 
-          <!-- Packaging-Regal -->
+          <!-- Regal mit de Tüte-Grössine -->
           <g id="g-shelf" filter="url(#soft-shadow)" transform="translate(0 -26)">
-            <text x="655" y="92" text-anchor="middle" font-size="13" letter-spacing="2" fill="#2E2015" font-weight="bold">PACKAGING</text>
+            <text x="655" y="92" text-anchor="middle" font-size="13" letter-spacing="2" fill="#2E2015" font-weight="bold">GRÖSSINE</text>
             <ellipse cx="655" cy="372" rx="72" ry="9" fill="#2E2015" opacity="0.18"/>
             <rect x="594" y="100" width="10" height="270" fill="url(#wood-grad)"/>
             <rect x="706" y="100" width="10" height="270" fill="url(#wood-grad)"/>
@@ -2173,7 +2173,7 @@ function windowSnowSVG(w, thick = 16) {
 
 /* Girlande: Kurve über em linke Drittel (x 40→560), leicht duruehänged */
 const GRL = { x0: 40, y0: 10, xc: 300, yc: 40, x1: 560, y1: 12, N: 10 };
-/* Zwöiti Schnuer: vom Kafi-Menü bis i d'rächt Egge, dass es obe nöd läär wirkt */
+/* Zwöiti Schnuer: vo de Kafi-Charte bis i d'rächt Egge, dass es obe nöd läär wirkt */
 const GRL2 = { x0: 596, y0: 12, xc: 900, yc: 40, x1: 1196, y1: 8, N: 9 };
 let GRL_CUR = GRL;
 function grlPt(t) {
@@ -2679,7 +2679,7 @@ function renderCoffeePanel() {
   const dayRef = state.pickupDate ? `Dini Wahl (${formatPickupDate(state.pickupDate)})` : "Hüt";
   if (!isCoffeeDay()) {
     label.textContent = "";
-    coffeeContent.innerHTML = `<p class="coffee-note">${dayRef} isch kei Abhol-Tag mit Kafi. 😴 Wähl bi Schritt 4 en Kafi-Tag (☕), de erschiint da s'Kafi-Menü – und im Café obe d'Maschine.</p>`;
+    coffeeContent.innerHTML = `<p class="coffee-note">${dayRef} isch kei Abhol-Tag mit Kafi. 😴 Wähl bi Schritt 4 en Kafi-Tag (☕), de erschiint da d'Kafi-Charte – und im Café obe d'Maschine.</p>`;
     return;
   }
   label.textContent = `– ${dayRef} isch Kafi-Tag! ☕`;
